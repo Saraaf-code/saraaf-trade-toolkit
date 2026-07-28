@@ -1,5 +1,5 @@
 /**
- * Navigation Module - Handles tool switching, placeholder views, and PWA Install Prompt
+ * Navigation Module - Handles tool switching, placeholder views, and PWA Install Button
  */
 
 import { renderCommodityConverter } from './app.js';
@@ -11,33 +11,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let deferredPrompt;
 
-  // Catch the browser's install event and show the "Install App" button
+  // Listen for Chrome's native install prompt
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    if (installBtn) {
-      installBtn.style.display = 'inline-block';
-    }
   });
 
-  // Handle click on custom Install App button
+  // Handle Install Button Click
   if (installBtn) {
     installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log(`User response to install prompt: ${outcome}`);
-      deferredPrompt = null;
-      installBtn.style.display = 'none';
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response: ${outcome}`);
+        deferredPrompt = null;
+      } else {
+        alert("To install on Android / Chrome:\n\n1. Tap the 3 dots menu (⋮) at top-right.\n2. Select 'Add to Home screen' or 'Install app'.");
+      }
     });
   }
-
-  // Hide button if already installed
-  window.addEventListener('appinstalled', () => {
-    if (installBtn) installBtn.style.display = 'none';
-    deferredPrompt = null;
-    console.log('Saraaf Trade Toolkit was successfully installed!');
-  });
 
   // Render content based on selected tab key
   function renderToolView(toolKey) {
