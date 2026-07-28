@@ -2,6 +2,8 @@
  * Navigation Module - Handles tool switching and placeholder views
  */
 
+import { renderCommodityConverter } from './app.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   const navTabs = document.querySelectorAll('.nav-tab');
   const mainContent = document.getElementById('main-content');
@@ -9,15 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Render content based on selected tab key
   function renderToolView(toolKey) {
     if (toolKey === 'commodity-converter') {
-      mainContent.innerHTML = `
-        <div class="tool-card">
-          <div class="tool-header">
-            <h2 class="tool-title">Commodity Price Converter</h2>
-            <p class="tool-subtitle">Convert prices seamlessly across weight units and currencies.</p>
-          </div>
-          <p style="color: var(--color-text-secondary);">Conversion interface UI loading in Step 2...</p>
-        </div>
-      `;
+      renderCommodityConverter(mainContent);
     } else {
       mainContent.innerHTML = `
         <div class="tool-card coming-soon-container">
