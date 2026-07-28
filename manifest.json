@@ -1,0 +1,17 @@
+{
+  "name": "Saraaf Trade Toolkit",
+  "short_name": "Saraaf Trade",
+  "description": "Professional Trade & Commodity Calculations",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1a2a33",
+  "theme_color": "#1a2a33",
+  "icons": [
+    {
+      "src": "Saraaf TM logo.jpg",
+      "sizes": "192x192 512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
