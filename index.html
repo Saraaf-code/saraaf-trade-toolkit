@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Saraaf Trade Toolkit - Professional Trade & Commodity Calculations">
+  <meta name="theme-color" content="#1a2a33">
+  <title>Saraaf Trade Toolkit</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+  <!-- Persistent Header Bar -->
+  <header class="app-header">
+    <div class="brand-container">
+      <!-- Vector Logo (Top Left Persistent) -->
+      <svg class="brand-logo" viewBox="0 0 120 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Saraaf Logo">
+        <rect width="36" height="36" rx="8" fill="#0480E4"/>
+        <path d="M10 26L18 10L26 26H21.5L18 18.5L14.5 26H10Z" fill="white"/>
+        <text x="44" y="24" fill="white" font-family="sans-serif" font-weight="bold" font-size="18" letter-spacing="0.5">SARAAF</text>
+      </svg>
+      <h1 class="brand-title">Trade Toolkit</h1>
+    </div>
+
+    <!-- Modular Tool Navigation -->
+    <nav class="app-nav" aria-label="Tool Navigation">
+      <button class="nav-tab active" data-tool="commodity-converter">Commodity Converter</button>
+      <button class="nav-tab" data-tool="hs-code">HS Code Lookup</button>
+      <button class="nav-tab" data-tool="moisture">Moisture Calculator</button>
+      <button class="nav-tab" data-tool="container">Container Estimator</button>
+      <button class="nav-tab" data-tool="incoterms">Incoterms Guide</button>
+    </nav>
+  </header>
+
+  <!-- Main Active Content View Area -->
+  <main class="app-main" id="main-content">
+    <!-- Active tool module will render dynamically here -->
+  </main>
+
+  <script type="module" src="src/ui/navigation.js"></script>
+</body>
+</html>
