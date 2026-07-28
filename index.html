@@ -6,6 +6,8 @@
   <meta name="description" content="Saraaf Trade Toolkit - Professional Trade & Commodity Calculations">
   <meta name="theme-color" content="#1a2a33">
   <title>Saraaf Trade Toolkit</title>
+
+  <link rel="manifest" href="manifest.json">
   
   <!-- Stylesheets -->
   <link rel="stylesheet" href="assets/css/variables.css">
@@ -36,5 +38,14 @@
   </main>
 
   <script type="module" src="src/ui/navigation.js"></script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker Registered!', reg))
+        .catch(err => console.error('Service Worker Registration Failed:', err));
+    });
+  }
+</script>
 </body>
 </html>
