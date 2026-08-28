@@ -231,6 +231,7 @@ input:focus, select:focus {
   margin-bottom: 1.5rem;
 }
 
+/* Adjusted Copy Results Button Width */
 .pill-btn-secondary {
   background-color: var(--color-bg-elevated);
   color: #ffffff;
@@ -238,6 +239,9 @@ input:focus, select:focus {
   padding: 0.5rem 1.25rem;
   border-radius: var(--radius-pill);
   cursor: pointer;
+  width: auto;
+  max-width: 160px;
+  white-space: nowrap;
 }
 
 .result-hero {
@@ -288,7 +292,7 @@ input:focus, select:focus {
   border: 1px solid var(--color-border);
 }
 
-/* 12 Tools Hub Grid */
+/* All Tools Hub Grid */
 .hub-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
