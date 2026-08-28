@@ -3,52 +3,200 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Saraaf Trade Toolkit - Professional Trade & Commodity Calculations">
+  <title>Saraaf Trade Toolkit | Commodity Price Converter</title>
+  <meta name="description" content="Commercial-grade trade utilities and commodity calculation toolkit for global commerce.">
   <meta name="theme-color" content="#1a2a33">
-  <title>Saraaf Trade Toolkit</title>
-
-  <link rel="manifest" href="manifest.json">
   
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="assets/css/variables.css">
-  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./assets/css/variables.css">
+  <link rel="stylesheet" href="./assets/css/main.css">
 </head>
 <body>
-
   <!-- Persistent Header Bar -->
-    <header class="app-header">
-      <div class="brand-container">
-        <img src="Saraaf TM logo.jpg" alt="Company Logo" class="brand-logo" style="height: 36px; width: auto;">
-        <h1 class="brand-title">Trade Toolkit</h1>
+  <header class="app-header">
+    <div class="header-brand">
+      <img src="./Saraaf TM logo.jpg" alt="Saraaf Logo" class="brand-logo">
+      <div class="brand-text">
+        <span class="brand-title">Saraaf</span>
+        <span class="brand-subtitle">Trade Toolkit</span>
+      </div>
+    </div>
+
+    <!-- Tool Navigation Bar -->
+    <nav class="header-nav" aria-label="Tool selection">
+      <button class="nav-tab active" data-tool="converter">Commodity Converter</button>
+      <button class="nav-tab" data-tool="hub">All 12 Tools</button>
+    </nav>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="app-main">
+    
+    <!-- View 1: Commodity Price Converter Tool -->
+    <section id="tool-converter" class="tool-view active">
+      <div class="card">
+        <h1 class="card-title">Commodity Price Converter</h1>
+        <p class="card-subtitle">Convert weight units, currency exchange rates, and calculate total commodity values seamlessly.</p>
+
+        <form id="converter-form" class="form-grid">
+          
+          <!-- Source Quantity & Unit -->
+          <div class="form-group">
+            <label for="input-amount">Quantity / Weight</label>
+            <input type="number" id="input-amount" step="any" min="0" placeholder="e.g. 100" required>
+          </div>
+
+          <div class="form-group">
+            <label for="select-source-unit">From Unit</label>
+            <select id="select-source-unit" class="select-input"></select>
+          </div>
+
+          <!-- Price & Target Unit -->
+          <div class="form-group">
+            <label for="input-price">Price Per Unit (Base Currency)</label>
+            <input type="number" id="input-price" step="any" min="0" placeholder="e.g. 50.00" required>
+          </div>
+
+          <div class="form-group">
+            <label for="select-target-unit">To Target Unit</label>
+            <select id="select-target-unit" class="select-input"></select>
+          </div>
+
+          <!-- Exchange Rate Mode Selection -->
+          <div class="form-group full-width">
+            <label>Exchange Rate Mode</label>
+            <div class="pill-toggle-group">
+              <button type="button" class="pill-btn active" data-mode="manual">Manual Rate</button>
+              <button type="button" class="pill-btn" data-mode="statebank">State Bank (Historical)</button>
+              <button type="button" class="pill-btn" data-mode="live">Live Market (Coming Soon)</button>
+            </div>
+          </div>
+
+          <!-- Mode Options Container -->
+          <div id="rate-mode-inputs" class="form-group full-width">
+            <div id="manual-rate-box">
+              <label for="input-exchange-rate">Exchange Rate (1 Base = X Target)</label>
+              <input type="number" id="input-exchange-rate" step="any" min="0" value="1.0">
+            </div>
+
+            <div id="statebank-rate-box" class="hidden">
+              <label for="input-statebank-date">Select Historical Rate Date</label>
+              <input type="date" id="input-statebank-date">
+              <small class="hint-text">Official bank rates repository integration coming soon.</small>
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <div class="form-group full-width">
+            <button type="submit" class="btn-primary">Calculate Conversion</button>
+          </div>
+
+        </form>
       </div>
 
-      <!-- Modular Tool Navigation -->
-      <nav class="app-nav" aria-label="Tool Navigation">
-        <button class="nav-tab active" data-tool="commodity-converter">Commodity Converter</button>
-        <button class="nav-tab" data-tool="hs-code">HS Code Lookup</button>
-        <button class="nav-tab" data-tool="moisture">Moisture Calculator</button>
-        <button class="nav-tab" data-tool="container">Container Estimator</button>
-        <button class="nav-tab" data-tool="incoterms">Incoterms Guide</button>
-      </nav>
+      <!-- Calculation Output & Breakdown Display -->
+      <div id="results-card" class="card results-card hidden">
+        <div class="results-header">
+          <h2>Conversion Results</h2>
+          <button id="btn-copy-results" class="pill-btn pill-btn-secondary">Copy Results</button>
+        </div>
 
-      <!-- Install App Button (Shown automatically when installable) -->
-      <button id="install-app-btn" class="nav-tab" style="display: inline-block; background: #0480E4; color: white; font-weight: bold; margin-left: auto;">📲 Install App</button>
-    </header>
+        <div class="result-hero">
+          <span class="result-label">Target Unit Price</span>
+          <span id="output-target-price" class="result-value">0.00</span>
+        </div>
 
-  <!-- Main Active Content View Area -->
-  <main class="app-main" id="main-content">
-    <!-- Active tool module will render dynamically here -->
+        <div class="breakdown-container">
+          <h3>Calculation Breakdown</h3>
+          <ol id="breakdown-list" class="breakdown-list"></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- View 2: 12 Tools Hub View -->
+    <section id="tool-hub" class="tool-view hidden">
+      <div class="hub-header">
+        <h1>Trade Utilities Suite</h1>
+        <p>12 professional tools built for trade execution, logistics, and commodity valuation.</p>
+      </div>
+
+      <div class="hub-grid">
+        <div class="tool-card active-card" data-open="converter">
+          <span class="badge badge-active">Active</span>
+          <h3>1. Commodity Price Converter</h3>
+          <p>Convert weight, currency, and unit prices dynamically with full calculation breakdowns.</p>
+        </div>
+
+        <div class="tool-card disabled-card">
+          <span class="badge">Coming Soon</span>
+          <h3>2. HS Code & Tariff Calculator</h3>
+          <p>Lookup global HS codes and calculate import tariffs across jurisdictions.</p>
+        </div>
+
+        <div class="tool-card disabled-card">
+          <span class="badge">Coming Soon</span>
+          <h3>3. Grain Moisture & Weight Loss</h3>
+          <p>Adjust weight calculations according to moisture shrink scales and contract parameters.</p>
+        </div>
+
+        <div class="tool-card disabled-card">
+          <span class="badge">Coming Soon</span>
+          <h3>4. Container Load & CBM Estimator</h3>
+          <p>Calculate volume utilization for 20ft, 40ft, and High Cube shipping containers.</p>
+        </div>
+
+        <div class="tool-card disabled-card">
+          <span class="badge">Coming Soon</span>
+          <h3>5. Incoterms Risk & Cost Matrix</h3>
+          <p>Interactive operational cost allocation based on ICC Incoterms 2020 rules.</p>
+        </div>
+
+        <div class="tool-card disabled-card">
+          <span class="badge">Coming Soon</span>
+          <h3>6. Letter of Credit (L/C) Checklist</h3>
+          <p>Validate documentation criteria and compute bank negotiation fees.</p>
+        </div>
+
+        <div class="tool-card disabled-card">
+          <span class="badge">Coming Soon</span>
+          <h3>7. Freight & Shipping Estimator</h3>
+          <p>Estimate ocean and air freight rates alongside local port charges.</p>
+        </div>
+
+        <div class="tool-card disabled-card">
+          <span class="badge">Coming Soon</span>
+          <h3>8. Currency Volatility & Hedging</h3>
+          <p>Calculate exposure risks and forward exchange cover margins.</p>
+        </div>
+
+        <div class="tool-card disabled-card">
+          <span class="badge">Coming Soon</span>
+          <h3>9. Import Duty & Local Tax Estimator</h3>
+          <p>Estimate VAT, custom duties, and port taxes for international shipments.</p>
+        </div>
+
+        <div class="tool-card disabled-card">
+          <span class="badge">Coming Soon</span>
+          <h3>10. Trade Margin & Markup Analyzer</h3>
+          <p>Calculate gross margins, net profit margins, and landed cost markups.</p>
+        </div>
+
+        <div class="tool-card disabled-card">
+          <span class="badge">Coming Soon</span>
+          <h3>11. Packaging & Tare Weight Deductor</h3>
+          <p>Compute net weight adjustments for bag, bag-in-box, and container tare weights.</p>
+        </div>
+
+        <div class="tool-card disabled-card">
+          <span class="badge">Coming Soon</span>
+          <h3>12. ISO 2859 Inspection Sampling Size</h3>
+          <p>Determine random sample sizes and acceptance quality limits (AQL) for cargo inspection.</p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <script type="module" src="src/ui/navigation.js"></script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('Service Worker Registered!', reg))
-        .catch(err => console.error('Service Worker Registration Failed:', err));
-    });
-  }
-</script>
+  <script type="module" src="./src/app.js"></script>
 </body>
 </html>
