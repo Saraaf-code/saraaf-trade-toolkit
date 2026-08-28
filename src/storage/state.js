@@ -1,47 +1,44 @@
 /**
- * Saraaf Trade Toolkit - Application State & LocalStorage Manager
- * Automatically persists user input values across browser sessions.
+ * Saraaf Trade Toolkit - Storage Service
+ * Manages local persistence for user inputs, selected units, and exchange rates.
  */
 
-const STORAGE_KEY = 'saraaf_trade_toolkit_state';
+const STORAGE_KEY = "saraaf_trade_toolkit_state";
 
-// Default state values if no saved data exists
 const DEFAULT_STATE = {
-  inputPrice: 1000,
-  sourceUnit: 'maund',
-  targetUnit: 'kg',
-  exchangeRateMode: 'manual', // 'manual', 'statebank', 'live'
-  exchangeRate: 1.0,
-  selectedDate: new Date().toISOString().split('T')[0] // Default to today (YYYY-MM-DD)
+  lastSourceUnit: "kg",
+  lastTargetUnit: "mt",
+  lastPricePerUnit: "",
+  lastAmount: "",
+  lastExchangeRate: "1.0",
+  exchangeRateMode: "manual",
+  selectedStateBankDate: new Date().toISOString().split("T")[0]
 };
 
 /**
- * Loads saved state from LocalStorage or returns defaults if unavailable.
- * @returns {Object} Application state object
+ * Retrieves saved application state from LocalStorage.
+ * @returns {Object} Application state object.
  */
-export function loadSavedState() {
+export function loadState() {
   try {
-    const savedData = localStorage.getItem(STORAGE_KEY);
-    if (!savedData) return { ...DEFAULT_STATE };
-    
-    const parsed = JSON.parse(savedData);
-    return { ...DEFAULT_STATE, ...parsed };
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? { ...DEFAULT_STATE, ...JSON.parse(data) } : DEFAULT_STATE;
   } catch (error) {
-    console.warn('Failed to load state from LocalStorage, returning defaults:', error);
-    return { ...DEFAULT_STATE };
+    console.warn("Unable to access localStorage, returning default state.", error);
+    return DEFAULT_STATE;
   }
 }
 
 /**
- * Saves updated state object to LocalStorage.
- * @param {Object} stateObj - Complete or partial state updates
+ * Saves current application state to LocalStorage.
+ * @param {Object} newState - Partial or full state object to persist.
  */
-export function saveState(stateObj) {
+export function saveState(newState) {
   try {
-    const currentState = loadSavedState();
-    const updatedState = { ...currentState, ...stateObj };
+    const currentState = loadState();
+    const updatedState = { ...currentState, ...newState };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedState));
   } catch (error) {
-    console.error('Failed to save state to LocalStorage:', error);
+    console.warn("Unable to save state to localStorage.", error);
   }
 }
