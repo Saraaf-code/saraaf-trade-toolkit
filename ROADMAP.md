@@ -35,3 +35,29 @@ Design calculators so each can deploy as a hyper-focused, standalone PWA alongsi
 
 ### 2. Live Market Integration
 - Integration of live forex exchange rates and bank historical rate tables into the Commodity Price Converter.
+
+
+## Progress & Completed Features
+
+- [x] **1. Commodity Price Converter**
+  - Multi-unit weight and currency conversion logic.
+  - Front & center settlement display with step-by-step mathematical breakdown.
+  - Fixed clipboard button label formatting ("Copy Results").
+- [x] **2. Moisture & Dry Mass Calculator**
+  - Commercial dry mass fiber and penalty deduction formulas.
+  - Rehydration shrink/variance calculations.
+- [x] **3. Container CBM & Load Estimator**
+  - Volume utilization calculations for 20ft, 40ft, and 40ft HC containers.
+  - Dynamic carton limits and max payload warnings.
+- [x] **4. Incoterms® 2020 Risk & Cost Matrix**
+  - Full operational cost allocations across all 11 Incoterms.
+  - Critical risk transfer visualizer and transport mode badges.
+
+---
+
+## Next Steps / Upcoming Queue
+
+- [ ] **HS Code & Tariff Calculator** (Interactive lookup & regional tariff estimation)
+- [ ] **Letter of Credit (L/C) Checklist** (Document validation criteria)
+- [ ] **State Bank / Historical Exchange Rates** (API or static dataset integration)
+- [ ] **Live Market Exchange Rates**
