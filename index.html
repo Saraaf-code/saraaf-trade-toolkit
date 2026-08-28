@@ -11,15 +11,7 @@
   <link rel="stylesheet" href="./assets/css/variables.css">
   <link rel="stylesheet" href="./assets/css/main.css">
 </head>
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then(reg => console.log('Service Worker registered successfully:', reg.scope))
-        .catch(err => console.log('Service Worker registration failed:', err));
-    });
-  }
-</script>
+
 <body>
   <!-- Persistent Header Bar -->
   <header class="app-header">
@@ -522,5 +514,14 @@
       setTimeout(() => btn.textContent = 'Copy Results', 2000);
     }
   </script>
+    <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('Service Worker registered successfully:', reg.scope))
+        .catch(err => console.log('Service Worker registration failed:', err));
+    });
+  }
+</script>
 </body>
 </html>
