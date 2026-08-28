@@ -50,8 +50,8 @@
           </div>
           <div class="tool-card active-card" onclick="switchView('moisture')">
             <span class="badge badge-active">Active</span>
-            <h3>2. Grain & Commodity Moisture Calculator</h3>
-            <p>Calculate weight adjustments, target moisture, and shrink allowances for bulk trade.</p>
+            <h3>2. Commodity Moisture & Dry Mass Calculator</h3>
+            <p>Calculate dry mass fiber weight, contract moisture penalties, and grain shrink loss.</p>
           </div>
           <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>3. HS Code & Tariff Calculator</h3><p>Lookup global HS codes and calculate import tariffs across jurisdictions.</p></div>
           <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>4. Container Load & CBM Estimator</h3><p>Calculate volume utilization for shipping containers.</p></div>
@@ -159,17 +159,25 @@
       </div>
     </section>
 
-    <!-- View 3: Grain & Commodity Moisture Calculator -->
+    <!-- View 3: Commodity Moisture & Dry Mass Calculator -->
     <section id="tool-moisture" class="tool-view hidden">
       <div class="card">
-        <h1 class="card-title">Grain & Commodity Moisture Calculator</h1>
-        <p class="card-subtitle">Calculate net weight adjustments and shrink loss percentage based on moisture changes.</p>
+        <h1 class="card-title">Commodity Moisture & Dry Mass Calculator</h1>
+        <p class="card-subtitle">Calculate net dry weight, contract moisture penalties, or dry matter shrink allowances.</p>
 
         <form id="moisture-form" class="form-grid" onsubmit="event.preventDefault(); runMoistureCalc();">
           
+          <div class="form-group full-width">
+            <label for="select-moisture-mode">Calculation Mode / Industry Model</label>
+            <select id="select-moisture-mode" class="select-input" onchange="runMoistureCalc()">
+              <option value="drymass" selected>Dry Mass & Penalty Deduction (Cotton & General Commodities)</option>
+              <option value="rehydrate">Commercial Dry Matter & Shrink (Grains / Processing)</option>
+            </select>
+          </div>
+
           <div class="form-group">
-            <label for="moisture-initial-weight">Initial Gross Weight</label>
-            <input type="number" id="moisture-initial-weight" step="any" min="0" placeholder="e.g. 1000" oninput="runMoistureCalc()" required>
+            <label for="moisture-initial-weight">Delivered Gross Weight</label>
+            <input type="number" id="moisture-initial-weight" step="any" min="0" placeholder="e.g. 15465" oninput="runMoistureCalc()" required>
           </div>
 
           <div class="form-group">
@@ -183,17 +191,17 @@
           </div>
 
           <div class="form-group">
-            <label for="moisture-initial-pct">Initial Moisture Level (%)</label>
-            <input type="number" id="moisture-initial-pct" step="0.1" min="0" max="100" placeholder="e.g. 18.0" oninput="runMoistureCalc()" required>
+            <label for="moisture-initial-pct">Delivered / Actual Moisture (%)</label>
+            <input type="number" id="moisture-initial-pct" step="0.1" min="0" max="100" placeholder="e.g. 7.0" oninput="runMoistureCalc()" required>
           </div>
 
           <div class="form-group">
-            <label for="moisture-target-pct">Target / Contract Moisture (%)</label>
-            <input type="number" id="moisture-target-pct" step="0.1" min="0" max="100" placeholder="e.g. 14.0" oninput="runMoistureCalc()" required>
+            <label for="moisture-target-pct">Contract Limit / Target Moisture (%)</label>
+            <input type="number" id="moisture-target-pct" step="0.1" min="0" max="100" placeholder="e.g. 5.0" oninput="runMoistureCalc()" required>
           </div>
 
           <div class="form-group full-width">
-            <button type="submit" class="btn-primary">Calculate Moisture Shrink</button>
+            <button type="submit" class="btn-primary">Calculate Moisture Breakdown</button>
           </div>
 
         </form>
@@ -205,12 +213,12 @@
         </div>
 
         <div class="result-hero">
-          <span class="result-label">Adjusted Net Weight</span>
+          <span id="output-moisture-label" class="result-label">Net Payable Weight</span>
           <span id="output-moisture-weight" class="result-value">0.00</span>
         </div>
 
         <div class="breakdown-container">
-          <h3>Shrinkage & Dry Matter Formula</h3>
+          <h3 id="output-moisture-breakdown-title">Commercial Formula & Deductions</h3>
           <ol id="moisture-breakdown-list" class="breakdown-list"></ol>
         </div>
       </div>
@@ -286,7 +294,7 @@
       seer: 0.9331
     };
 
-    // Commodity Price Converter Calculation & Explicit Formula Breakdown
+    // Price Converter Calculation
     function runCalculation() {
       const amount = parseFloat(document.getElementById('input-amount').value);
       const price = parseFloat(document.getElementById('input-price').value);
@@ -302,7 +310,6 @@
       const srcRatio = unitRatiosInKg[srcUnit];
       const tgtRatio = unitRatiosInKg[tgtUnit];
 
-      // Conversion steps
       const priceInTargetCurr = price * exchangeRate;
       const pricePerKgInTargetCurr = priceInTargetCurr / srcRatio;
       const pricePerTargetUnit = pricePerKgInTargetCurr * tgtRatio;
@@ -322,35 +329,62 @@
       document.getElementById('results-card').classList.remove('hidden');
     }
 
-    // Moisture Calculator Logic
+    // Moisture & Dry Mass Calculator Logic
     function runMoistureCalc() {
+      const mode = document.getElementById('select-moisture-mode').value;
       const weight = parseFloat(document.getElementById('moisture-initial-weight').value);
       const unit = document.getElementById('moisture-weight-unit').value;
-      const initialMoisture = parseFloat(document.getElementById('moisture-initial-pct').value);
-      const targetMoisture = parseFloat(document.getElementById('moisture-target-pct').value);
+      const actualMoisture = parseFloat(document.getElementById('moisture-initial-pct').value);
+      const contractMoisture = parseFloat(document.getElementById('moisture-target-pct').value);
 
-      if (isNaN(weight) || isNaN(initialMoisture) || isNaN(targetMoisture) || weight <= 0) {
+      if (isNaN(weight) || isNaN(actualMoisture) || isNaN(contractMoisture) || weight <= 0) {
         document.getElementById('moisture-results-card').classList.add('hidden');
         return;
       }
 
-      const dryMatterPct = (100 - initialMoisture) / 100;
-      const targetDryMatterPct = (100 - targetMoisture) / 100;
-      
-      // Commercial Dry Matter Retention formula: Adjusted Weight = Initial Weight * (100 - Initial %) / (100 - Target %)
-      const finalWeight = weight * (dryMatterPct / targetDryMatterPct);
-      const shrinkWeight = weight - finalWeight;
-      const shrinkPct = (shrinkWeight / weight) * 100;
-
-      document.getElementById('output-moisture-weight').textContent = 
-        finalWeight.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + unit;
-
       const breakdown = document.getElementById('moisture-breakdown-list');
-      breakdown.innerHTML = `
-        <li><strong>Dry Matter Ratio:</strong> (100% - ${initialMoisture}%) ÷ (100% - ${targetMoisture}%) = ${(dryMatterPct / targetDryMatterPct).toFixed(6)}</li>
-        <li><strong>Adjusted Weight Calculation:</strong> ${weight} ${unit} × ${(dryMatterPct / targetDryMatterPct).toFixed(6)} = <strong>${finalWeight.toFixed(2)} ${unit}</strong></li>
-        <li><strong>Weight Loss / Moisture Shrink:</strong> ${weight} ${unit} - ${finalWeight.toFixed(2)} ${unit} = <strong>${shrinkWeight.toFixed(2)} ${unit} (${shrinkPct.toFixed(2)}% loss)</strong></li>
-      `;
+
+      if (mode === 'drymass') {
+        // Cotton / Dry Mass Penalty Model
+        const dryMass = weight * ((100 - actualMoisture) / 100);
+        
+        let netPayableWeight = weight;
+        let penaltyDeduction = 0;
+        
+        if (actualMoisture > contractMoisture) {
+          netPayableWeight = dryMass / ((100 - contractMoisture) / 100);
+          penaltyDeduction = weight - netPayableWeight;
+        }
+
+        document.getElementById('output-moisture-label').textContent = 'Net Payable Weight';
+        document.getElementById('output-moisture-weight').textContent = 
+          netPayableWeight.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + unit;
+
+        breakdown.innerHTML = `
+          <li><strong>Absolute Dry Mass (0% Moisture):</strong> ${weight} ${unit} × (100% - ${actualMoisture}%) = <strong>${dryMass.toFixed(2)} ${unit}</strong></li>
+          <li><strong>Contract Limit Allowed Margin:</strong> ${contractMoisture}% max moisture threshold</li>
+          <li><strong>Excess Moisture Deduction:</strong> ${penaltyDeduction > 0 ? penaltyDeduction.toFixed(2) + ' ' + unit + ' (' + ((penaltyDeduction/weight)*100).toFixed(2) + '% penalty)' : '0.00 ' + unit + ' (Within allowed limit)'}</li>
+          <li><strong>Final Payable Lot Weight:</strong> <strong>${netPayableWeight.toFixed(2)} ${unit}</strong></li>
+        `;
+
+      } else {
+        // Commercial Rehydration / Grain Drying Model
+        const dryMatterPct = (100 - actualMoisture) / 100;
+        const targetDryMatterPct = (100 - contractMoisture) / 100;
+        
+        const adjustedWeight = weight * (dryMatterPct / targetDryMatterPct);
+        const weightDifference = adjustedWeight - weight;
+
+        document.getElementById('output-moisture-label').textContent = 'Adjusted Commercial Weight';
+        document.getElementById('output-moisture-weight').textContent = 
+          adjustedWeight.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + unit;
+
+        breakdown.innerHTML = `
+          <li><strong>Dry Matter Ratio:</strong> (100% - ${actualMoisture}%) ÷ (100% - ${contractMoisture}%) = ${(dryMatterPct / targetDryMatterPct).toFixed(6)}</li>
+          <li><strong>Adjusted Lot Weight:</strong> ${weight} ${unit} × ${(dryMatterPct / targetDryMatterPct).toFixed(6)} = <strong>${adjustedWeight.toFixed(2)} ${unit}</strong></li>
+          <li><strong>Commercial Shrink / Variance:</strong> ${weightDifference >= 0 ? '+' + weightDifference.toFixed(2) : weightDifference.toFixed(2)} ${unit}</li>
+        `;
+      }
 
       document.getElementById('moisture-results-card').classList.remove('hidden');
     }
