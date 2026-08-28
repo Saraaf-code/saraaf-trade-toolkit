@@ -147,8 +147,7 @@
       <div id="results-card" class="card results-card hidden">
         <div class="results-header">
           <h2>Conversion Results</h2>
-         <!-- Change this line in index.html -->
-        <button id="btn-copy-results" class="pill-btn pill-btn-secondary" type="button" onclick="copyResults()">Copy Results</button>
+          <button id="btn-copy-results" class="pill-btn pill-btn-secondary" type="button" onclick="copyResults()">Copy Results</button>
         </div>
 
         <!-- Front & Center Total Settlement Layout -->
@@ -517,7 +516,7 @@
       document.getElementById('cbm-results-card').classList.remove('hidden');
     }
 
-    // Robust Copy Settlement Summary Logic
+    // Copy Results Logic
     function copyResults() {
       const outputVal = document.getElementById('output-target-price').textContent;
       const totalVal = document.getElementById('output-total-value').textContent;
@@ -527,8 +526,8 @@
 
       if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(summaryText).then(() => {
-          btn.textContent = 'Copied Summary!';
-          setTimeout(() => btn.textContent = 'Copy Settlement Summary', 2000);
+          btn.textContent = 'Copied!';
+          setTimeout(() => btn.textContent = 'Copy Results', 2000);
         }).catch(() => fallbackCopyText(summaryText, btn));
       } else {
         fallbackCopyText(summaryText, btn);
@@ -545,8 +544,8 @@
       textArea.select();
       try {
         document.execCommand('copy');
-        btn.textContent = 'Copied Summary!';
-        setTimeout(() => btn.textContent = 'Copy Settlement Summary', 2000);
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy Results', 2000);
       } catch (err) {
         console.error('Fallback copy failed', err);
       }
