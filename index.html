@@ -80,12 +80,12 @@
         <form id="converter-form" class="form-grid" onsubmit="event.preventDefault(); runCalculation();">
           
           <div class="form-group">
-            <label for="input-amount">Quantity / Weight</label>
-            <input type="number" id="input-amount" step="any" min="0" placeholder="e.g. 100" oninput="runCalculation()" required>
+            <label for="input-amount">Offer Quantity / Volume</label>
+            <input type="number" id="input-amount" step="any" min="0" placeholder="e.g. 50000" oninput="runCalculation()" required>
           </div>
 
           <div class="form-group">
-            <label for="select-source-unit">From Unit</label>
+            <label for="select-source-unit">Offer Unit</label>
             <select id="select-source-unit" class="select-input" onchange="runCalculation()">
               <option value="kg">Kilograms (kg)</option>
               <option value="g">Grams (g)</option>
@@ -99,11 +99,11 @@
 
           <div class="form-group">
             <label for="input-price">Price Per Unit (Base Currency)</label>
-            <input type="number" id="input-price" step="any" min="0" placeholder="e.g. 500" oninput="runCalculation()" required>
+            <input type="number" id="input-price" step="any" min="0" placeholder="e.g. 52.3" oninput="runCalculation()" required>
           </div>
 
           <div class="form-group">
-            <label for="select-target-unit">To Target Unit</label>
+            <label for="select-target-unit">Convert To Target Unit</label>
             <select id="select-target-unit" class="select-input" onchange="runCalculation()">
               <option value="kg" selected>Kilograms (kg)</option>
               <option value="g">Grams (g)</option>
@@ -126,8 +126,8 @@
 
           <div id="rate-mode-inputs" class="form-group full-width">
             <div id="manual-rate-box">
-              <label for="input-exchange-rate">Exchange Rate (1 Base = X Target)</label>
-              <input type="number" id="input-exchange-rate" step="any" min="0" value="1.0" oninput="runCalculation()">
+              <label for="input-exchange-rate">Exchange Rate (1 Base Currency = X Target Currency)</label>
+              <input type="number" id="input-exchange-rate" step="any" min="0" value="1.0" placeholder="e.g. 7.23 for USD to CNY" oninput="runCalculation()">
             </div>
 
             <div id="statebank-rate-box" class="hidden">
@@ -138,7 +138,7 @@
           </div>
 
           <div class="form-group full-width">
-            <button type="submit" class="btn-primary">Calculate Conversion</button>
+            <button type="submit" class="btn-primary">Calculate Settlement Valuation</button>
           </div>
 
         </form>
@@ -147,15 +147,21 @@
       <div id="results-card" class="card results-card hidden">
         <div class="results-header">
           <h2>Conversion Results</h2>
-          <button id="btn-copy-results" class="pill-btn pill-btn-secondary" type="button" onclick="copyResults()">Copy Results</button>
+          <button id="btn-copy-results" class="pill-btn pill-btn-secondary" type="button" onclick="copyResults()">Copy Settlement Summary</button>
         </div>
 
-        <div class="result-hero">
-          <span class="result-label">Target Unit Price</span>
-          <span id="output-target-price" class="result-value">0.00</span>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <div class="result-hero" style="flex: 1; min-width: 220px;">
+            <span class="result-label">Target Unit Price</span>
+            <span id="output-target-price" class="result-value">0.00</span>
+          </div>
+          <div class="result-hero" style="flex: 1; min-width: 220px;">
+            <span class="result-label">Total Settlement Value</span>
+            <span id="output-total-value" class="result-value">0.00</span>
+          </div>
         </div>
 
-        <div class="breakdown-container">
+        <div class="breakdown-container" style="margin-top: 1.5rem;">
           <h3>Mathematical Breakdown & Steps</h3>
           <ol id="breakdown-list" class="breakdown-list"></ol>
         </div>
@@ -371,20 +377,31 @@
       const srcRatio = unitRatiosInKg[srcUnit];
       const tgtRatio = unitRatiosInKg[tgtUnit];
 
+      // Conversion Logic
       const priceInTargetCurr = price * exchangeRate;
       const pricePerKgInTargetCurr = priceInTargetCurr / srcRatio;
       const pricePerTargetUnit = pricePerKgInTargetCurr * tgtRatio;
-      const totalValue = priceInTargetCurr * amount;
+      
+      // Total Settlement Valuation for full order volume
+      const totalOrderValueTargetCurrency = priceInTargetCurr * amount;
+      const totalWeightInKg = amount * srcRatio;
+      const totalWeightInTargetUnit = totalWeightInKg / tgtRatio;
+
+      // Smart precision for unit prices versus bulk settlement amounts
+      const unitDecimals = pricePerTargetUnit < 0.1 ? 4 : 2;
 
       document.getElementById('output-target-price').textContent = 
-        pricePerTargetUnit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' / ' + tgtUnit.toUpperCase();
+        pricePerTargetUnit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: unitDecimals }) + ' / ' + tgtUnit.toUpperCase();
+
+      document.getElementById('output-total-value').textContent = 
+        totalOrderValueTargetCurrency.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
       const breakdown = document.getElementById('breakdown-list');
       breakdown.innerHTML = `
-        <li><strong>Step 1 (Currency Exchange):</strong> Base Price (${price}) × Rate (${exchangeRate}) = ${priceInTargetCurr.toFixed(4)} Target Currency per ${srcUnit.toUpperCase()}</li>
-        <li><strong>Step 2 (Normalize to Base Kg):</strong> ${priceInTargetCurr.toFixed(4)} ÷ ${srcRatio} kg (${srcUnit.toUpperCase()} weight ratio) = ${pricePerKgInTargetCurr.toFixed(4)} Target Currency per KG</li>
-        <li><strong>Step 3 (Target Unit Conversion):</strong> ${pricePerKgInTargetCurr.toFixed(4)} × ${tgtRatio} kg (${tgtUnit.toUpperCase()} weight ratio) = <strong>${pricePerTargetUnit.toFixed(4)} per ${tgtUnit.toUpperCase()}</strong></li>
-        <li><strong>Step 4 (Total Lot Value):</strong> ${amount} ${srcUnit.toUpperCase()} × ${priceInTargetCurr.toFixed(2)} = <strong>${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Total Target Value</strong></li>
+        <li><strong>Step 1 (Currency & Unit Base Rate):</strong> ${price} Base Currency × Exchange Rate (${exchangeRate}) = ${priceInTargetCurr.toFixed(4)} Target Currency per ${srcUnit.toUpperCase()}</li>
+        <li><strong>Step 2 (Converted Target Unit Price):</strong> ${priceInTargetCurr.toFixed(4)} per ${srcUnit.toUpperCase()} = <strong>${pricePerTargetUnit.toFixed(4)} Target Currency per ${tgtUnit.toUpperCase()}</strong></li>
+        <li><strong>Step 3 (Converted Total Volume):</strong> ${amount.toLocaleString()} ${srcUnit.toUpperCase()} = <strong>${totalWeightInTargetUnit.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${tgtUnit.toUpperCase()}</strong></li>
+        <li><strong>Step 4 (Total Settlement Value):</strong> ${amount.toLocaleString()} ${srcUnit.toUpperCase()} × ${priceInTargetCurr.toFixed(4)} = <strong>${totalOrderValueTargetCurrency.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Total Target Currency</strong></li>
       `;
 
       document.getElementById('results-card').classList.remove('hidden');
@@ -504,13 +521,14 @@
       document.getElementById('cbm-results-card').classList.remove('hidden');
     }
 
-    // Copy Results
+    // Copy Settlement Summary
     function copyResults() {
       const outputVal = document.getElementById('output-target-price').textContent;
-      navigator.clipboard.writeText('Saraaf Price Result: ' + outputVal);
+      const totalVal = document.getElementById('output-total-value').textContent;
+      navigator.clipboard.writeText('Saraaf Trade Summary | Target Unit Price: ' + outputVal + ' | Total Settlement Value: ' + totalVal);
       const btn = document.getElementById('btn-copy-results');
-      btn.textContent = 'Copied!';
-      setTimeout(() => btn.textContent = 'Copy Results', 2000);
+      btn.textContent = 'Copied Summary!';
+      setTimeout(() => btn.textContent = 'Copy Settlement Summary', 2000);
     }
   </script>
 
