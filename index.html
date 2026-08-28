@@ -22,9 +22,13 @@
       </div>
     </div>
 
-    <!-- Tool Navigation Bar -->
+    <!-- Tool Navigation Tabs -->
     <nav class="header-nav" aria-label="Tool selection">
       <button class="nav-tab active" data-tool="converter">Commodity Converter</button>
+      <button class="nav-tab" data-tool="hscode">HS Code Lookup</button>
+      <button class="nav-tab" data-tool="moisture">Moisture Calculator</button>
+      <button class="nav-tab" data-tool="container">Container Estimator</button>
+      <button class="nav-tab" data-tool="incoterms">Incoterms Guide</button>
       <button class="nav-tab" data-tool="hub">All 12 Tools</button>
     </nav>
   </header>
@@ -33,7 +37,7 @@
   <main class="app-main">
     
     <!-- View 1: Commodity Price Converter Tool -->
-    <section id="tool-converter" class="tool-view active">
+    <section id="tool-converter" class="tool-view">
       <div class="card">
         <h1 class="card-title">Commodity Price Converter</h1>
         <p class="card-subtitle">Convert weight units, currency exchange rates, and calculate total commodity values seamlessly.</p>
@@ -113,84 +117,125 @@
       </div>
     </section>
 
-    <!-- View 2: 12 Tools Hub View -->
-    <section id="tool-hub" class="tool-view hidden">
-      <div class="hub-header">
-        <h1>Trade Utilities Suite</h1>
-        <p>12 professional tools built for trade execution, logistics, and commodity valuation.</p>
+    <!-- Placeholder Views for Header Tabs -->
+    <section id="tool-hscode" class="tool-view hidden">
+      <div class="card">
+        <h1 class="card-title">HS Code & Tariff Calculator</h1>
+        <p class="card-subtitle">Global commodity classification and tariff estimation tool.</p>
+        <div class="result-hero">
+          <span class="result-value">Coming Soon</span>
+        </div>
       </div>
+    </section>
 
-      <div class="hub-grid">
-        <div class="tool-card active-card" data-open="converter">
-          <span class="badge badge-active">Active</span>
-          <h3>1. Commodity Price Converter</h3>
-          <p>Convert weight, currency, and unit prices dynamically with full calculation breakdowns.</p>
+    <section id="tool-moisture" class="tool-view hidden">
+      <div class="card">
+        <h1 class="card-title">Grain & Commodity Moisture Calculator</h1>
+        <p class="card-subtitle">Calculate weight adjustments and shrink allowances based on moisture levels.</p>
+        <div class="result-hero">
+          <span class="result-value">Coming Soon</span>
         </div>
+      </div>
+    </section>
 
-        <div class="tool-card disabled-card">
-          <span class="badge">Coming Soon</span>
-          <h3>2. HS Code & Tariff Calculator</h3>
-          <p>Lookup global HS codes and calculate import tariffs across jurisdictions.</p>
+    <section id="tool-container" class="tool-view hidden">
+      <div class="card">
+        <h1 class="card-title">Container CBM & Load Estimator</h1>
+        <p class="card-subtitle">Estimate volumetric capacity for 20ft, 40ft, and High Cube containers.</p>
+        <div class="result-hero">
+          <span class="result-value">Coming Soon</span>
         </div>
+      </div>
+    </section>
 
-        <div class="tool-card disabled-card">
-          <span class="badge">Coming Soon</span>
-          <h3>3. Grain Moisture & Weight Loss</h3>
-          <p>Adjust weight calculations according to moisture shrink scales and contract parameters.</p>
+    <section id="tool-incoterms" class="tool-view hidden">
+      <div class="card">
+        <h1 class="card-title">Incoterms 2020 Guide & Matrix</h1>
+        <p class="card-subtitle">Buyer/Seller cost and risk allocation guide for international shipping.</p>
+        <div class="result-hero">
+          <span class="result-value">Coming Soon</span>
         </div>
+      </div>
+    </section>
 
-        <div class="tool-card disabled-card">
-          <span class="badge">Coming Soon</span>
-          <h3>4. Container Load & CBM Estimator</h3>
-          <p>Calculate volume utilization for 20ft, 40ft, and High Cube shipping containers.</p>
-        </div>
+    <!-- View: 12 Tools Hub Grid -->
+    <section id="tool-hub" class="tool-view hidden">
+      <div class="card">
+        <h1 class="card-title">Trade Utilities Suite</h1>
+        <p class="card-subtitle">12 professional tools built for trade execution, logistics, and commodity valuation.</p>
 
-        <div class="tool-card disabled-card">
-          <span class="badge">Coming Soon</span>
-          <h3>5. Incoterms Risk & Cost Matrix</h3>
-          <p>Interactive operational cost allocation based on ICC Incoterms 2020 rules.</p>
-        </div>
+        <div class="hub-grid">
+          <div class="tool-card active-card" data-open="converter">
+            <span class="badge badge-active">Active</span>
+            <h3>1. Commodity Price Converter</h3>
+            <p>Convert weight, currency, and unit prices dynamically with full calculation breakdowns.</p>
+          </div>
 
-        <div class="tool-card disabled-card">
-          <span class="badge">Coming Soon</span>
-          <h3>6. Letter of Credit (L/C) Checklist</h3>
-          <p>Validate documentation criteria and compute bank negotiation fees.</p>
-        </div>
+          <div class="tool-card disabled-card">
+            <span class="badge">Coming Soon</span>
+            <h3>2. HS Code & Tariff Calculator</h3>
+            <p>Lookup global HS codes and calculate import tariffs across jurisdictions.</p>
+          </div>
 
-        <div class="tool-card disabled-card">
-          <span class="badge">Coming Soon</span>
-          <h3>7. Freight & Shipping Estimator</h3>
-          <p>Estimate ocean and air freight rates alongside local port charges.</p>
-        </div>
+          <div class="tool-card disabled-card">
+            <span class="badge">Coming Soon</span>
+            <h3>3. Grain Moisture & Weight Loss</h3>
+            <p>Adjust weight calculations according to moisture shrink scales and contract parameters.</p>
+          </div>
 
-        <div class="tool-card disabled-card">
-          <span class="badge">Coming Soon</span>
-          <h3>8. Currency Volatility & Hedging</h3>
-          <p>Calculate exposure risks and forward exchange cover margins.</p>
-        </div>
+          <div class="tool-card disabled-card">
+            <span class="badge">Coming Soon</span>
+            <h3>4. Container Load & CBM Estimator</h3>
+            <p>Calculate volume utilization for 20ft, 40ft, and High Cube shipping containers.</p>
+          </div>
 
-        <div class="tool-card disabled-card">
-          <span class="badge">Coming Soon</span>
-          <h3>9. Import Duty & Local Tax Estimator</h3>
-          <p>Estimate VAT, custom duties, and port taxes for international shipments.</p>
-        </div>
+          <div class="tool-card disabled-card">
+            <span class="badge">Coming Soon</span>
+            <h3>5. Incoterms Risk & Cost Matrix</h3>
+            <p>Interactive operational cost allocation based on ICC Incoterms 2020 rules.</p>
+          </div>
 
-        <div class="tool-card disabled-card">
-          <span class="badge">Coming Soon</span>
-          <h3>10. Trade Margin & Markup Analyzer</h3>
-          <p>Calculate gross margins, net profit margins, and landed cost markups.</p>
-        </div>
+          <div class="tool-card disabled-card">
+            <span class="badge">Coming Soon</span>
+            <h3>6. Letter of Credit (L/C) Checklist</h3>
+            <p>Validate documentation criteria and compute bank negotiation fees.</p>
+          </div>
 
-        <div class="tool-card disabled-card">
-          <span class="badge">Coming Soon</span>
-          <h3>11. Packaging & Tare Weight Deductor</h3>
-          <p>Compute net weight adjustments for bag, bag-in-box, and container tare weights.</p>
-        </div>
+          <div class="tool-card disabled-card">
+            <span class="badge">Coming Soon</span>
+            <h3>7. Freight & Shipping Estimator</h3>
+            <p>Estimate ocean and air freight rates alongside local port charges.</p>
+          </div>
 
-        <div class="tool-card disabled-card">
-          <span class="badge">Coming Soon</span>
-          <h3>12. ISO 2859 Inspection Sampling Size</h3>
-          <p>Determine random sample sizes and acceptance quality limits (AQL) for cargo inspection.</p>
+          <div class="tool-card disabled-card">
+            <span class="badge">Coming Soon</span>
+            <h3>8. Currency Volatility & Hedging</h3>
+            <p>Calculate exposure risks and forward exchange cover margins.</p>
+          </div>
+
+          <div class="tool-card disabled-card">
+            <span class="badge">Coming Soon</span>
+            <h3>9. Import Duty & Local Tax Estimator</h3>
+            <p>Estimate VAT, custom duties, and port taxes for international shipments.</p>
+          </div>
+
+          <div class="tool-card disabled-card">
+            <span class="badge">Coming Soon</span>
+            <h3>10. Trade Margin & Markup Analyzer</h3>
+            <p>Calculate gross margins, net profit margins, and landed cost markups.</p>
+          </div>
+
+          <div class="tool-card disabled-card">
+            <span class="badge">Coming Soon</span>
+            <h3>11. Packaging & Tare Weight Deductor</h3>
+            <p>Compute net weight adjustments for bag, bag-in-box, and container tare weights.</p>
+          </div>
+
+          <div class="tool-card disabled-card">
+            <span class="badge">Coming Soon</span>
+            <h3>12. ISO 2859 Inspection Sampling</h3>
+            <p>Determine random sample sizes and acceptance quality limits (AQL) for cargo inspection.</p>
+          </div>
         </div>
       </div>
     </section>
