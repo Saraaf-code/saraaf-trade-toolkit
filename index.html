@@ -24,12 +24,12 @@
 
     <!-- Tool Navigation Tabs -->
     <nav class="header-nav" aria-label="Tool selection">
-      <button class="nav-tab active" data-tool="converter">Price Converter</button>
-      <button class="nav-tab" data-tool="hscode">HS Code Lookup</button>
-      <button class="nav-tab" data-tool="moisture">Moisture Calculator</button>
-      <button class="nav-tab" data-tool="container">Container Estimator</button>
-      <button class="nav-tab" data-tool="incoterms">Incoterms Guide</button>
-      <button class="nav-tab" data-tool="hub">All 12 Tools</button>
+      <button class="nav-tab active" onclick="switchView('converter')">Price Converter</button>
+      <button class="nav-tab" onclick="switchView('hscode')">HS Code Lookup</button>
+      <button class="nav-tab" onclick="switchView('moisture')">Moisture Calculator</button>
+      <button class="nav-tab" onclick="switchView('container')">Container Estimator</button>
+      <button class="nav-tab" onclick="switchView('incoterms')">Incoterms Guide</button>
+      <button class="nav-tab" onclick="switchView('hub')">All Tools</button>
     </nav>
   </header>
 
@@ -42,37 +42,53 @@
         <h1 class="card-title">The Commodity Price Converter</h1>
         <p class="card-subtitle">Convert weight units, currency exchange rates, and calculate total commodity values seamlessly.</p>
 
-        <form id="converter-form" class="form-grid">
+        <form id="converter-form" class="form-grid" onsubmit="event.preventDefault(); runCalculation();">
           
           <!-- Source Quantity & Unit -->
           <div class="form-group">
             <label for="input-amount">Quantity / Weight</label>
-            <input type="number" id="input-amount" step="any" min="0" placeholder="e.g. 100" required>
+            <input type="number" id="input-amount" step="any" min="0" placeholder="e.g. 100" oninput="runCalculation()" required>
           </div>
 
           <div class="form-group">
             <label for="select-source-unit">From Unit</label>
-            <select id="select-source-unit" class="select-input"></select>
+            <select id="select-source-unit" class="select-input" onchange="runCalculation()">
+              <option value="kg">Kilograms (kg)</option>
+              <option value="g">Grams (g)</option>
+              <option value="mt" selected>Metric Tons (MT)</option>
+              <option value="lb">Pounds (lbs)</option>
+              <option value="oz">Ounces (oz)</option>
+              <option value="maund">Maund (md)</option>
+              <option value="seer">Seer</option>
+            </select>
           </div>
 
           <!-- Price & Target Unit -->
           <div class="form-group">
             <label for="input-price">Price Per Unit (Base Currency)</label>
-            <input type="number" id="input-price" step="any" min="0" placeholder="e.g. 50.00" required>
+            <input type="number" id="input-price" step="any" min="0" placeholder="e.g. 50.00" oninput="runCalculation()" required>
           </div>
 
           <div class="form-group">
             <label for="select-target-unit">To Target Unit</label>
-            <select id="select-target-unit" class="select-input"></select>
+            <select id="select-target-unit" class="select-input" onchange="runCalculation()">
+              <option value="kg">Kilograms (kg)</option>
+              <option value="g">Grams (g)</option>
+              <option value="mt">Metric Tons (MT)</option>
+              <option value="lb">Pounds (lbs)</option>
+              <option value="oz">Ounces (oz)</option>
+              <option value="maund">Maund (md)</option>
+              <option value="seer">Seer</option>
+            </select>
           </div>
 
           <!-- Exchange Rate Mode Selection -->
           <div class="form-group full-width">
             <label>Exchange Rate Mode</label>
             <div class="pill-toggle-group">
-              <button type="button" class="pill-btn active" data-mode="manual">Manual Rate</button>
-              <button type="button" class="pill-btn" data-mode="statebank">State Bank (Historical)</button>
-              <button type="button" class="pill-btn" data-mode="live">Live Market (Coming Soon)</button>
+              <button type="button" class="pill-btn active" id="btn-mode-manual" onclick="setMode('manual')">Manual Rate</button>
+              <button type="button" class="pill-btn" id="btn-mode-statebank" onclick="setMode('statebank')">State Bank (Historical)</button>
+              <button type="button" class="pill-btn" id="btn-mode-live" onclick="setMode('live')">Live Market (Coming Soon)</button>
             </div>
           </div>
 
@@ -80,13 +96,13 @@
           <div id="rate-mode-inputs" class="form-group full-width">
             <div id="manual-rate-box">
               <label for="input-exchange-rate">Exchange Rate (1 Base = X Target)</label>
-              <input type="number" id="input-exchange-rate" step="any" min="0" value="1.0">
+              <input type="number" id="input-exchange-rate" step="any" min="0" value="1.0" oninput="runCalculation()">
             </div>
 
             <div id="statebank-rate-box" class="hidden">
               <label for="input-statebank-date">Select Historical Rate Date</label>
               <input type="date" id="input-statebank-date">
-              <small style="color: var(--color-text-secondary); display: block; margin-top: 0.25rem;">Official bank rates repository integration coming soon.</small>
+              <small style="color: var(--color-text-secondary); display: block; margin-top: 0.25rem;">Official bank rates repository integration active in next update.</small>
             </div>
           </div>
 
@@ -102,7 +118,7 @@
       <div id="results-card" class="card results-card hidden">
         <div class="results-header">
           <h2>Conversion Results</h2>
-          <button id="btn-copy-results" class="pill-btn pill-btn-secondary" type="button">Copy Results</button>
+          <button id="btn-copy-results" class="pill-btn pill-btn-secondary" type="button" onclick="copyResults()">Copy Results</button>
         </div>
 
         <div class="result-hero">
@@ -150,14 +166,14 @@
       </div>
     </section>
 
-    <!-- View: 12 Tools Hub Grid -->
+    <!-- View: All Tools Hub Grid -->
     <section id="tool-hub" class="tool-view hidden">
       <div class="card">
         <h1 class="card-title">Trade Utilities Suite</h1>
-        <p class="card-subtitle">12 professional tools built for trade execution, logistics, and commodity valuation.</p>
+        <p class="card-subtitle">Professional tools built for trade execution, logistics, and commodity valuation.</p>
 
         <div class="hub-grid">
-          <div class="tool-card active-card" data-open="converter">
+          <div class="tool-card active-card" onclick="switchView('converter')">
             <span class="badge badge-active">Active</span>
             <h3>1. The Commodity Price Converter</h3>
             <p>Convert weight, currency, and unit prices dynamically with full calculation breakdowns.</p>
@@ -179,7 +195,93 @@
 
   </main>
 
-  <!-- Correct path pointing to src/ui/app.js -->
-  <script type="module" src="./src/ui/app.js"></script>
+  <script>
+    // Tab switching logic
+    function switchView(toolId) {
+      document.querySelectorAll('.nav-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes("'" + toolId + "'"));
+      });
+      document.querySelectorAll('.tool-view').forEach(view => {
+        view.classList.toggle('hidden', view.id !== 'tool-' + toolId);
+      });
+    }
+
+    // Exchange Rate Mode logic
+    function setMode(mode) {
+      document.querySelectorAll('.pill-toggle-group .pill-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById('btn-mode-' + mode);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const manualBox = document.getElementById('manual-rate-box');
+      const stateBankBox = document.getElementById('statebank-rate-box');
+
+      if (mode === 'manual') {
+        manualBox.classList.remove('hidden');
+        stateBankBox.classList.add('hidden');
+      } else if (mode === 'statebank') {
+        manualBox.classList.add('hidden');
+        stateBankBox.classList.remove('hidden');
+      } else if (mode === 'live') {
+        alert('Live Market exchange rate integration is coming in Phase 2.');
+      }
+    }
+
+    // Weight ratios in kilograms
+    const unitRatiosInKg = {
+      kg: 1,
+      g: 0.001,
+      mt: 1000,
+      lb: 0.45359237,
+      oz: 0.028349523125,
+      maund: 40,
+      seer: 0.9331
+    };
+
+    // Calculation logic
+    function runCalculation() {
+      const amount = parseFloat(document.getElementById('input-amount').value);
+      const price = parseFloat(document.getElementById('input-price').value);
+      const exchangeRate = parseFloat(document.getElementById('input-exchange-rate').value) || 1.0;
+      const srcUnit = document.getElementById('select-source-unit').value;
+      const tgtUnit = document.getElementById('select-target-unit').value;
+
+      if (isNaN(amount) || isNaN(price) || amount <= 0 || price <= 0) {
+        document.getElementById('results-card').classList.add('hidden');
+        return;
+      }
+
+      // Calculate total weight in kg then converted to target unit
+      const totalKg = amount * unitRatiosInKg[srcUnit];
+      const targetQty = totalKg / unitRatiosInKg[tgtUnit];
+      
+      // Price per target unit in converted currency
+      const pricePerTarget = (price * exchangeRate) * (unitRatiosInKg[tgtUnit] / unitRatiosInKg[srcUnit]);
+
+      document.getElementById('output-target-price').textContent = pricePerTarget.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+      const breakdown = document.getElementById('breakdown-list');
+      breakdown.innerHTML = `
+        <li>Input Quantity: ${amount} ${srcUnit.toUpperCase()}</li>
+        <li>Base Price: ${price} per ${srcUnit.toUpperCase()}</li>
+        <li>Exchange Rate: 1 Base = ${exchangeRate} Target Currency</li>
+        <li>Converted Price: ${pricePerTarget.toFixed(2)} per ${tgtUnit.toUpperCase()}</li>
+      `;
+
+      document.getElementById('results-card').classList.remove('hidden');
+    }
+
+    // Copy to Clipboard
+    function copyResults() {
+      const outputVal = document.getElementById('output-target-price').textContent;
+      const targetUnit = document.getElementById('select-target-unit').selectedOptions[0].text;
+      navigator.clipboard.writeText('Saraaf Price Result: ' + outputVal + ' per ' + targetUnit);
+      const btn = document.getElementById('btn-copy-results');
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy Results', 2000);
+    }
+  </script>
 </body>
 </html>
