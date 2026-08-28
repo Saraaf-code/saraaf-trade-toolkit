@@ -1,18 +1,29 @@
-/* ==========================================================================
-   Saraaf Trade Toolkit - Main Stylesheet
-   ========================================================================== */
+/* Core Styling & Dark Palette */
+:root {
+  --color-bg-primary: #1a2a33;
+  --color-bg-surface: #233540;
+  --color-bg-elevated: #2c4250;
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #94a3b8;
+  --color-accent-primary: #0480e4;
+  --color-accent-hover: #0369b9;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
 
-/* 1. Global Reset & Box Sizing */
-*, *::before, *::after {
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
 body {
-  font-family: var(--font-family-base);
-  background-color: var(--color-primary-dark);
+  background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
+  font-family: var(--font-family);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -20,121 +31,313 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* 2. Persistent Header */
+/* App Header & Navigation */
 .app-header {
+  background-color: #1a2a33;
+  border-bottom: 1px solid var(--color-border);
+  padding: 1rem 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md) var(--spacing-lg);
-  background-color: var(--color-primary-surface);
-  border-bottom: 1px solid var(--color-primary-border);
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
-.brand-container {
+.header-brand {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: 1rem;
 }
 
 .brand-logo {
-  height: 36px;
+  height: 38px;
   width: auto;
-  display: block;
+  border-radius: 6px;
 }
 
 .brand-title {
-  font-size: var(--font-size-lg);
   font-weight: 700;
+  font-size: 1.1rem;
   color: var(--color-text-primary);
-  letter-spacing: -0.02em;
-  white-space: nowrap;
+  display: block;
 }
 
-/* 3. Navigation Tabs */
-.app-nav {
+.brand-subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+}
+
+.header-nav {
   display: flex;
-  gap: var(--spacing-sm);
-  overflow-x: auto;
-  scrollbar-width: none; /* Firefox */
-}
-
-.app-nav::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  gap: 0.5rem;
 }
 
 .nav-tab {
   background: transparent;
   border: 1px solid transparent;
   color: var(--color-text-secondary);
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: 0.6rem 1.25rem;
   border-radius: var(--radius-pill);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.875rem;
   cursor: pointer;
-  white-space: nowrap;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
 }
 
 .nav-tab:hover {
   color: var(--color-text-primary);
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--color-bg-surface);
 }
 
 .nav-tab.active {
-  background-color: var(--color-accent-blue);
-  color: var(--color-text-primary);
+  background-color: var(--color-accent-primary);
+  color: #ffffff;
 }
 
-/* 4. Main App Container */
+/* Main Layout & Cards */
 .app-main {
   flex: 1;
-  max-width: 900px;
+  max-width: 1000px;
   width: 100%;
   margin: 0 auto;
-  padding: var(--spacing-xl) var(--spacing-md);
+  padding: 2.5rem 1.5rem;
 }
 
-/* 5. Tool Container / Card Layout */
-.tool-card {
-  background-color: var(--color-primary-surface);
-  border: 1px solid var(--color-primary-border);
+.tool-view {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.card {
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
-  box-shadow: var(--shadow-card);
+  padding: 2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
-.tool-header {
-  margin-bottom: var(--spacing-lg);
+.card-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
 }
 
-.tool-title {
-  font-size: var(--font-size-xl);
+.card-subtitle {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+/* Form Layout & Inputs */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+label {
+  font-size: 0.85rem;
   font-weight: 600;
-  margin-bottom: var(--spacing-xs);
-}
-
-.tool-subtitle {
-  font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-/* 6. Placeholder / Coming Soon View */
-.coming-soon-container {
+input, select {
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+input:focus, select:focus {
+  border-color: var(--color-accent-primary);
+}
+
+/* Pill Toggle Group */
+.pill-toggle-group {
+  display: flex;
+  gap: 0.5rem;
+  background-color: var(--color-bg-primary);
+  padding: 5px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+}
+
+.pill-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pill-btn.active {
+  background-color: var(--color-accent-primary);
+  color: #ffffff;
+}
+
+.btn-primary {
+  background-color: var(--color-accent-primary);
+  color: #ffffff;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: var(--radius-pill);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+}
+
+/* Calculation Results */
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.pill-btn-secondary {
+  background-color: var(--color-bg-elevated);
+  color: #ffffff;
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.result-hero {
   text-align: center;
-  padding: var(--spacing-xl) var(--spacing-md);
+  padding: 1.75rem;
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--color-border);
 }
 
-.coming-soon-title {
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--spacing-sm);
-}
-
-.coming-soon-desc {
+.result-label {
+  display: block;
+  font-size: 0.8rem;
   color: var(--color-text-secondary);
-  font-size: var(--font-size-md);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.25rem;
+}
+
+.result-value {
+  display: block;
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--color-accent-primary);
+}
+
+.breakdown-container h3 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+}
+
+.breakdown-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.breakdown-list li {
+  padding: 0.75rem 1rem;
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+
+/* 12 Tools Hub Grid */
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.tool-card {
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.tool-card.active-card {
+  border-color: var(--color-accent-primary);
+  cursor: pointer;
+}
+
+.tool-card.active-card:hover {
+  transform: translateY(-3px);
+}
+
+.tool-card.disabled-card {
+  opacity: 0.55;
+}
+
+.badge {
+  align-self: flex-start;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-active {
+  background-color: var(--color-accent-primary);
+  color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
 }
