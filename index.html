@@ -10,6 +10,51 @@
   <link rel="manifest" href="./manifest.json">
   <link rel="stylesheet" href="./assets/css/variables.css">
   <link rel="stylesheet" href="./assets/css/main.css">
+  <style>
+    /* Incoterms specific lightweight styling overrides */
+    .incoterm-matrix-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .responsibility-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm, 6px);
+      background-color: var(--color-bg-secondary, rgba(255, 255, 255, 0.03));
+      border: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+    }
+    .responsibility-stage {
+      font-weight: 600;
+      color: var(--color-text-primary, #ffffff);
+    }
+    .party-badge {
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-seller {
+      background-color: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+    .badge-buyer {
+      background-color: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .badge-shared {
+      background-color: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+  </style>
 </head>
 <body>
   <!-- Persistent Header Bar -->
@@ -28,8 +73,8 @@
       <button class="nav-tab" onclick="switchView('converter')">Price Converter</button>
       <button class="nav-tab" onclick="switchView('moisture')">Moisture Calculator</button>
       <button class="nav-tab" onclick="switchView('container')">Container Estimator</button>
-      <button class="nav-tab" onclick="switchView('hscode')">HS Code Lookup</button>
       <button class="nav-tab" onclick="switchView('incoterms')">Incoterms Guide</button>
+      <button class="nav-tab" onclick="switchView('hscode')">HS Code Lookup</button>
     </nav>
   </header>
 
@@ -58,8 +103,12 @@
             <h3>3. Container CBM & Load Estimator</h3>
             <p>Calculate volume utilization, box counts, and payload limits for 20ft & 40ft containers.</p>
           </div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>4. HS Code & Tariff Calculator</h3><p>Lookup global HS codes and calculate import tariffs across jurisdictions.</p></div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>5. Incoterms Risk & Cost Matrix</h3><p>Interactive operational cost allocation based on Incoterms 2020.</p></div>
+          <div class="tool-card active-card" onclick="switchView('incoterms')">
+            <span class="badge badge-active">Active</span>
+            <h3>4. Incoterms 2020 Risk & Cost Matrix</h3>
+            <p>Interactive operational cost allocation and risk transfer points for international trade.</p>
+          </div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>5. HS Code & Tariff Calculator</h3><p>Lookup global HS codes and calculate import tariffs across jurisdictions.</p></div>
           <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>6. Letter of Credit (L/C) Checklist</h3><p>Validate documentation criteria and bank negotiation fees.</p></div>
           <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>7. Freight & Shipping Estimator</h3><p>Estimate ocean and air freight rates alongside local port charges.</p></div>
           <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>8. Currency Volatility & Hedging</h3><p>Calculate exposure risks and forward exchange cover margins.</p></div>
@@ -71,7 +120,7 @@
       </div>
     </section>
     
-    <!-- View 2: The Commodity Price Converter Tool -->
+    <!-- View 2: Commodity Price Converter Tool -->
     <section id="tool-converter" class="tool-view hidden">
       <div class="card">
         <h1 class="card-title">The Commodity Price Converter</h1>
@@ -150,7 +199,6 @@
           <button id="btn-copy-results" class="pill-btn pill-btn-secondary" type="button" onclick="copyResults()">Copy Results</button>
         </div>
 
-        <!-- Front & Center Total Settlement Layout -->
         <div class="result-hero" style="text-align: center; padding: 2rem 1rem;">
           <span class="result-label" style="text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.875rem;">Total Settlement Value</span>
           <span id="output-total-value" class="result-value" style="display: block; font-size: 2.5rem; font-weight: 700; margin: 0.5rem 0; word-break: break-word;">0.00</span>
@@ -168,7 +216,7 @@
       </div>
     </section>
 
-    <!-- View 3: Commodity Moisture & Dry Mass Calculator -->
+    <!-- View 3: Commodity Moisture Calculator -->
     <section id="tool-moisture" class="tool-view hidden">
       <div class="card">
         <h1 class="card-title">Commodity Moisture & Dry Mass Calculator</h1>
@@ -299,19 +347,90 @@
       </div>
     </section>
 
-    <!-- Placeholder Views -->
+    <!-- View 5: Incoterms 2020 Risk & Cost Matrix -->
+    <section id="tool-incoterms" class="tool-view hidden">
+      <div class="card">
+        <h1 class="card-title">Incoterms® 2020 Operational Matrix</h1>
+        <p class="card-subtitle">Analyze cost allocations, transport modes, and risk transfer points for international commercial trade.</p>
+
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="select-incoterm">Select Incoterm Rule</label>
+            <select id="select-incoterm" class="select-input" onchange="updateIncotermView()">
+              <option value="EXW">EXW – Ex Works</option>
+              <option value="FCA">FCA – Free Carrier</option>
+              <option value="FAS">FAS – Free Alongside Ship (Sea Only)</option>
+              <option value="FOB" selected>FOB – Free On Board (Sea Only)</option>
+              <option value="CFR">CFR – Cost and Freight (Sea Only)</option>
+              <option value="CIF">CIF – Cost, Insurance & Freight (Sea Only)</option>
+              <option value="CPT">CPT – Carriage Paid To</option>
+              <option value="CIP">CIP – Carriage and Insurance Paid To</option>
+              <option value="DAP">DAP – Delivered at Place</option>
+              <option value="DPU">DPU – Delivered at Place Unloaded</option>
+              <option value="DDP">DDP – Delivered Duty Paid</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="incoterm-details-card" class="card results-card" style="margin-top: 1.5rem;">
+        <div class="results-header" style="flex-wrap: wrap; gap: 0.5rem;">
+          <h2 id="incoterm-title" style="margin: 0;">FOB – Free On Board</h2>
+          <span id="incoterm-mode-badge" class="badge badge-active">Sea & Inland Waterway Only</span>
+        </div>
+
+        <div class="result-hero" style="text-align: left; padding: 1.25rem 1rem;">
+          <span class="result-label" style="text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem;">Critical Risk Transfer Point</span>
+          <p id="incoterm-risk-point" style="margin: 0.5rem 0 0 0; font-size: 1.05rem; color: var(--color-text-primary); font-weight: 600;">
+            Risk transfers from seller to buyer once goods are loaded on board the vessel at the named port of shipment.
+          </p>
+        </div>
+
+        <div class="breakdown-container" style="margin-top: 1.5rem;">
+          <h3>Operational Cost Allocation (Seller vs Buyer)</h3>
+          <div class="incoterm-matrix-grid">
+            <div class="responsibility-row">
+              <span class="responsibility-stage">1. Export Packaging & Marking</span>
+              <span id="stage-packaging" class="party-badge badge-seller">Seller</span>
+            </div>
+            <div class="responsibility-row">
+              <span class="responsibility-stage">2. Export Customs Clearance & Local Taxes</span>
+              <span id="stage-export-customs" class="party-badge badge-seller">Seller</span>
+            </div>
+            <div class="responsibility-row">
+              <span class="responsibility-stage">3. Inland Transport to Departure Port/Terminal</span>
+              <span id="stage-inland-origin" class="party-badge badge-seller">Seller</span>
+            </div>
+            <div class="responsibility-row">
+              <span class="responsibility-stage">4. Terminal Handling & Origin Loading</span>
+              <span id="stage-loading-origin" class="party-badge badge-seller">Seller</span>
+            </div>
+            <div class="responsibility-row">
+              <span class="responsibility-stage">5. Main Freight (Ocean / Air Carriage)</span>
+              <span id="stage-freight" class="party-badge badge-buyer">Buyer</span>
+            </div>
+            <div class="responsibility-row">
+              <span class="responsibility-stage">6. Cargo Insurance</span>
+              <span id="stage-insurance" class="party-badge badge-buyer">Buyer (Optional)</span>
+            </div>
+            <div class="responsibility-row">
+              <span class="responsibility-stage">7. Import Customs Clearance, Duties & Taxes</span>
+              <span id="stage-import-customs" class="party-badge badge-buyer">Buyer</span>
+            </div>
+            <div class="responsibility-row">
+              <span class="responsibility-stage">8. Final Mile Delivery to Destination Warehouse</span>
+              <span id="stage-final-delivery" class="party-badge badge-buyer">Buyer</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Placeholder View -->
     <section id="tool-hscode" class="tool-view hidden">
       <div class="card">
         <h1 class="card-title">HS Code & Tariff Calculator</h1>
         <p class="card-subtitle">Global commodity classification and tariff estimation tool.</p>
-        <div class="result-hero"><span class="result-value">Coming Soon</span></div>
-      </div>
-    </section>
-
-    <section id="tool-incoterms" class="tool-view hidden">
-      <div class="card">
-        <h1 class="card-title">Incoterms 2020 Guide & Matrix</h1>
-        <p class="card-subtitle">Buyer/Seller cost and risk allocation guide for international shipping.</p>
         <div class="result-hero"><span class="result-value">Coming Soon</span></div>
       </div>
     </section>
@@ -328,6 +447,9 @@
       document.querySelectorAll('.tool-view').forEach(view => {
         view.classList.toggle('hidden', view.id !== 'tool-' + toolId);
       });
+      if (toolId === 'incoterms') {
+        updateIncotermView();
+      }
     }
 
     // Exchange Rate Mode logic
@@ -514,6 +636,109 @@
 
       breakdown.innerHTML = itemsHtml;
       document.getElementById('cbm-results-card').classList.remove('hidden');
+    }
+
+    // Incoterms Data Model
+    const incotermsData = {
+      EXW: {
+        title: "EXW – Ex Works",
+        mode: "Any Transport Mode",
+        risk: "Risk transfers at seller's premises (factory/warehouse) when goods are made available to buyer. Buyer bears all loading, transport, and customs risks.",
+        stages: { packaging: "Seller", exportCustoms: "Buyer", inlandOrigin: "Buyer", loadingOrigin: "Buyer", freight: "Buyer", insurance: "Buyer (Optional)", importCustoms: "Buyer", finalDelivery: "Buyer" }
+      },
+      FCA: {
+        title: "FCA – Free Carrier",
+        mode: "Any Transport Mode",
+        risk: "Risk transfers when goods are delivered to the nominated carrier or terminal named by the buyer.",
+        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Buyer", insurance: "Buyer (Optional)", importCustoms: "Buyer", finalDelivery: "Buyer" }
+      },
+      FAS: {
+        title: "FAS – Free Alongside Ship",
+        mode: "Sea & Inland Waterway Only",
+        risk: "Risk transfers when goods are placed alongside the vessel nominated by the buyer at the named port of shipment.",
+        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Buyer", freight: "Buyer", insurance: "Buyer (Optional)", importCustoms: "Buyer", finalDelivery: "Buyer" }
+      },
+      FOB: {
+        title: "FOB – Free On Board",
+        mode: "Sea & Inland Waterway Only",
+        risk: "Risk transfers once goods are loaded safely on board the vessel at the named port of shipment.",
+        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Buyer", insurance: "Buyer (Optional)", importCustoms: "Buyer", finalDelivery: "Buyer" }
+      },
+      CFR: {
+        title: "CFR – Cost and Freight",
+        mode: "Sea & Inland Waterway Only",
+        risk: "Risk transfers on board vessel at origin port. Seller pays ocean freight to destination port, but buyer holds transit risk.",
+        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Seller", insurance: "Buyer (Optional)", importCustoms: "Buyer", finalDelivery: "Buyer" }
+      },
+      CIF: {
+        title: "CIF – Cost, Insurance & Freight",
+        mode: "Sea & Inland Waterway Only",
+        risk: "Risk transfers on board vessel at origin port. Seller pays freight and minimum clause (C) marine insurance to destination port.",
+        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Seller", insurance: "Seller (Minimum Cover)", importCustoms: "Buyer", finalDelivery: "Buyer" }
+      },
+      CPT: {
+        title: "CPT – Carriage Paid To",
+        mode: "Any Transport Mode",
+        risk: "Risk transfers when goods are handed over to the first carrier. Seller pays main transport to named destination.",
+        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Seller", insurance: "Buyer (Optional)", importCustoms: "Buyer", finalDelivery: "Buyer" }
+      },
+      CIP: {
+        title: "CIP – Carriage and Insurance Paid To",
+        mode: "Any Transport Mode",
+        risk: "Risk transfers when handed to first carrier. Seller pays freight and mandatory comprehensive Clause (A) insurance.",
+        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Seller", insurance: "Seller (All-Risk Cover)", importCustoms: "Buyer", finalDelivery: "Buyer" }
+      },
+      DAP: {
+        title: "DAP – Delivered at Place",
+        mode: "Any Transport Mode",
+        risk: "Risk transfers when goods arrive at named destination ready for unloading. Buyer handles import clearance and unloading.",
+        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Seller", insurance: "Seller", importCustoms: "Buyer", finalDelivery: "Seller" }
+      },
+      DPU: {
+        title: "DPU – Delivered at Place Unloaded",
+        mode: "Any Transport Mode",
+        risk: "Risk transfers once goods are unloaded by seller at named place of destination. Buyer handles import clearance.",
+        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Seller", insurance: "Seller", importCustoms: "Buyer", finalDelivery: "Seller (Unloaded)" }
+      },
+      DDP: {
+        title: "DDP – Delivered Duty Paid",
+        mode: "Any Transport Mode",
+        risk: "Maximum seller obligation. Risk transfers upon arrival at destination after seller completes import customs clearance and duties.",
+        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Seller", insurance: "Seller", importCustoms: "Seller", finalDelivery: "Seller" }
+      }
+    };
+
+    function updateIncotermView() {
+      const code = document.getElementById('select-incoterm').value;
+      const data = incotermsData[code];
+      if (!data) return;
+
+      document.getElementById('incoterm-title').textContent = data.title;
+      document.getElementById('incoterm-mode-badge').textContent = data.mode;
+      document.getElementById('incoterm-risk-point').textContent = data.risk;
+
+      setStageBadge('stage-packaging', data.stages.packaging);
+      setStageBadge('stage-export-customs', data.stages.exportCustoms);
+      setStageBadge('stage-inland-origin', data.stages.inlandOrigin);
+      setStageBadge('stage-loading-origin', data.stages.loadingOrigin);
+      setStageBadge('stage-freight', data.stages.freight);
+      setStageBadge('stage-insurance', data.stages.insurance);
+      setStageBadge('stage-import-customs', data.stages.importCustoms);
+      setStageBadge('stage-final-delivery', data.stages.finalDelivery);
+    }
+
+    function setStageBadge(elementId, text) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      el.textContent = text;
+      el.className = 'party-badge';
+      if (text.startsWith('Seller')) {
+        el.classList.add('badge-seller');
+      } else if (text.startsWith('Buyer')) {
+        el.classList.add('badge-buyer');
+      } else {
+        el.classList.add('badge-shared');
+      }
     }
 
     // Copy Results Logic
