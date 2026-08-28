@@ -27,8 +27,8 @@
       <button class="nav-tab active" onclick="switchView('hub')">All Tools</button>
       <button class="nav-tab" onclick="switchView('converter')">Price Converter</button>
       <button class="nav-tab" onclick="switchView('moisture')">Moisture Calculator</button>
-      <button class="nav-tab" onclick="switchView('hscode')">HS Code Lookup</button>
       <button class="nav-tab" onclick="switchView('container')">Container Estimator</button>
+      <button class="nav-tab" onclick="switchView('hscode')">HS Code Lookup</button>
       <button class="nav-tab" onclick="switchView('incoterms')">Incoterms Guide</button>
     </nav>
   </header>
@@ -53,8 +53,12 @@
             <h3>2. Commodity Moisture & Dry Mass Calculator</h3>
             <p>Calculate dry mass fiber weight, contract moisture penalties, and grain shrink loss.</p>
           </div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>3. HS Code & Tariff Calculator</h3><p>Lookup global HS codes and calculate import tariffs across jurisdictions.</p></div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>4. Container Load & CBM Estimator</h3><p>Calculate volume utilization for shipping containers.</p></div>
+          <div class="tool-card active-card" onclick="switchView('container')">
+            <span class="badge badge-active">Active</span>
+            <h3>3. Container CBM & Load Estimator</h3>
+            <p>Calculate volume utilization, box counts, and payload limits for 20ft & 40ft containers.</p>
+          </div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>4. HS Code & Tariff Calculator</h3><p>Lookup global HS codes and calculate import tariffs across jurisdictions.</p></div>
           <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>5. Incoterms Risk & Cost Matrix</h3><p>Interactive operational cost allocation based on Incoterms 2020.</p></div>
           <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>6. Letter of Credit (L/C) Checklist</h3><p>Validate documentation criteria and bank negotiation fees.</p></div>
           <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>7. Freight & Shipping Estimator</h3><p>Estimate ocean and air freight rates alongside local port charges.</p></div>
@@ -140,7 +144,6 @@
         </form>
       </div>
 
-      <!-- Calculation Output & Step-by-Step Mathematical Breakdown -->
       <div id="results-card" class="card results-card hidden">
         <div class="results-header">
           <h2>Conversion Results</h2>
@@ -224,19 +227,77 @@
       </div>
     </section>
 
+    <!-- View 4: Container CBM & Load Estimator -->
+    <section id="tool-container" class="tool-view hidden">
+      <div class="card">
+        <h1 class="card-title">Container CBM & Load Estimator</h1>
+        <p class="card-subtitle">Calculate total cubic volume (CBM), box counts, and container space utilization.</p>
+
+        <form id="container-form" class="form-grid" onsubmit="event.preventDefault(); runCbmCalc();">
+          
+          <div class="form-group">
+            <label for="cbm-box-length">Box / Package Length</label>
+            <input type="number" id="cbm-box-length" step="any" min="0" placeholder="e.g. 60" oninput="runCbmCalc()" required>
+          </div>
+
+          <div class="form-group">
+            <label for="cbm-box-width">Box / Package Width</label>
+            <input type="number" id="cbm-box-width" step="any" min="0" placeholder="e.g. 40" oninput="runCbmCalc()" required>
+          </div>
+
+          <div class="form-group">
+            <label for="cbm-box-height">Box / Package Height</label>
+            <input type="number" id="cbm-box-height" step="any" min="0" placeholder="e.g. 40" oninput="runCbmCalc()" required>
+          </div>
+
+          <div class="form-group">
+            <label for="cbm-dim-unit">Dimension Unit</label>
+            <select id="cbm-dim-unit" class="select-input" onchange="runCbmCalc()">
+              <option value="cm" selected>Centimeters (cm)</option>
+              <option value="m">Meters (m)</option>
+              <option value="in">Inches (in)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="cbm-total-boxes">Total Number of Packages / Cartons</label>
+            <input type="number" id="cbm-total-boxes" step="1" min="1" placeholder="e.g. 500" oninput="runCbmCalc()" required>
+          </div>
+
+          <div class="form-group">
+            <label for="cbm-box-weight">Gross Weight per Carton (kg)</label>
+            <input type="number" id="cbm-box-weight" step="any" min="0" placeholder="e.g. 15" oninput="runCbmCalc()">
+          </div>
+
+          <div class="form-group full-width">
+            <button type="submit" class="btn-primary">Calculate Container Fit</button>
+          </div>
+
+        </form>
+      </div>
+
+      <div id="cbm-results-card" class="card results-card hidden">
+        <div class="results-header">
+          <h2>Volumetric & Load Results</h2>
+        </div>
+
+        <div class="result-hero">
+          <span class="result-label">Total Volume (CBM)</span>
+          <span id="output-cbm-total" class="result-value">0.00 CBM</span>
+        </div>
+
+        <div class="breakdown-container">
+          <h3>Container Capacity Utilization</h3>
+          <ol id="cbm-breakdown-list" class="breakdown-list"></ol>
+        </div>
+      </div>
+    </section>
+
     <!-- Placeholder Views -->
     <section id="tool-hscode" class="tool-view hidden">
       <div class="card">
         <h1 class="card-title">HS Code & Tariff Calculator</h1>
         <p class="card-subtitle">Global commodity classification and tariff estimation tool.</p>
-        <div class="result-hero"><span class="result-value">Coming Soon</span></div>
-      </div>
-    </section>
-
-    <section id="tool-container" class="tool-view hidden">
-      <div class="card">
-        <h1 class="card-title">Container CBM & Load Estimator</h1>
-        <p class="card-subtitle">Estimate volumetric capacity for 20ft, 40ft, and High Cube containers.</p>
         <div class="result-hero"><span class="result-value">Coming Soon</span></div>
       </div>
     </section>
@@ -345,9 +406,7 @@
       const breakdown = document.getElementById('moisture-breakdown-list');
 
       if (mode === 'drymass') {
-        // Cotton / Dry Mass Penalty Model
         const dryMass = weight * ((100 - actualMoisture) / 100);
-        
         let netPayableWeight = weight;
         let penaltyDeduction = 0;
         
@@ -368,10 +427,8 @@
         `;
 
       } else {
-        // Commercial Rehydration / Grain Drying Model
         const dryMatterPct = (100 - actualMoisture) / 100;
         const targetDryMatterPct = (100 - contractMoisture) / 100;
-        
         const adjustedWeight = weight * (dryMatterPct / targetDryMatterPct);
         const weightDifference = adjustedWeight - weight;
 
@@ -387,6 +444,64 @@
       }
 
       document.getElementById('moisture-results-card').classList.remove('hidden');
+    }
+
+    // Container CBM Calculation Logic
+    function runCbmCalc() {
+      const length = parseFloat(document.getElementById('cbm-box-length').value);
+      const width = parseFloat(document.getElementById('cbm-box-width').value);
+      const height = parseFloat(document.getElementById('cbm-box-height').value);
+      const unit = document.getElementById('cbm-dim-unit').value;
+      const boxes = parseInt(document.getElementById('cbm-total-boxes').value);
+      const boxWeight = parseFloat(document.getElementById('cbm-box-weight').value) || 0;
+
+      if (isNaN(length) || isNaN(width) || isNaN(height) || isNaN(boxes) || length <= 0 || width <= 0 || height <= 0 || boxes <= 0) {
+        document.getElementById('cbm-results-card').classList.add('hidden');
+        return;
+      }
+
+      // Convert dimensions to meters
+      let factorToMeters = 0.01; // cm default
+      if (unit === 'm') factorToMeters = 1.0;
+      if (unit === 'in') factorToMeters = 0.0254;
+
+      const singleBoxCbm = (length * factorToMeters) * (width * factorToMeters) * (height * factorToMeters);
+      const totalCbm = singleBoxCbm * boxes;
+      const totalGrossWeightKg = boxWeight * boxes;
+
+      document.getElementById('output-cbm-total').textContent = 
+        totalCbm.toFixed(3) + ' CBM' + (totalGrossWeightKg > 0 ? ' (' + (totalGrossWeightKg/1000).toFixed(2) + ' MT)' : '');
+
+      // Standard container usable volumes and payload limits
+      const containers = [
+        { name: '20ft Standard Container', cbm: 33.2, maxWeightKg: 28230 },
+        { name: '40ft Standard Container', cbm: 67.7, maxWeightKg: 26700 },
+        { name: '40ft High Cube (HC)', cbm: 76.3, maxWeightKg: 28600 }
+      ];
+
+      const breakdown = document.getElementById('cbm-breakdown-list');
+      let itemsHtml = `<li><strong>Single Carton Volume:</strong> ${length} × ${width} × ${height} ${unit} = <strong>${singleBoxCbm.toFixed(4)} CBM per box</strong></li>`;
+
+      containers.forEach(c => {
+        const volUtil = ((totalCbm / c.cbm) * 100).toFixed(1);
+        const boxesByVol = Math.floor(c.cbm / singleBoxCbm);
+        let weightWarning = '';
+
+        if (totalGrossWeightKg > 0 && totalGrossWeightKg > c.maxWeightKg) {
+          weightWarning = ` <span style="color: var(--color-error); font-weight: bold;">[Warning: Exceeds ${c.maxWeightKg.toLocaleString()} kg payload limit!]</span>`;
+        }
+
+        itemsHtml += `
+          <li>
+            <strong>${c.name}:</strong> 
+            Utilizes <strong>${volUtil}%</strong> of capacity (${totalCbm.toFixed(2)} / ${c.cbm} CBM). 
+            Max unit capacity: ~<strong>${boxesByVol.toLocaleString()} cartons</strong>.${weightWarning}
+          </li>
+        `;
+      });
+
+      breakdown.innerHTML = itemsHtml;
+      document.getElementById('cbm-results-card').classList.remove('hidden');
     }
 
     // Copy Results
