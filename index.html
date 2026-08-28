@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saraaf Trade Toolkit | The Commodity Price Converter</title>
+  <title>Saraaf Trade Toolkit | Commodity Tools</title>
   <meta name="description" content="Commercial-grade trade utilities and commodity calculation toolkit for global commerce.">
   <meta name="theme-color" content="#1a2a33">
   
@@ -14,37 +14,67 @@
 <body>
   <!-- Persistent Header Bar -->
   <header class="app-header">
-    <div class="header-brand">
+    <a href="https://saraafglobal.com" class="header-brand" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
       <img src="./Saraaf TM logo.jpg" alt="Saraaf Logo" class="brand-logo">
       <div class="brand-text">
         <span class="brand-title">Saraaf</span>
         <span class="brand-subtitle">Trade Toolkit</span>
       </div>
-    </div>
+    </a>
 
     <!-- Tool Navigation Tabs -->
     <nav class="header-nav" aria-label="Tool selection">
-      <button class="nav-tab active" onclick="switchView('converter')">Price Converter</button>
-      <button class="nav-tab" onclick="switchView('hscode')">HS Code Lookup</button>
+      <button class="nav-tab active" onclick="switchView('hub')">All Tools</button>
+      <button class="nav-tab" onclick="switchView('converter')">Price Converter</button>
       <button class="nav-tab" onclick="switchView('moisture')">Moisture Calculator</button>
+      <button class="nav-tab" onclick="switchView('hscode')">HS Code Lookup</button>
       <button class="nav-tab" onclick="switchView('container')">Container Estimator</button>
       <button class="nav-tab" onclick="switchView('incoterms')">Incoterms Guide</button>
-      <button class="nav-tab" onclick="switchView('hub')">All Tools</button>
     </nav>
   </header>
 
   <!-- Main View Container -->
   <main class="app-main">
+
+    <!-- View 1 (Default): All Tools Hub Grid -->
+    <section id="tool-hub" class="tool-view">
+      <div class="card">
+        <h1 class="card-title">Trade Utilities Suite</h1>
+        <p class="card-subtitle">Professional tools built for trade execution, logistics, and commodity valuation.</p>
+
+        <div class="hub-grid">
+          <div class="tool-card active-card" onclick="switchView('converter')">
+            <span class="badge badge-active">Active</span>
+            <h3>1. The Commodity Price Converter</h3>
+            <p>Convert weight, currency, and unit prices dynamically with full formula breakdowns.</p>
+          </div>
+          <div class="tool-card active-card" onclick="switchView('moisture')">
+            <span class="badge badge-active">Active</span>
+            <h3>2. Grain & Commodity Moisture Calculator</h3>
+            <p>Calculate weight adjustments, target moisture, and shrink allowances for bulk trade.</p>
+          </div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>3. HS Code & Tariff Calculator</h3><p>Lookup global HS codes and calculate import tariffs across jurisdictions.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>4. Container Load & CBM Estimator</h3><p>Calculate volume utilization for shipping containers.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>5. Incoterms Risk & Cost Matrix</h3><p>Interactive operational cost allocation based on Incoterms 2020.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>6. Letter of Credit (L/C) Checklist</h3><p>Validate documentation criteria and bank negotiation fees.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>7. Freight & Shipping Estimator</h3><p>Estimate ocean and air freight rates alongside local port charges.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>8. Currency Volatility & Hedging</h3><p>Calculate exposure risks and forward exchange cover margins.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>9. Import Duty & Local Tax Estimator</h3><p>Estimate VAT, custom duties, and port taxes for shipments.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>10. Trade Margin & Markup Analyzer</h3><p>Calculate gross margins, net profit margins, and landed cost markups.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>11. Packaging & Tare Weight Deductor</h3><p>Compute net weight adjustments for bag and container tare weights.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>12. ISO 2859 Inspection Sampling</h3><p>Determine random sample sizes and acceptance quality limits (AQL).</p></div>
+        </div>
+      </div>
+    </section>
     
-    <!-- View 1: The Commodity Price Converter Tool -->
-    <section id="tool-converter" class="tool-view">
+    <!-- View 2: The Commodity Price Converter Tool -->
+    <section id="tool-converter" class="tool-view hidden">
       <div class="card">
         <h1 class="card-title">The Commodity Price Converter</h1>
         <p class="card-subtitle">Convert weight units, currency exchange rates, and calculate total commodity values seamlessly.</p>
 
         <form id="converter-form" class="form-grid" onsubmit="event.preventDefault(); runCalculation();">
           
-          <!-- Source Quantity & Unit -->
           <div class="form-group">
             <label for="input-amount">Quantity / Weight</label>
             <input type="number" id="input-amount" step="any" min="0" placeholder="e.g. 100" oninput="runCalculation()" required>
@@ -63,16 +93,15 @@
             </select>
           </div>
 
-          <!-- Price & Target Unit -->
           <div class="form-group">
             <label for="input-price">Price Per Unit (Base Currency)</label>
-            <input type="number" id="input-price" step="any" min="0" placeholder="e.g. 50.00" oninput="runCalculation()" required>
+            <input type="number" id="input-price" step="any" min="0" placeholder="e.g. 500" oninput="runCalculation()" required>
           </div>
 
           <div class="form-group">
             <label for="select-target-unit">To Target Unit</label>
             <select id="select-target-unit" class="select-input" onchange="runCalculation()">
-              <option value="kg">Kilograms (kg)</option>
+              <option value="kg" selected>Kilograms (kg)</option>
               <option value="g">Grams (g)</option>
               <option value="mt">Metric Tons (MT)</option>
               <option value="lb">Pounds (lbs)</option>
@@ -82,7 +111,6 @@
             </select>
           </div>
 
-          <!-- Exchange Rate Mode Selection -->
           <div class="form-group full-width">
             <label>Exchange Rate Mode</label>
             <div class="pill-toggle-group">
@@ -92,7 +120,6 @@
             </div>
           </div>
 
-          <!-- Mode Options Container -->
           <div id="rate-mode-inputs" class="form-group full-width">
             <div id="manual-rate-box">
               <label for="input-exchange-rate">Exchange Rate (1 Base = X Target)</label>
@@ -106,7 +133,6 @@
             </div>
           </div>
 
-          <!-- Action Button -->
           <div class="form-group full-width">
             <button type="submit" class="btn-primary">Calculate Conversion</button>
           </div>
@@ -114,7 +140,7 @@
         </form>
       </div>
 
-      <!-- Calculation Output & Breakdown Display -->
+      <!-- Calculation Output & Step-by-Step Mathematical Breakdown -->
       <div id="results-card" class="card results-card hidden">
         <div class="results-header">
           <h2>Conversion Results</h2>
@@ -127,25 +153,74 @@
         </div>
 
         <div class="breakdown-container">
-          <h3>Calculation Breakdown</h3>
+          <h3>Mathematical Breakdown & Steps</h3>
           <ol id="breakdown-list" class="breakdown-list"></ol>
         </div>
       </div>
     </section>
 
-    <!-- Placeholder Views for Header Tabs -->
+    <!-- View 3: Grain & Commodity Moisture Calculator -->
+    <section id="tool-moisture" class="tool-view hidden">
+      <div class="card">
+        <h1 class="card-title">Grain & Commodity Moisture Calculator</h1>
+        <p class="card-subtitle">Calculate net weight adjustments and shrink loss percentage based on moisture changes.</p>
+
+        <form id="moisture-form" class="form-grid" onsubmit="event.preventDefault(); runMoistureCalc();">
+          
+          <div class="form-group">
+            <label for="moisture-initial-weight">Initial Gross Weight</label>
+            <input type="number" id="moisture-initial-weight" step="any" min="0" placeholder="e.g. 1000" oninput="runMoistureCalc()" required>
+          </div>
+
+          <div class="form-group">
+            <label for="moisture-weight-unit">Weight Unit</label>
+            <select id="moisture-weight-unit" class="select-input" onchange="runMoistureCalc()">
+              <option value="MT" selected>Metric Tons (MT)</option>
+              <option value="kg">Kilograms (kg)</option>
+              <option value="lbs">Pounds (lbs)</option>
+              <option value="md">Maund (md)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="moisture-initial-pct">Initial Moisture Level (%)</label>
+            <input type="number" id="moisture-initial-pct" step="0.1" min="0" max="100" placeholder="e.g. 18.0" oninput="runMoistureCalc()" required>
+          </div>
+
+          <div class="form-group">
+            <label for="moisture-target-pct">Target / Contract Moisture (%)</label>
+            <input type="number" id="moisture-target-pct" step="0.1" min="0" max="100" placeholder="e.g. 14.0" oninput="runMoistureCalc()" required>
+          </div>
+
+          <div class="form-group full-width">
+            <button type="submit" class="btn-primary">Calculate Moisture Shrink</button>
+          </div>
+
+        </form>
+      </div>
+
+      <div id="moisture-results-card" class="card results-card hidden">
+        <div class="results-header">
+          <h2>Moisture Adjustment Results</h2>
+        </div>
+
+        <div class="result-hero">
+          <span class="result-label">Adjusted Net Weight</span>
+          <span id="output-moisture-weight" class="result-value">0.00</span>
+        </div>
+
+        <div class="breakdown-container">
+          <h3>Shrinkage & Dry Matter Formula</h3>
+          <ol id="moisture-breakdown-list" class="breakdown-list"></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Placeholder Views -->
     <section id="tool-hscode" class="tool-view hidden">
       <div class="card">
         <h1 class="card-title">HS Code & Tariff Calculator</h1>
         <p class="card-subtitle">Global commodity classification and tariff estimation tool.</p>
-        <div class="result-hero"><span class="result-value">Coming Soon</span></div>
-      </div>
-    </section>
-
-    <section id="tool-moisture" class="tool-view hidden">
-      <div class="card">
-        <h1 class="card-title">Grain & Commodity Moisture Calculator</h1>
-        <p class="card-subtitle">Calculate weight adjustments and shrink allowances based on moisture levels.</p>
         <div class="result-hero"><span class="result-value">Coming Soon</span></div>
       </div>
     </section>
@@ -166,40 +241,14 @@
       </div>
     </section>
 
-    <!-- View: All Tools Hub Grid -->
-    <section id="tool-hub" class="tool-view hidden">
-      <div class="card">
-        <h1 class="card-title">Trade Utilities Suite</h1>
-        <p class="card-subtitle">Professional tools built for trade execution, logistics, and commodity valuation.</p>
-
-        <div class="hub-grid">
-          <div class="tool-card active-card" onclick="switchView('converter')">
-            <span class="badge badge-active">Active</span>
-            <h3>1. The Commodity Price Converter</h3>
-            <p>Convert weight, currency, and unit prices dynamically with full calculation breakdowns.</p>
-          </div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>2. HS Code & Tariff Calculator</h3><p>Lookup global HS codes and calculate import tariffs across jurisdictions.</p></div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>3. Grain Moisture & Weight Loss</h3><p>Adjust weight calculations according to moisture shrink scales.</p></div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>4. Container Load & CBM Estimator</h3><p>Calculate volume utilization for shipping containers.</p></div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>5. Incoterms Risk & Cost Matrix</h3><p>Interactive operational cost allocation based on Incoterms 2020.</p></div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>6. Letter of Credit (L/C) Checklist</h3><p>Validate documentation criteria and bank negotiation fees.</p></div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>7. Freight & Shipping Estimator</h3><p>Estimate ocean and air freight rates alongside local port charges.</p></div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>8. Currency Volatility & Hedging</h3><p>Calculate exposure risks and forward exchange cover margins.</p></div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>9. Import Duty & Local Tax Estimator</h3><p>Estimate VAT, custom duties, and port taxes for shipments.</p></div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>10. Trade Margin & Markup Analyzer</h3><p>Calculate gross margins, net profit margins, and landed cost markups.</p></div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>11. Packaging & Tare Weight Deductor</h3><p>Compute net weight adjustments for bag and container tare weights.</p></div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>12. ISO 2859 Inspection Sampling</h3><p>Determine random sample sizes and acceptance quality limits (AQL).</p></div>
-        </div>
-      </div>
-    </section>
-
   </main>
 
   <script>
     // Tab switching logic
     function switchView(toolId) {
       document.querySelectorAll('.nav-tab').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('onclick').includes("'" + toolId + "'"));
+        const isMatch = btn.getAttribute('onclick').includes("'" + toolId + "'");
+        btn.classList.toggle('active', isMatch);
       });
       document.querySelectorAll('.tool-view').forEach(view => {
         view.classList.toggle('hidden', view.id !== 'tool-' + toolId);
@@ -237,7 +286,7 @@
       seer: 0.9331
     };
 
-    // Calculation logic
+    // Commodity Price Converter Calculation & Explicit Formula Breakdown
     function runCalculation() {
       const amount = parseFloat(document.getElementById('input-amount').value);
       const price = parseFloat(document.getElementById('input-price').value);
@@ -250,34 +299,66 @@
         return;
       }
 
-      // Calculate total weight in kg then converted to target unit
-      const totalKg = amount * unitRatiosInKg[srcUnit];
-      const targetQty = totalKg / unitRatiosInKg[tgtUnit];
-      
-      // Price per target unit in converted currency
-      const pricePerTarget = (price * exchangeRate) * (unitRatiosInKg[tgtUnit] / unitRatiosInKg[srcUnit]);
+      const srcRatio = unitRatiosInKg[srcUnit];
+      const tgtRatio = unitRatiosInKg[tgtUnit];
 
-      document.getElementById('output-target-price').textContent = pricePerTarget.toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
+      // Conversion steps
+      const priceInTargetCurr = price * exchangeRate;
+      const pricePerKgInTargetCurr = priceInTargetCurr / srcRatio;
+      const pricePerTargetUnit = pricePerKgInTargetCurr * tgtRatio;
+      const totalValue = priceInTargetCurr * amount;
+
+      document.getElementById('output-target-price').textContent = 
+        pricePerTargetUnit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' / ' + tgtUnit.toUpperCase();
 
       const breakdown = document.getElementById('breakdown-list');
       breakdown.innerHTML = `
-        <li>Input Quantity: ${amount} ${srcUnit.toUpperCase()}</li>
-        <li>Base Price: ${price} per ${srcUnit.toUpperCase()}</li>
-        <li>Exchange Rate: 1 Base = ${exchangeRate} Target Currency</li>
-        <li>Converted Price: ${pricePerTarget.toFixed(2)} per ${tgtUnit.toUpperCase()}</li>
+        <li><strong>Step 1 (Currency Exchange):</strong> Base Price (${price}) × Rate (${exchangeRate}) = ${priceInTargetCurr.toFixed(4)} Target Currency per ${srcUnit.toUpperCase()}</li>
+        <li><strong>Step 2 (Normalize to Base Kg):</strong> ${priceInTargetCurr.toFixed(4)} ÷ ${srcRatio} kg (${srcUnit.toUpperCase()} weight ratio) = ${pricePerKgInTargetCurr.toFixed(4)} Target Currency per KG</li>
+        <li><strong>Step 3 (Target Unit Conversion):</strong> ${pricePerKgInTargetCurr.toFixed(4)} × ${tgtRatio} kg (${tgtUnit.toUpperCase()} weight ratio) = <strong>${pricePerTargetUnit.toFixed(4)} per ${tgtUnit.toUpperCase()}</strong></li>
+        <li><strong>Step 4 (Total Lot Value):</strong> ${amount} ${srcUnit.toUpperCase()} × ${priceInTargetCurr.toFixed(2)} = <strong>${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Total Target Value</strong></li>
       `;
 
       document.getElementById('results-card').classList.remove('hidden');
     }
 
-    // Copy to Clipboard
+    // Moisture Calculator Logic
+    function runMoistureCalc() {
+      const weight = parseFloat(document.getElementById('moisture-initial-weight').value);
+      const unit = document.getElementById('moisture-weight-unit').value;
+      const initialMoisture = parseFloat(document.getElementById('moisture-initial-pct').value);
+      const targetMoisture = parseFloat(document.getElementById('moisture-target-pct').value);
+
+      if (isNaN(weight) || isNaN(initialMoisture) || isNaN(targetMoisture) || weight <= 0) {
+        document.getElementById('moisture-results-card').classList.add('hidden');
+        return;
+      }
+
+      const dryMatterPct = (100 - initialMoisture) / 100;
+      const targetDryMatterPct = (100 - targetMoisture) / 100;
+      
+      // Commercial Dry Matter Retention formula: Adjusted Weight = Initial Weight * (100 - Initial %) / (100 - Target %)
+      const finalWeight = weight * (dryMatterPct / targetDryMatterPct);
+      const shrinkWeight = weight - finalWeight;
+      const shrinkPct = (shrinkWeight / weight) * 100;
+
+      document.getElementById('output-moisture-weight').textContent = 
+        finalWeight.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + unit;
+
+      const breakdown = document.getElementById('moisture-breakdown-list');
+      breakdown.innerHTML = `
+        <li><strong>Dry Matter Ratio:</strong> (100% - ${initialMoisture}%) ÷ (100% - ${targetMoisture}%) = ${(dryMatterPct / targetDryMatterPct).toFixed(6)}</li>
+        <li><strong>Adjusted Weight Calculation:</strong> ${weight} ${unit} × ${(dryMatterPct / targetDryMatterPct).toFixed(6)} = <strong>${finalWeight.toFixed(2)} ${unit}</strong></li>
+        <li><strong>Weight Loss / Moisture Shrink:</strong> ${weight} ${unit} - ${finalWeight.toFixed(2)} ${unit} = <strong>${shrinkWeight.toFixed(2)} ${unit} (${shrinkPct.toFixed(2)}% loss)</strong></li>
+      `;
+
+      document.getElementById('moisture-results-card').classList.remove('hidden');
+    }
+
+    // Copy Results
     function copyResults() {
       const outputVal = document.getElementById('output-target-price').textContent;
-      const targetUnit = document.getElementById('select-target-unit').selectedOptions[0].text;
-      navigator.clipboard.writeText('Saraaf Price Result: ' + outputVal + ' per ' + targetUnit);
+      navigator.clipboard.writeText('Saraaf Price Result: ' + outputVal);
       const btn = document.getElementById('btn-copy-results');
       btn.textContent = 'Copied!';
       setTimeout(() => btn.textContent = 'Copy Results', 2000);
