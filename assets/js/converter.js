@@ -1,5 +1,5 @@
 /**
- * Saraaf Trade Toolkit - Commodity Price Converter Module
+ * Saraaf Trade Toolkit - Commodity Price Converter Engine
  */
 
 const unitRatiosInKg = {
@@ -8,7 +8,8 @@ const unitRatiosInKg = {
   mt: 1000,
   lb: 0.45359237,
   oz: 0.028349523125,
-  maund: 40,
+  maund: 37.3242,   // Traditional Maund (37.3242 kg)
+  maund40: 40,     // Commercial Metric Maund (40 kg)
   seer: 0.9331
 };
 
@@ -34,7 +35,13 @@ function setMode(mode) {
 function runCalculation() {
   const amount = parseFloat(document.getElementById('input-amount').value);
   const price = parseFloat(document.getElementById('input-price').value);
-  const exchangeRate = parseFloat(document.getElementById('input-exchange-rate').value) || 1.0;
+  
+  // Read manual rate reliably
+  const rateInput = document.getElementById('input-exchange-rate');
+  const exchangeRate = (rateInput && rateInput.value && parseFloat(rateInput.value) > 0) 
+    ? parseFloat(rateInput.value) 
+    : 1.0;
+
   const srcUnit = document.getElementById('select-source-unit').value;
   const tgtUnit = document.getElementById('select-target-unit').value;
 
@@ -43,8 +50,8 @@ function runCalculation() {
     return;
   }
 
-  const srcRatio = unitRatiosInKg[srcUnit];
-  const tgtRatio = unitRatiosInKg[tgtUnit];
+  const srcRatio = unitRatiosInKg[srcUnit] || 1;
+  const tgtRatio = unitRatiosInKg[tgtUnit] || 1;
 
   const priceInTargetCurr = price * exchangeRate;
   const pricePerKgInTargetCurr = priceInTargetCurr / srcRatio;
@@ -63,12 +70,14 @@ function runCalculation() {
     totalOrderValueTargetCurrency.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   const breakdown = document.getElementById('breakdown-list');
-  breakdown.innerHTML = `
-    <li><strong>Step 1 (Currency & Unit Base Rate):</strong> ${price} Base Currency × Exchange Rate (${exchangeRate}) = ${priceInTargetCurr.toFixed(4)} Target Currency per ${srcUnit.toUpperCase()}</li>
-    <li><strong>Step 2 (Converted Target Unit Price):</strong> ${priceInTargetCurr.toFixed(4)} per ${srcUnit.toUpperCase()} = <strong>${pricePerTargetUnit.toFixed(4)} Target Currency per ${tgtUnit.toUpperCase()}</strong></li>
-    <li><strong>Step 3 (Converted Total Volume):</strong> ${amount.toLocaleString()} ${srcUnit.toUpperCase()} = <strong>${totalWeightInTargetUnit.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${tgtUnit.toUpperCase()}</strong></li>
-    <li><strong>Step 4 (Total Settlement Value):</strong> ${amount.toLocaleString()} ${srcUnit.toUpperCase()} × ${priceInTargetCurr.toFixed(4)} = <strong>${totalOrderValueTargetCurrency.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Total Target Currency</strong></li>
-  `;
+  if (breakdown) {
+    breakdown.innerHTML = `
+      <li><strong>Step 1 (Currency & Unit Base Rate):</strong> ${price} Base Currency × Exchange Rate (${exchangeRate}) = ${priceInTargetCurr.toFixed(4)} Target Currency per ${srcUnit.toUpperCase()}</li>
+      <li><strong>Step 2 (Converted Target Unit Price):</strong> ${priceInTargetCurr.toFixed(4)} per ${srcUnit.toUpperCase()} = <strong>${pricePerTargetUnit.toFixed(4)} Target Currency per ${tgtUnit.toUpperCase()}</strong></li>
+      <li><strong>Step 3 (Converted Total Volume):</strong> ${amount.toLocaleString()} ${srcUnit.toUpperCase()} = <strong>${totalWeightInTargetUnit.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${tgtUnit.toUpperCase()}</strong></li>
+      <li><strong>Step 4 (Total Settlement Value):</strong> ${amount.toLocaleString()} ${srcUnit.toUpperCase()} × ${priceInTargetCurr.toFixed(4)} = <strong>${totalOrderValueTargetCurrency.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Total Target Currency</strong></li>
+    `;
+  }
 
   document.getElementById('results-card').classList.remove('hidden');
 }
