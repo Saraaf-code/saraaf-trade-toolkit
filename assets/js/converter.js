@@ -8,7 +8,7 @@ const unitRatiosInKg = {
   mt: 1000,
   lb: 0.45359237,
   oz: 0.028349523125,
-  maund: 37.3242,   // Traditional Maund (37.3242 kg)
+  maund: 37.3242,   // Traditional Maund (~37.32 kg)
   maund40: 40,     // Commercial Metric Maund (40 kg)
   seer: 0.9331
 };
@@ -36,7 +36,6 @@ function runCalculation() {
   const amount = parseFloat(document.getElementById('input-amount').value);
   const price = parseFloat(document.getElementById('input-price').value);
   
-  // Read manual rate reliably
   const rateInput = document.getElementById('input-exchange-rate');
   const exchangeRate = (rateInput && rateInput.value && parseFloat(rateInput.value) > 0) 
     ? parseFloat(rateInput.value) 
