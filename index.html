@@ -136,14 +136,14 @@
           <div class="form-group">
             <label for="select-source-unit">Offer Unit</label>
             <select id="select-source-unit" class="select-input" onchange="runCalculation()">
-             <option value="kg">Kilograms (kg)</option>
-                <option value="g">Grams (g)</option>
-                <option value="mt" selected>Metric Tons (MT)</option>
-                <option value="lb">Pounds (lbs)</option>
-                <option value="oz">Ounces (oz)</option>
-                <option value="maund">Maund (37.32 kg)</option>
-                <option value="maund40">Maund 40 (40 kg)</option>
-                <option value="seer">Seer</option>
+              <option value="kg">Kilograms (kg)</option>
+              <option value="g">Grams (g)</option>
+              <option value="mt" selected>Metric Tons (MT)</option>
+              <option value="lb">Pounds (lbs)</option>
+              <option value="oz">Ounces (oz)</option>
+              <option value="maund">Maund (37.32 kg)</option>
+              <option value="maund40">Maund 40 (40 kg)</option>
+              <option value="seer">Seer</option>
             </select>
           </div>
 
@@ -160,7 +160,8 @@
               <option value="mt">Metric Tons (MT)</option>
               <option value="lb">Pounds (lbs)</option>
               <option value="oz">Ounces (oz)</option>
-              <option value="maund">Maund (md)</option>
+              <option value="maund">Maund (37.32 kg)</option>
+              <option value="maund40">Maund 40 (40 kg)</option>
               <option value="seer">Seer</option>
             </select>
           </div>
@@ -383,7 +384,7 @@
         <div class="result-hero" style="text-align: left; padding: 1.25rem 1rem;">
           <span class="result-label" style="text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem;">Critical Risk Transfer Point</span>
           <p id="incoterm-risk-point" style="margin: 0.5rem 0 0 0; font-size: 1.05rem; color: var(--color-text-primary); font-weight: 600;">
-            Risk transfers from seller to buyer once goods are loaded on board the vessel at the named port of shipment.
+            Risk transfers once goods are loaded safely on board the vessel at the named port of shipment.
           </p>
         </div>
 
@@ -438,356 +439,11 @@
 
   </main>
 
-  <script>
-    // Tab switching logic
-    function switchView(toolId) {
-      document.querySelectorAll('.nav-tab').forEach(btn => {
-        const isMatch = btn.getAttribute('onclick').includes("'" + toolId + "'");
-        btn.classList.toggle('active', isMatch);
-      });
-      document.querySelectorAll('.tool-view').forEach(view => {
-        view.classList.toggle('hidden', view.id !== 'tool-' + toolId);
-      });
-      if (toolId === 'incoterms') {
-        updateIncotermView();
-      }
-    }
-
-    // Exchange Rate Mode logic
-    function setMode(mode) {
-      document.querySelectorAll('.pill-toggle-group .pill-btn').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.getElementById('btn-mode-' + mode);
-      if (activeBtn) activeBtn.classList.add('active');
-
-      const manualBox = document.getElementById('manual-rate-box');
-      const stateBankBox = document.getElementById('statebank-rate-box');
-
-      if (mode === 'manual') {
-        manualBox.classList.remove('hidden');
-        stateBankBox.classList.add('hidden');
-      } else if (mode === 'statebank') {
-        manualBox.classList.add('hidden');
-        stateBankBox.classList.remove('hidden');
-      } else if (mode === 'live') {
-        alert('Live Market exchange rate integration is coming in Phase 2.');
-      }
-    }
-
-    // Weight ratios in kilograms
-    const unitRatiosInKg = {
-      kg: 1,
-      g: 0.001,
-      mt: 1000,
-      lb: 0.45359237,
-      oz: 0.028349523125,
-      maund: 40,
-      seer: 0.9331
-    };
-
-    // Price Converter Calculation
-    function runCalculation() {
-      const amount = parseFloat(document.getElementById('input-amount').value);
-      const price = parseFloat(document.getElementById('input-price').value);
-      const exchangeRate = parseFloat(document.getElementById('input-exchange-rate').value) || 1.0;
-      const srcUnit = document.getElementById('select-source-unit').value;
-      const tgtUnit = document.getElementById('select-target-unit').value;
-
-      if (isNaN(amount) || isNaN(price) || amount <= 0 || price <= 0) {
-        document.getElementById('results-card').classList.add('hidden');
-        return;
-      }
-
-      const srcRatio = unitRatiosInKg[srcUnit];
-      const tgtRatio = unitRatiosInKg[tgtUnit];
-
-      const priceInTargetCurr = price * exchangeRate;
-      const pricePerKgInTargetCurr = priceInTargetCurr / srcRatio;
-      const pricePerTargetUnit = pricePerKgInTargetCurr * tgtRatio;
-      
-      const totalOrderValueTargetCurrency = priceInTargetCurr * amount;
-      const totalWeightInKg = amount * srcRatio;
-      const totalWeightInTargetUnit = totalWeightInKg / tgtRatio;
-
-      const unitDecimals = pricePerTargetUnit < 0.1 ? 4 : 2;
-
-      document.getElementById('output-target-price').textContent = 
-        pricePerTargetUnit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: unitDecimals }) + ' / ' + tgtUnit.toUpperCase();
-
-      document.getElementById('output-total-value').textContent = 
-        totalOrderValueTargetCurrency.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-      const breakdown = document.getElementById('breakdown-list');
-      breakdown.innerHTML = `
-        <li><strong>Step 1 (Currency & Unit Base Rate):</strong> ${price} Base Currency × Exchange Rate (${exchangeRate}) = ${priceInTargetCurr.toFixed(4)} Target Currency per ${srcUnit.toUpperCase()}</li>
-        <li><strong>Step 2 (Converted Target Unit Price):</strong> ${priceInTargetCurr.toFixed(4)} per ${srcUnit.toUpperCase()} = <strong>${pricePerTargetUnit.toFixed(4)} Target Currency per ${tgtUnit.toUpperCase()}</strong></li>
-        <li><strong>Step 3 (Converted Total Volume):</strong> ${amount.toLocaleString()} ${srcUnit.toUpperCase()} = <strong>${totalWeightInTargetUnit.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${tgtUnit.toUpperCase()}</strong></li>
-        <li><strong>Step 4 (Total Settlement Value):</strong> ${amount.toLocaleString()} ${srcUnit.toUpperCase()} × ${priceInTargetCurr.toFixed(4)} = <strong>${totalOrderValueTargetCurrency.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Total Target Currency</strong></li>
-      `;
-
-      document.getElementById('results-card').classList.remove('hidden');
-    }
-
-    // Moisture & Dry Mass Calculator Logic
-    function runMoistureCalc() {
-      const mode = document.getElementById('select-moisture-mode').value;
-      const weight = parseFloat(document.getElementById('moisture-initial-weight').value);
-      const unit = document.getElementById('moisture-weight-unit').value;
-      const actualMoisture = parseFloat(document.getElementById('moisture-initial-pct').value);
-      const contractMoisture = parseFloat(document.getElementById('moisture-target-pct').value);
-
-      if (isNaN(weight) || isNaN(actualMoisture) || isNaN(contractMoisture) || weight <= 0) {
-        document.getElementById('moisture-results-card').classList.add('hidden');
-        return;
-      }
-
-      const breakdown = document.getElementById('moisture-breakdown-list');
-
-      if (mode === 'drymass') {
-        const dryMass = weight * ((100 - actualMoisture) / 100);
-        let netPayableWeight = weight;
-        let penaltyDeduction = 0;
-        
-        if (actualMoisture > contractMoisture) {
-          netPayableWeight = dryMass / ((100 - contractMoisture) / 100);
-          penaltyDeduction = weight - netPayableWeight;
-        }
-
-        document.getElementById('output-moisture-label').textContent = 'Net Payable Weight';
-        document.getElementById('output-moisture-weight').textContent = 
-          netPayableWeight.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + unit;
-
-        breakdown.innerHTML = `
-          <li><strong>Absolute Dry Mass (0% Moisture):</strong> ${weight} ${unit} × (100% - ${actualMoisture}%) = <strong>${dryMass.toFixed(2)} ${unit}</strong></li>
-          <li><strong>Contract Limit Allowed Margin:</strong> ${contractMoisture}% max moisture threshold</li>
-          <li><strong>Excess Moisture Deduction:</strong> ${penaltyDeduction > 0 ? penaltyDeduction.toFixed(2) + ' ' + unit + ' (' + ((penaltyDeduction/weight)*100).toFixed(2) + '% penalty)' : '0.00 ' + unit + ' (Within allowed limit)'}</li>
-          <li><strong>Final Payable Lot Weight:</strong> <strong>${netPayableWeight.toFixed(2)} ${unit}</strong></li>
-        `;
-
-      } else {
-        const dryMatterPct = (100 - actualMoisture) / 100;
-        const targetDryMatterPct = (100 - contractMoisture) / 100;
-        const adjustedWeight = weight * (dryMatterPct / targetDryMatterPct);
-        const weightDifference = adjustedWeight - weight;
-
-        document.getElementById('output-moisture-label').textContent = 'Adjusted Commercial Weight';
-        document.getElementById('output-moisture-weight').textContent = 
-          adjustedWeight.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + unit;
-
-        breakdown.innerHTML = `
-          <li><strong>Dry Matter Ratio:</strong> (100% - ${actualMoisture}%) ÷ (100% - ${contractMoisture}%) = ${(dryMatterPct / targetDryMatterPct).toFixed(6)}</li>
-          <li><strong>Adjusted Lot Weight:</strong> ${weight} ${unit} × ${(dryMatterPct / targetDryMatterPct).toFixed(6)} = <strong>${adjustedWeight.toFixed(2)} ${unit}</strong></li>
-          <li><strong>Commercial Shrink / Variance:</strong> ${weightDifference >= 0 ? '+' + weightDifference.toFixed(2) : weightDifference.toFixed(2)} ${unit}</li>
-        `;
-      }
-
-      document.getElementById('moisture-results-card').classList.remove('hidden');
-    }
-
-    // Container CBM Calculation Logic
-    function runCbmCalc() {
-      const length = parseFloat(document.getElementById('cbm-box-length').value);
-      const width = parseFloat(document.getElementById('cbm-box-width').value);
-      const height = parseFloat(document.getElementById('cbm-box-height').value);
-      const unit = document.getElementById('cbm-dim-unit').value;
-      const boxes = parseInt(document.getElementById('cbm-total-boxes').value);
-      const boxWeight = parseFloat(document.getElementById('cbm-box-weight').value) || 0;
-
-      if (isNaN(length) || isNaN(width) || isNaN(height) || isNaN(boxes) || length <= 0 || width <= 0 || height <= 0 || boxes <= 0) {
-        document.getElementById('cbm-results-card').classList.add('hidden');
-        return;
-      }
-
-      let factorToMeters = 0.01;
-      if (unit === 'm') factorToMeters = 1.0;
-      if (unit === 'in') factorToMeters = 0.0254;
-
-      const singleBoxCbm = (length * factorToMeters) * (width * factorToMeters) * (height * factorToMeters);
-      const totalCbm = singleBoxCbm * boxes;
-      const totalGrossWeightKg = boxWeight * boxes;
-
-      document.getElementById('output-cbm-total').textContent = 
-        totalCbm.toFixed(3) + ' CBM' + (totalGrossWeightKg > 0 ? ' (' + (totalGrossWeightKg/1000).toFixed(2) + ' MT)' : '');
-
-      const containers = [
-        { name: '20ft Standard Container', cbm: 33.2, maxWeightKg: 28230 },
-        { name: '40ft Standard Container', cbm: 67.7, maxWeightKg: 26700 },
-        { name: '40ft High Cube (HC)', cbm: 76.3, maxWeightKg: 28600 }
-      ];
-
-      const breakdown = document.getElementById('cbm-breakdown-list');
-      let itemsHtml = `<li><strong>Single Carton Volume:</strong> ${length} × ${width} × ${height} ${unit} = <strong>${singleBoxCbm.toFixed(4)} CBM per box</strong></li>`;
-
-      containers.forEach(c => {
-        const volUtil = ((totalCbm / c.cbm) * 100).toFixed(1);
-        const boxesByVol = Math.floor(c.cbm / singleBoxCbm);
-        let weightWarning = '';
-
-        if (totalGrossWeightKg > 0 && totalGrossWeightKg > c.maxWeightKg) {
-          weightWarning = ` <span style="color: var(--color-error); font-weight: bold;">[Warning: Exceeds ${c.maxWeightKg.toLocaleString()} kg payload limit!]</span>`;
-        }
-
-        itemsHtml += `
-          <li>
-            <strong>${c.name}:</strong> 
-            Utilizes <strong>${volUtil}%</strong> of capacity (${totalCbm.toFixed(2)} / ${c.cbm} CBM). 
-            Max unit capacity: ~<strong>${boxesByVol.toLocaleString()} cartons</strong>.${weightWarning}
-          </li>
-        `;
-      });
-
-      breakdown.innerHTML = itemsHtml;
-      document.getElementById('cbm-results-card').classList.remove('hidden');
-    }
-
-    // Incoterms Data Model
-    const incotermsData = {
-      EXW: {
-        title: "EXW – Ex Works",
-        mode: "Any Transport Mode",
-        risk: "Risk transfers at seller's premises (factory/warehouse) when goods are made available to buyer. Buyer bears all loading, transport, and customs risks.",
-        stages: { packaging: "Seller", exportCustoms: "Buyer", inlandOrigin: "Buyer", loadingOrigin: "Buyer", freight: "Buyer", insurance: "Buyer (Optional)", importCustoms: "Buyer", finalDelivery: "Buyer" }
-      },
-      FCA: {
-        title: "FCA – Free Carrier",
-        mode: "Any Transport Mode",
-        risk: "Risk transfers when goods are delivered to the nominated carrier or terminal named by the buyer.",
-        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Buyer", insurance: "Buyer (Optional)", importCustoms: "Buyer", finalDelivery: "Buyer" }
-      },
-      FAS: {
-        title: "FAS – Free Alongside Ship",
-        mode: "Sea & Inland Waterway Only",
-        risk: "Risk transfers when goods are placed alongside the vessel nominated by the buyer at the named port of shipment.",
-        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Buyer", freight: "Buyer", insurance: "Buyer (Optional)", importCustoms: "Buyer", finalDelivery: "Buyer" }
-      },
-      FOB: {
-        title: "FOB – Free On Board",
-        mode: "Sea & Inland Waterway Only",
-        risk: "Risk transfers once goods are loaded safely on board the vessel at the named port of shipment.",
-        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Buyer", insurance: "Buyer (Optional)", importCustoms: "Buyer", finalDelivery: "Buyer" }
-      },
-      CFR: {
-        title: "CFR – Cost and Freight",
-        mode: "Sea & Inland Waterway Only",
-        risk: "Risk transfers on board vessel at origin port. Seller pays ocean freight to destination port, but buyer holds transit risk.",
-        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Seller", insurance: "Buyer (Optional)", importCustoms: "Buyer", finalDelivery: "Buyer" }
-      },
-      CIF: {
-        title: "CIF – Cost, Insurance & Freight",
-        mode: "Sea & Inland Waterway Only",
-        risk: "Risk transfers on board vessel at origin port. Seller pays freight and minimum clause (C) marine insurance to destination port.",
-        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Seller", insurance: "Seller (Minimum Cover)", importCustoms: "Buyer", finalDelivery: "Buyer" }
-      },
-      CPT: {
-        title: "CPT – Carriage Paid To",
-        mode: "Any Transport Mode",
-        risk: "Risk transfers when goods are handed over to the first carrier. Seller pays main transport to named destination.",
-        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Seller", insurance: "Buyer (Optional)", importCustoms: "Buyer", finalDelivery: "Buyer" }
-      },
-      CIP: {
-        title: "CIP – Carriage and Insurance Paid To",
-        mode: "Any Transport Mode",
-        risk: "Risk transfers when handed to first carrier. Seller pays freight and mandatory comprehensive Clause (A) insurance.",
-        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Seller", insurance: "Seller (All-Risk Cover)", importCustoms: "Buyer", finalDelivery: "Buyer" }
-      },
-      DAP: {
-        title: "DAP – Delivered at Place",
-        mode: "Any Transport Mode",
-        risk: "Risk transfers when goods arrive at named destination ready for unloading. Buyer handles import clearance and unloading.",
-        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Seller", insurance: "Seller", importCustoms: "Buyer", finalDelivery: "Seller" }
-      },
-      DPU: {
-        title: "DPU – Delivered at Place Unloaded",
-        mode: "Any Transport Mode",
-        risk: "Risk transfers once goods are unloaded by seller at named place of destination. Buyer handles import clearance.",
-        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Seller", insurance: "Seller", importCustoms: "Buyer", finalDelivery: "Seller (Unloaded)" }
-      },
-      DDP: {
-        title: "DDP – Delivered Duty Paid",
-        mode: "Any Transport Mode",
-        risk: "Maximum seller obligation. Risk transfers upon arrival at destination after seller completes import customs clearance and duties.",
-        stages: { packaging: "Seller", exportCustoms: "Seller", inlandOrigin: "Seller", loadingOrigin: "Seller", freight: "Seller", insurance: "Seller", importCustoms: "Seller", finalDelivery: "Seller" }
-      }
-    };
-
-    function updateIncotermView() {
-      const code = document.getElementById('select-incoterm').value;
-      const data = incotermsData[code];
-      if (!data) return;
-
-      document.getElementById('incoterm-title').textContent = data.title;
-      document.getElementById('incoterm-mode-badge').textContent = data.mode;
-      document.getElementById('incoterm-risk-point').textContent = data.risk;
-
-      setStageBadge('stage-packaging', data.stages.packaging);
-      setStageBadge('stage-export-customs', data.stages.exportCustoms);
-      setStageBadge('stage-inland-origin', data.stages.inlandOrigin);
-      setStageBadge('stage-loading-origin', data.stages.loadingOrigin);
-      setStageBadge('stage-freight', data.stages.freight);
-      setStageBadge('stage-insurance', data.stages.insurance);
-      setStageBadge('stage-import-customs', data.stages.importCustoms);
-      setStageBadge('stage-final-delivery', data.stages.finalDelivery);
-    }
-
-    function setStageBadge(elementId, text) {
-      const el = document.getElementById(elementId);
-      if (!el) return;
-      el.textContent = text;
-      el.className = 'party-badge';
-      if (text.startsWith('Seller')) {
-        el.classList.add('badge-seller');
-      } else if (text.startsWith('Buyer')) {
-        el.classList.add('badge-buyer');
-      } else {
-        el.classList.add('badge-shared');
-      }
-    }
-
-    // Copy Results Logic
-    function copyResults() {
-      const outputVal = document.getElementById('output-target-price').textContent;
-      const totalVal = document.getElementById('output-total-value').textContent;
-      const summaryText = 'Saraaf Trade Summary | Total Settlement Value: ' + totalVal + ' | Target Unit Price: ' + outputVal;
-
-      const btn = document.getElementById('btn-copy-results');
-
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(summaryText).then(() => {
-          btn.textContent = 'Copied!';
-          setTimeout(() => btn.textContent = 'Copy Results', 2000);
-        }).catch(() => fallbackCopyText(summaryText, btn));
-      } else {
-        fallbackCopyText(summaryText, btn);
-      }
-    }
-
-    function fallbackCopyText(text, btn) {
-      const textArea = document.createElement("textarea");
-      textArea.value = text;
-      textArea.style.position = "fixed";
-      textArea.style.left = "-999999px";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      try {
-        document.execCommand('copy');
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = 'Copy Results', 2000);
-      } catch (err) {
-        console.error('Fallback copy failed', err);
-      }
-      document.body.removeChild(textArea);
-    }
-  </script>
-
-  <!-- Service Worker Registration -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('Service Worker registered successfully:', reg.scope))
-          .catch(err => console.log('Service Worker registration failed:', err));
-      });
-    }
-  </script>
+  <!-- Modular Scripts Loading -->
+  <script src="./assets/js/app.js"></script>
+  <script src="./assets/js/converter.js"></script>
+  <script src="./assets/js/moisture.js"></script>
+  <script src="./assets/js/container.js"></script>
+  <script src="./assets/js/incoterms.js"></script>
 </body>
 </html>
