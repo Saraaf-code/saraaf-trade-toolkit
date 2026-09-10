@@ -1,9 +1,8 @@
-
 /**
  * Saraaf Trade Toolkit - Core App Controller
  */
 
-// Tab switching logic across tool views
+// Global tab switching controller
 function switchView(toolId) {
   document.querySelectorAll('.nav-tab').forEach(btn => {
     const isMatch = btn.getAttribute('onclick')?.includes("'" + toolId + "'");
@@ -14,7 +13,7 @@ function switchView(toolId) {
     view.classList.toggle('hidden', view.id !== 'tool-' + toolId);
   });
 
-  // Trigger tool-specific initializers if necessary
+  // Trigger tool initializers when navigating
   if (toolId === 'incoterms' && typeof updateIncotermView === 'function') {
     updateIncotermView();
   }
