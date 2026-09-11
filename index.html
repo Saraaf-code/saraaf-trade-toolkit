@@ -370,65 +370,102 @@
     </section>
 
     <!-- View 6: Ore & Concentrate Valuation Engine -->
-    <section id="tool-ore" class="tool-view hidden">
-      <div class="card">
+<section id="tool-ore" class="tool-view hidden">
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
         <h1 class="card-title">Ore & Concentrate Valuation Engine</h1>
         <p class="card-subtitle">Calculate metal content value, payability percentages, and treatment charges (TC/RC).</p>
+      </div>
+      <div style="display: flex; gap: 0.5rem;">
+        <button type="button" class="pill-btn pill-btn-secondary" onclick="printOrePDF()">
+          📄 Export PDF
+        </button>
+        <button type="button" class="pill-btn pill-btn-secondary" onclick="shareOreResults()">
+          🔗 Share
+        </button>
+      </div>
+    </div>
 
-        <form id="ore-form" class="form-grid" onsubmit="event.preventDefault(); runOreValuation();">
-          <div class="form-group">
-            <label for="ore-dry-weight">Dry Weight Volume (DMT)</label>
-            <input type="number" id="ore-dry-weight" step="any" min="0" placeholder="e.g. 1000" oninput="runOreValuation()" required>
-          </div>
-          <div class="form-group">
-            <label for="ore-grade-pct">Metal Grade / Purity (%)</label>
-            <input type="number" id="ore-grade-pct" step="0.01" min="0" max="100" placeholder="e.g. 22.5" oninput="runOreValuation()" required>
-          </div>
-          <div class="form-group">
-            <label for="ore-benchmark-price">Metal Benchmark Price ($ / MT)</label>
-            <input type="number" id="ore-benchmark-price" step="any" min="0" placeholder="e.g. 8500" oninput="runOreValuation()" required>
-          </div>
-          <div class="form-group">
-            <label for="ore-payability-pct">Contract Payability Rate (%)</label>
-            <input type="number" id="ore-payability-pct" step="0.1" min="0" max="100" value="95.0" oninput="runOreValuation()">
-          </div>
-          <div class="form-group">
-            <label for="ore-tc-deduction">Treatment Charge (TC) ($ / DMT)</label>
-            <input type="number" id="ore-tc-deduction" step="any" min="0" placeholder="e.g. 70" oninput="runOreValuation()">
-          </div>
-          <div class="form-group">
-            <label for="ore-rc-deduction">Refining Charge (RC) ($ / Contained MT)</label>
-            <input type="number" id="ore-rc-deduction" step="any" min="0" placeholder="e.g. 150" oninput="runOreValuation()">
-          </div>
-          <div class="form-group full-width">
-            <label for="ore-freight-cost">Ocean / Inland Freight Cost ($ / DMT)</label>
-            <input type="number" id="ore-freight-cost" step="any" min="0" placeholder="e.g. 35" oninput="runOreValuation()">
-          </div>
-          <div class="form-group full-width">
-            <button type="submit" class="btn-primary">Calculate Ore Settlement</button>
-          </div>
-        </form>
+    <form id="ore-form" class="form-grid" onsubmit="event.preventDefault(); runOreValuation();">
+      
+      <!-- Dry Weight + Slider -->
+      <div class="form-group full-width">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+          <label for="ore-dry-weight" style="margin:0;">Dry Weight Volume (DMT)</label>
+          <input type="number" id="ore-dry-weight" step="any" min="0" max="50000" value="1000" style="width: 120px; text-align: right;" oninput="syncOreInput('ore-dry-weight', 'slider-dry-weight')" required>
+        </div>
+        <input type="range" id="slider-dry-weight" min="1" max="10000" value="1000" step="10" style="width: 100%; accent-color: var(--color-accent, #3b82f6);" oninput="syncOreSlider('slider-dry-weight', 'ore-dry-weight')">
       </div>
 
-      <div id="ore-results-card" class="card results-card hidden">
-        <div class="results-header">
-          <h2>Ore Valuation Results</h2>
-          <button class="pill-btn pill-btn-secondary" type="button" onclick="shareOreResults()">Share Results</button>
+      <!-- Metal Grade + Slider -->
+      <div class="form-group full-width">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+          <label for="ore-grade-pct" style="margin:0;">Metal Grade / Purity (%)</label>
+          <input type="number" id="ore-grade-pct" step="0.01" min="0" max="100" value="22.5" style="width: 120px; text-align: right;" oninput="syncOreInput('ore-grade-pct', 'slider-grade-pct')" required>
         </div>
-        <div class="result-hero" style="text-align: center; padding: 2rem 1rem;">
-          <span class="result-label" style="text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.875rem;">Net Commercial Lot Value</span>
-          <span id="output-ore-net-value" class="result-value" style="display: block; font-size: 2.5rem; font-weight: 700; margin: 0.5rem 0; word-break: break-word;">$0.00</span>
-          <div style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 0.95rem;">
-            <span>Effective Rate: </span>
-            <strong id="output-ore-per-mt" style="color: var(--color-text-primary); font-size: 1.05rem;">$0.00 / DMT</strong>
-          </div>
-        </div>
-        <div class="breakdown-container" style="margin-top: 1.5rem;">
-          <h3>Commercial Smelter & Payability Breakdown</h3>
-          <ol id="ore-breakdown-list" class="breakdown-list"></ol>
-        </div>
+        <input type="range" id="slider-grade-pct" min="0.1" max="100" value="22.5" step="0.1" style="width: 100%; accent-color: var(--color-accent, #3b82f6);" oninput="syncOreSlider('slider-grade-pct', 'ore-grade-pct')">
       </div>
-    </section>
+
+      <!-- Benchmark Price -->
+      <div class="form-group">
+        <label for="ore-benchmark-price">Benchmark Metal Price ($ / MT)</label>
+        <input type="number" id="ore-benchmark-price" step="any" min="0" value="8500" placeholder="e.g. 8500" oninput="runOreValuation()" required>
+      </div>
+
+      <!-- Payability % + Slider -->
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+          <label for="ore-payability-pct" style="margin:0;">Payability Rate (%)</label>
+          <input type="number" id="ore-payability-pct" step="0.1" min="0" max="100" value="95.0" style="width: 90px; text-align: right;" oninput="syncOreInput('ore-payability-pct', 'slider-payability')" required>
+        </div>
+        <input type="range" id="slider-payability" min="50" max="100" value="95.0" step="0.5" style="width: 100%; accent-color: var(--color-accent, #3b82f6);" oninput="syncOreSlider('slider-payability', 'ore-payability-pct')">
+      </div>
+
+      <!-- Treatment Charge (TC) -->
+      <div class="form-group">
+        <label for="ore-tc-deduction">Treatment Charge (TC) ($ / DMT)</label>
+        <input type="number" id="ore-tc-deduction" step="any" min="0" value="70" placeholder="e.g. 70" oninput="runOreValuation()">
+      </div>
+
+      <!-- Refining Charge (RC) -->
+      <div class="form-group">
+        <label for="ore-rc-deduction">Refining Charge (RC) ($ / Contained MT)</label>
+        <input type="number" id="ore-rc-deduction" step="any" min="0" value="150" placeholder="e.g. 150" oninput="runOreValuation()">
+      </div>
+
+      <!-- Freight Cost -->
+      <div class="form-group full-width">
+        <label for="ore-freight-cost">Freight & Logistics Cost ($ / DMT)</label>
+        <input type="number" id="ore-freight-cost" step="any" min="0" value="35" placeholder="e.g. 35" oninput="runOreValuation()">
+      </div>
+    </form>
+  </div>
+
+  <!-- Results Card -->
+  <div id="ore-results-card" class="card results-card" style="margin-top: 1.5rem;">
+    <div class="results-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <h2>Valuation Summary</h2>
+      <div style="display: flex; gap: 0.5rem;">
+        <button class="pill-btn pill-btn-secondary" type="button" onclick="printOrePDF()">📄 Export PDF</button>
+        <button class="pill-btn pill-btn-secondary" type="button" onclick="shareOreResults()">🔗 Share</button>
+      </div>
+    </div>
+
+    <div class="result-hero" style="text-align: center; padding: 2rem 1rem; background: var(--color-bg-secondary, rgba(255,255,255,0.02)); border-radius: 8px; margin: 1rem 0;">
+      <span class="result-label" style="text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.85rem; color: var(--color-text-secondary);">Net Commercial Lot Value</span>
+      <span id="output-ore-net-value" class="result-value" style="display: block; font-size: 2.5rem; font-weight: 700; color: #34d399; margin: 0.5rem 0;">$0.00</span>
+      <div style="color: var(--color-text-secondary); font-size: 0.95rem;">
+        <span>Effective Yield Rate: </span>
+        <strong id="output-ore-per-mt" style="color: var(--color-text-primary);">$0.00 / DMT</strong>
+      </div>
+    </div>
+
+    <div class="breakdown-container" style="margin-top: 1.5rem;">
+      <h3>Smelter & Payability Calculation Breakdown</h3>
+      <ol id="ore-breakdown-list" class="breakdown-list"></ol>
+    </div>
+  </section>
 
   </main>
 
