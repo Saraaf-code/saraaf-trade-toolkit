@@ -2,8 +2,12 @@
  * Saraaf Trade Toolkit - Core App Controller
  */
 
-// Global tab switching controller
 function switchView(toolId) {
+  if (toolId === 'ore-valuation') {
+    window.location.href = './tools/ore-valuation-engine.html';
+    return;
+  }
+
   document.querySelectorAll('.nav-tab').forEach(btn => {
     const isMatch = btn.getAttribute('onclick')?.includes("'" + toolId + "'");
     btn.classList.toggle('active', isMatch);
@@ -13,13 +17,11 @@ function switchView(toolId) {
     view.classList.toggle('hidden', view.id !== 'tool-' + toolId);
   });
 
-  // Trigger tool initializers when navigating
   if (toolId === 'incoterms' && typeof updateIncotermView === 'function') {
     updateIncotermView();
   }
 }
 
-// Service Worker Registration for PWA Support
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
