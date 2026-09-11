@@ -1,37 +1,22 @@
 /**
- * Saraaf Trade Toolkit - Core App Controller & View Switcher
+ * Saraaf Trade Toolkit - Core App Controller
  */
 
+// Global tab switching controller
 function switchView(toolId) {
-  // Hide all tool views
-  const views = document.querySelectorAll('.tool-view');
-  views.forEach(view => view.classList.add('hidden'));
+  document.querySelectorAll('.nav-tab').forEach(btn => {
+    const isMatch = btn.getAttribute('onclick')?.includes("'" + toolId + "'");
+    btn.classList.toggle('active', isMatch);
+  });
 
-  // Remove active state from header tabs
-  const tabs = document.querySelectorAll('.nav-tab');
-  tabs.forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tool-view').forEach(view => {
+    view.classList.toggle('hidden', view.id !== 'tool-' + toolId);
+  });
 
-  // Show the selected view section in index.html
-  const targetView = document.getElementById('tool-' + toolId);
-  if (targetView) {
-    targetView.classList.remove('hidden');
-  }
-
-  // Highlight the active navigation tab
-  const activeTab = Array.from(tabs).find(tab => 
-    tab.getAttribute('onclick')?.includes("'" + toolId + "'")
-  );
-  if (activeTab) {
-    activeTab.classList.add('active');
-  }
-
-  // Trigger tool-specific view initializers when navigating
+  // Trigger tool initializers when navigating
   if (toolId === 'incoterms' && typeof updateIncotermView === 'function') {
     updateIncotermView();
   }
-
-  // Scroll to top
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Service Worker Registration for PWA Support

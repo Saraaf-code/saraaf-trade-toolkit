@@ -343,53 +343,5 @@ input:focus, select:focus {
 @media (max-width: 640px) {
   .form-grid {
     grid-template-columns: 1fr;
-
-    @media print {
-  @page {
-    size: A4 portrait;
-    margin: 10mm;
-  }
-  html, body {
-    background: #ffffff !important;
-    color: #111111 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    font-size: 10pt !important;
-  }
-  .app-header,
-  .header-nav,
-  .no-print {
-    display: none !important;
-  }
-  .print-shell {
-    max-width: none !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  .print-panel {
-    background: #ffffff !important;
-    color: #111111 !important;
-    border: 1px solid #bbbbbb !important;
-    box-shadow: none !important;
-  }
-  .print-panel * {
-    color: #111111 !important;
-  }
-  .print-title {
-    color: #111111 !important;
-  }
-  section {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-  .print-hero {
-    border: 2px solid #777777 !important;
-    background: #ffffff !important;
-  }
-  .print-footer {
-    margin-top: 8px !important;
-  }
-}
   }
 }

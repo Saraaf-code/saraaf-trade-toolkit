@@ -1,323 +1,449 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-950 text-slate-100 font-sans antialiased">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saraaf Trade Toolkit</title>
-    <meta name="description" content="Executive Commodity & Trade Tool Suite">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        input[type=range]{-webkit-appearance:none;appearance:none;background:transparent}
-        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;height:18px;width:18px;border-radius:50%;background:#f59e0b;cursor:pointer;margin-top:-6px;box-shadow:0 0 10px rgba(245,158,11,.5);transition:all .15s ease}
-        input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);background:#fbbf24;box-shadow:0 0 15px rgba(251,191,36,.8)}
-        input[type=range]::-webkit-slider-runnable-track{width:100%;height:6px;cursor:pointer;background:#334155;border-radius:3px}
-        input[type=range]::-moz-range-thumb{height:18px;width:18px;border:0;border-radius:50%;background:#f59e0b;cursor:pointer}
-        input[type=range]::-moz-range-track{height:6px;background:#334155;border-radius:3px}
-        input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-        input[type=number]{-moz-appearance:textfield}
-        @media print{
-            @page{size:A4 portrait;margin:10mm}
-            html,body{background:#fff!important;color:#111!important;padding:0!important;margin:0!important;font-size:10pt!important}
-            body{display:block!important}
-            .no-print{display:none!important}
-            .print-shell{max-width:none!important;width:100%!important;margin:0!important;padding:0!important}
-            .print-panel{background:#fff!important;color:#111!important;border:1px solid #bbb!important;box-shadow:none!important}
-            .print-panel *{color:#111!important}
-            .print-title{color:#111!important}
-            section{break-inside:avoid;page-break-inside:avoid}
-            .print-hero{border:2px solid #777!important;background:#fff!important;box-shadow:none!important}
-            .print-hero .value{color:#111!important;-webkit-text-fill-color:#111!important}
-            .print-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
-            .print-compact{padding:10px!important;margin-bottom:8px!important}
-            .print-footer{margin-top:8px!important}
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saraaf Trade Toolkit | Commodity Tools</title>
+  <meta name="description" content="Commercial-grade trade utilities and commodity calculation toolkit for global commerce.">
+  <meta name="theme-color" content="#1a2a33">
+  
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./assets/css/variables.css">
+  <link rel="stylesheet" href="./assets/css/main.css">
+  <style>
+    /* Incoterms specific lightweight styling overrides */
+    .incoterm-matrix-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .responsibility-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm, 6px);
+      background-color: var(--color-bg-secondary, rgba(255, 255, 255, 0.03));
+      border: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+    }
+    .responsibility-stage {
+      font-weight: 600;
+      color: var(--color-text-primary, #ffffff);
+    }
+    .party-badge {
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-seller {
+      background-color: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+    .badge-buyer {
+      background-color: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .badge-shared {
+      background-color: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+  </style>
 </head>
-<body class="min-h-full flex flex-col justify-between bg-slate-950 text-slate-100 p-3 sm:p-6 lg:p-8">
+<body>
+  <!-- Persistent Header Bar -->
+  <header class="app-header">
+    <a href="https://saraafglobal.com" class="header-brand" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+      <img src="./Saraaf TM logo.jpg" alt="Saraaf Logo" class="brand-logo">
+      <div class="brand-text">
+        <span class="brand-title">Saraaf</span>
+        <span class="brand-subtitle">Trade Toolkit</span>
+      </div>
+    </a>
 
-<!-- Global Toolkit Header -->
-<header class="no-print max-w-7xl mx-auto w-full flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
-    <div class="flex items-center gap-3">
-        <a href="index.html" class="flex items-center gap-3">
-            <img src="Saraaf TM logo.jpg" alt="Saraaf" class="h-10 rounded">
-        </a>
-        <div>
-            <h1 class="text-xl sm:text-2xl font-black tracking-tight text-amber-400">SARAAF TRADE TOOLKIT</h1>
-            <p class="text-xs text-slate-400">Executive Trade & Commodity Calculators</p>
+    <!-- Tool Navigation Tabs -->
+    <nav class="header-nav" aria-label="Tool selection">
+      <button class="nav-tab active" onclick="switchView('hub')">All Tools</button>
+      <button class="nav-tab" onclick="switchView('converter')">Price Converter</button>
+      <button class="nav-tab" onclick="switchView('moisture')">Moisture Calculator</button>
+      <button class="nav-tab" onclick="switchView('container')">Container Estimator</button>
+      <button class="nav-tab" onclick="switchView('incoterms')">Incoterms Guide</button>
+      <button class="nav-tab" onclick="switchView('hscode')">HS Code Lookup</button>
+    </nav>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="app-main">
+
+    <!-- View 1 (Default): All Tools Hub Grid -->
+    <section id="tool-hub" class="tool-view">
+      <div class="card">
+        <h1 class="card-title">Trade Utilities Suite</h1>
+        <p class="card-subtitle">Professional tools built for trade execution, logistics, and commodity valuation.</p>
+
+        <div class="hub-grid">
+          <div class="tool-card active-card" onclick="switchView('converter')">
+            <span class="badge badge-active">Active</span>
+            <h3>1. The Commodity Price Converter</h3>
+            <p>Convert weight, currency, and unit prices dynamically with full formula breakdowns.</p>
+          </div>
+          <div class="tool-card active-card" onclick="switchView('moisture')">
+            <span class="badge badge-active">Active</span>
+            <h3>2. Commodity Moisture & Dry Mass Calculator</h3>
+            <p>Calculate dry mass fiber weight, contract moisture penalties, and grain shrink loss.</p>
+          </div>
+          <div class="tool-card active-card" onclick="switchView('container')">
+            <span class="badge badge-active">Active</span>
+            <h3>3. Container CBM & Load Estimator</h3>
+            <p>Calculate volume utilization, box counts, and payload limits for 20ft & 40ft containers.</p>
+          </div>
+          <div class="tool-card active-card" onclick="switchView('incoterms')">
+            <span class="badge badge-active">Active</span>
+            <h3>4. Incoterms 2020 Risk & Cost Matrix</h3>
+            <p>Interactive operational cost allocation and risk transfer points for international trade.</p>
+          </div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>5. HS Code & Tariff Calculator</h3><p>Lookup global HS codes and calculate import tariffs across jurisdictions.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>6. Letter of Credit (L/C) Checklist</h3><p>Validate documentation criteria and bank negotiation fees.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>7. Freight & Shipping Estimator</h3><p>Estimate ocean and air freight rates alongside local port charges.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>8. Currency Volatility & Hedging</h3><p>Calculate exposure risks and forward exchange cover margins.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>9. Import Duty & Local Tax Estimator</h3><p>Estimate VAT, custom duties, and port taxes for shipments.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>10. Trade Margin & Markup Analyzer</h3><p>Calculate gross margins, net profit margins, and landed cost markups.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>11. Packaging & Tare Weight Deductor</h3><p>Compute net weight adjustments for bag and container tare weights.</p></div>
+          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>12. ISO 2859 Inspection Sampling</h3><p>Determine random sample sizes and acceptance quality limits (AQL).</p></div>
         </div>
-    </div>
-</header>
-
-<div class="print-shell max-w-7xl mx-auto w-full space-y-4 sm:space-y-6">
-
-<!-- VIEW 1: Toolkit Homepage Grid -->
-<section id="tool-grid" class="space-y-6">
-    <div class="border-b border-slate-800 pb-4">
-        <h2 class="text-2xl font-bold text-slate-100">Executive Calculator Suite</h2>
-        <p class="text-sm text-slate-400">Select a tool below to launch its valuation engine.</p>
-    </div>
+      </div>
+    </section>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Ore Calculator Card -->
-        <a href="#tool-ore" onclick="showTool('tool-ore')" class="block p-5 bg-slate-900 border border-slate-800 hover:border-amber-500/50 rounded-xl transition-all group">
-            <div class="flex justify-between items-start mb-2">
-                <span class="text-xs font-semibold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Metals & Ores</span>
-            </div>
-            <h3 class="text-lg font-bold text-slate-100 group-hover:text-amber-400 transition-colors">Ore Valuation Engine</h3>
-            <p class="text-xs text-slate-400 mt-1">Executive Gold-Antimony (Au-Sb) Ore Settlement System</p>
-        </a>
+    <!-- View 2: Commodity Price Converter Tool -->
+    <section id="tool-converter" class="tool-view hidden">
+      <div class="card">
+        <h1 class="card-title">The Commodity Price Converter</h1>
+        <p class="card-subtitle">Convert weight units, currency exchange rates, and calculate total commodity values seamlessly.</p>
 
-        <!-- Additional Tool Cards will mount here -->
-    </div>
-</section>
+        <form id="converter-form" class="form-grid" onsubmit="event.preventDefault(); runCalculation();">
+          
+          <div class="form-group">
+            <label for="input-amount">Offer Quantity / Volume</label>
+            <input type="number" id="input-amount" step="any" min="0" placeholder="e.g. 50000" oninput="runCalculation()" required>
+          </div>
 
-<!-- VIEW 2: Ore Valuation Engine (UNCHANGED) -->
-<section id="tool-ore" class="space-y-4 sm:space-y-6 hidden">
-    <header class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3 sm:pb-4 gap-2 sm:gap-4">
-        <div>
-            <h1 class="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 print-title">ORE VALUATION ENGINE</h1>
-            <p class="text-xs sm:text-sm text-slate-400">Executive Gold-Antimony (Au-Sb) Ore Settlement System</p>
-        </div>
-        <div class="actions no-print flex items-center gap-2 flex-wrap">
-            <button id="printBtn" type="button" class="px-3 py-2 text-xs sm:text-sm font-bold rounded-lg border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-100">Print / Save PDF</button>
-            <button id="shareBtn" type="button" class="px-3 py-2 text-xs sm:text-sm font-bold rounded-lg bg-amber-500 text-slate-950 hover:bg-amber-400">Share Quote</button>
-        </div>
-    </header>
+          <div class="form-group">
+            <label for="select-source-unit">Offer Unit</label>
+            <select id="select-source-unit" class="select-input" onchange="runCalculation()">
+              <option value="kg">Kilograms (kg)</option>
+              <option value="g">Grams (g)</option>
+              <option value="mt" selected>Metric Tons (MT)</option>
+              <option value="lb">Pounds (lbs)</option>
+              <option value="oz">Ounces (oz)</option>
+              <option value="maund">Maund (37.32 kg)</option>
+              <option value="maund40">Maund 40 (40 kg)</option>
+              <option value="seer">Seer</option>
+            </select>
+          </div>
 
-    <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-amber-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xl relative overflow-hidden print-panel print-hero">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-center">
-            <div class="lg:col-span-2">
-                <span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-amber-500/80">Total Estimated Lot Value</span>
-                <div id="total-value" class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-300 to-amber-500 my-1 truncate">$0.00</div>
-                <p class="text-[11px] sm:text-xs text-slate-400">Net payout yield combined from Antimony and Gold constituents, net of moisture factors.</p>
-            </div>
-            <div class="bg-slate-950/60 rounded-xl p-3.5 sm:p-4 border border-slate-800/80 flex flex-col justify-center space-y-1 print-panel">
-                <span class="text-[11px] sm:text-xs text-slate-400">Effective Dry Metric Tons (DMT)</span>
-                <span id="dmt-display" class="text-xl sm:text-2xl font-bold text-slate-200">0.00 MT</span>
-                <div class="text-[10px] sm:text-[11px] text-slate-500 flex justify-between pt-1 border-t border-slate-800/40 mt-1">
-                    <span>Gross Mass: <span id="gross-mass-sub">0</span> MT</span>
-                    <span>Moisture: -<span id="moisture-sub">0</span>%</span>
-                </div>
-            </div>
-        </div>
-    </div>
+          <div class="form-group">
+            <label for="input-price">Price Per Unit (Base Currency)</label>
+            <input type="number" id="input-price" step="any" min="0" placeholder="e.g. 52.3" oninput="runCalculation()" required>
+          </div>
 
-    <section class="no-print bg-slate-900/80 border border-slate-800 rounded-xl p-4 sm:p-5">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-                <label class="text-xs text-slate-400 block mb-1" for="quote-ref">Quote / Deal Reference</label>
-                <input id="quote-ref" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-sm text-slate-100" placeholder="Optional reference">
+          <div class="form-group">
+            <label for="select-target-unit">Convert To Target Unit</label>
+            <select id="select-target-unit" class="select-input" onchange="runCalculation()">
+              <option value="kg" selected>Kilograms (kg)</option>
+              <option value="g">Grams (g)</option>
+              <option value="mt">Metric Tons (MT)</option>
+              <option value="lb">Pounds (lbs)</option>
+              <option value="oz">Ounces (oz)</option>
+              <option value="maund">Maund (37.32 kg)</option>
+              <option value="maund40">Maund 40 (40 kg)</option>
+              <option value="seer">Seer</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label>Exchange Rate Mode</label>
+            <div class="pill-toggle-group">
+              <button type="button" class="pill-btn active" id="btn-mode-manual" onclick="setMode('manual')">Manual Rate</button>
+              <button type="button" class="pill-btn" id="btn-mode-statebank" onclick="setMode('statebank')">State Bank (Historical)</button>
+              <button type="button" class="pill-btn" id="btn-mode-live" onclick="setMode('live')">Live Market (Coming Soon)</button>
             </div>
-            <div>
-                <label class="text-xs text-slate-400 block mb-1" for="counterparty">Counterparty</label>
-                <input id="counterparty" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-sm text-slate-100" placeholder="Optional company / party">
+          </div>
+
+          <div id="rate-mode-inputs" class="form-group full-width">
+            <div id="manual-rate-box">
+              <label for="input-exchange-rate">Exchange Rate (1 Base Currency = X Target Currency)</label>
+              <input type="number" id="input-exchange-rate" step="any" min="0" value="1.0" placeholder="e.g. 7.23 for USD to CNY" oninput="runCalculation()">
             </div>
+
+            <div id="statebank-rate-box" class="hidden">
+              <label for="input-statebank-date">Select Historical Rate Date</label>
+              <input type="date" id="input-statebank-date">
+              <small style="color: var(--color-text-secondary); display: block; margin-top: 0.25rem;">Official bank rates repository integration active in next update.</small>
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <button type="submit" class="btn-primary">Calculate Settlement Valuation</button>
+          </div>
+
+        </form>
+      </div>
+
+      <div id="results-card" class="card results-card hidden">
+        <div class="results-header">
+          <h2>Conversion Results</h2>
+          <button id="btn-copy-results" class="pill-btn pill-btn-secondary" type="button" onclick="copyResults()">Copy Results</button>
         </div>
+
+        <div class="result-hero" style="text-align: center; padding: 2rem 1rem;">
+          <span class="result-label" style="text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.875rem;">Total Settlement Value</span>
+          <span id="output-total-value" class="result-value" style="display: block; font-size: 2.5rem; font-weight: 700; margin: 0.5rem 0; word-break: break-word;">0.00</span>
+          
+          <div style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 0.95rem;">
+            <span>Target Unit Price: </span>
+            <strong id="output-target-price" style="color: var(--color-text-primary); font-size: 1.05rem;">0.00</strong>
+          </div>
+        </div>
+
+        <div class="breakdown-container" style="margin-top: 1.5rem;">
+          <h3>Mathematical Breakdown & Steps</h3>
+          <ol id="breakdown-list" class="breakdown-list"></ol>
+        </div>
+      </div>
     </section>
 
-    <main class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-        <section class="space-y-4 sm:space-y-6">
-            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3.5 sm:space-y-4 print-panel print-compact">
-                <h2 class="text-xs sm:text-sm font-bold tracking-wider text-slate-300 uppercase border-b border-slate-800 pb-2 flex items-center justify-between">
-                    <span>Lot Specifications</span>
-                    <span class="text-[10px] sm:text-xs font-normal text-slate-500">Physical Payload</span>
-                </h2>
-                <div class="space-y-1">
-                    <div class="flex justify-between items-center text-xs">
-                        <label for="mass-input" class="text-slate-300 font-medium truncate pr-2">Cargo Total Mass (MT)</label>
-                        <input type="number" id="mass-input" min="1" max="500" step="0.1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
-                    </div>
-                    <input type="range" id="mass-slider" min="1" max="500" step="0.1" class="w-full no-print">
-                </div>
-                <div class="space-y-1">
-                    <div class="flex justify-between items-center text-xs">
-                        <label for="moisture-input" class="text-slate-300 font-medium truncate pr-2">Moisture Content Reduction (%)</label>
-                        <input type="number" id="moisture-input" min="0" max="10" step="0.01" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
-                    </div>
-                    <input type="range" id="moisture-slider" min="0" max="10" step="0.01" class="w-full no-print">
-                </div>
-            </div>
+    <!-- View 3: Commodity Moisture Calculator -->
+    <section id="tool-moisture" class="tool-view hidden">
+      <div class="card">
+        <h1 class="card-title">Commodity Moisture & Dry Mass Calculator</h1>
+        <p class="card-subtitle">Calculate net dry weight, contract moisture penalties, or dry matter shrink allowances.</p>
 
-            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3.5 sm:space-y-4 relative overflow-hidden print-panel print-compact">
-                <div class="absolute top-0 right-0 w-2 h-full bg-sky-500/30 no-print"></div>
-                <h2 class="text-xs sm:text-sm font-bold tracking-wider text-slate-300 uppercase border-b border-slate-800 pb-2 flex items-center justify-between">
-                    <span class="text-sky-400">Antimony (Sb) Parameters</span>
-                    <span class="text-[10px] sm:text-xs font-normal text-slate-500">Base Metal</span>
-                </h2>
-                <div class="space-y-1">
-                    <div class="flex justify-between items-center text-xs">
-                        <label for="sb-grade-input" class="text-slate-300 font-medium truncate pr-2">Purity Grade (%)</label>
-                        <input type="number" id="sb-grade-input" min="5" max="90" step="0.01" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-sky-400 font-mono text-xs sm:text-sm">
-                    </div>
-                    <input type="range" id="sb-grade-slider" min="5" max="90" step="0.01" class="w-full no-print">
-                </div>
-                <div class="space-y-1">
-                    <div class="flex justify-between items-center text-xs">
-                        <div>
-                            <label for="sb-price-input" class="text-slate-300 font-medium truncate pr-2">Benchmark Price ($ / MT)</label>
-                            <div class="text-[9px] text-slate-500">Market benchmark used for this estimate</div>
-                        </div>
-                        <input type="number" id="sb-price-input" min="10000" max="60000" step="100" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-sky-400 font-mono text-xs sm:text-sm">
-                    </div>
-                    <input type="range" id="sb-price-slider" min="10000" max="60000" step="100" class="w-full no-print">
-                </div>
-                <div class="space-y-1">
-                    <div class="flex justify-between items-center text-xs">
-                        <label for="sb-pay-input" class="text-slate-300 font-medium truncate pr-2">Buyer Payability (%)</label>
-                        <input type="number" id="sb-pay-input" min="20" max="100" step="0.1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-sky-400 font-mono text-xs sm:text-sm">
-                    </div>
-                    <input type="range" id="sb-pay-slider" min="20" max="100" step="0.1" class="w-full no-print">
-                </div>
-            </div>
+        <form id="moisture-form" class="form-grid" onsubmit="event.preventDefault(); runMoistureCalc();">
+          
+          <div class="form-group full-width">
+            <label for="select-moisture-mode">Calculation Mode / Industry Model</label>
+            <select id="select-moisture-mode" class="select-input" onchange="runMoistureCalc()">
+              <option value="drymass" selected>Dry Mass & Penalty Deduction (Cotton & General Commodities)</option>
+              <option value="rehydrate">Commercial Dry Matter & Shrink (Grains / Processing)</option>
+            </select>
+          </div>
 
-            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3.5 sm:space-y-4 relative overflow-hidden print-panel print-compact">
-                <div class="absolute top-0 right-0 w-2 h-full bg-amber-500/40 no-print"></div>
-                <h2 class="text-xs sm:text-sm font-bold tracking-wider text-amber-400 uppercase border-b border-slate-800 pb-2 flex items-center justify-between">
-                    <span>Gold (Au) Parameters</span>
-                    <span class="text-[10px] sm:text-xs font-normal text-slate-500">Precious Metal</span>
-                </h2>
-                <div class="space-y-1">
-                    <div class="flex justify-between items-center text-xs">
-                        <label for="au-conc-input" class="text-slate-300 font-medium truncate pr-2">Concentration (ppm or g/t)</label>
-                        <input type="number" id="au-conc-input" min="0" max="50" step="0.01" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
-                    </div>
-                    <input type="range" id="au-conc-slider" min="0" max="50" step="0.01" class="w-full no-print">
-                </div>
-                <div class="space-y-1">
-                    <div class="flex justify-between items-center text-xs">
-                        <label for="au-price-input" class="text-slate-300 font-medium truncate pr-2">Benchmark Spot Price ($ / gram)</label>
-                        <input type="number" id="au-price-input" min="50" max="250" step="0.01" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
-                    </div>
-                    <input type="range" id="au-price-slider" min="50" max="250" step="0.01" class="w-full no-print">
-                </div>
-                <div class="space-y-1">
-                    <div class="flex justify-between items-center text-xs">
-                        <label for="au-pay-input" class="text-slate-300 font-medium truncate pr-2">Buyer Payability (%)</label>
-                        <input type="number" id="au-pay-input" min="20" max="100" step="0.1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
-                    </div>
-                    <input type="range" id="au-pay-slider" min="20" max="100" step="0.1" class="w-full no-print">
-                </div>
-            </div>
-        </section>
+          <div class="form-group">
+            <label for="moisture-initial-weight">Delivered Gross Weight</label>
+            <input type="number" id="moisture-initial-weight" step="any" min="0" placeholder="e.g. 15465" oninput="runMoistureCalc()" required>
+          </div>
 
-        <section class="space-y-4 sm:space-y-6">
-            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 sm:p-6 space-y-4 sm:space-y-6 lg:sticky lg:top-6 shadow-xl print-panel print-compact">
-                <h2 class="text-xs sm:text-sm font-bold tracking-wider text-slate-300 uppercase border-b border-slate-800 pb-2.5 sm:pb-3 flex justify-between items-center">
-                    <span>Material Refining Flow</span>
-                    <span class="text-[10px] sm:text-xs font-normal text-slate-500">Visual Allocation</span>
-                </h2>
-                <div class="space-y-3 sm:space-y-4">
-                    <div class="bg-slate-950 border border-slate-700/80 rounded-xl p-3.5 sm:p-4 text-center shadow-lg print-panel">
-                        <span class="text-[10px] sm:text-xs font-bold tracking-widest text-slate-400 uppercase block">RAW CARGO INTAKE</span>
-                        <div id="flow-raw-dmt" class="text-lg sm:text-2xl font-black text-slate-100 font-mono my-0.5 truncate">0.00 MT (DMT)</div>
-                        <span class="text-[10px] sm:text-[11px] text-slate-500 block truncate">Dry mass ready for physical extraction</span>
-                    </div>
+          <div class="form-group">
+            <label for="moisture-weight-unit">Weight Unit</label>
+            <select id="moisture-weight-unit" class="select-input" onchange="runMoistureCalc()">
+              <option value="MT" selected>Metric Tons (MT)</option>
+              <option value="kg">Kilograms (kg)</option>
+              <option value="lbs">Pounds (lbs)</option>
+              <option value="md">Maund (md)</option>
+            </select>
+          </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-1">
-                        <div class="bg-slate-950 border-l-4 border-l-sky-500 border-y border-r border-slate-800 rounded-r-xl p-3 sm:p-4 space-y-1.5 shadow-md print-panel">
-                            <div class="flex items-center justify-between border-b border-slate-800/80 pb-1">
-                                <span class="text-[11px] sm:text-xs font-bold text-sky-400 uppercase tracking-wider">REFINED ANTIMONY (Sb)</span>
-                                <span class="text-[9px] font-mono text-slate-400">Base</span>
-                            </div>
-                            <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider block">Physical Pure Mass</span>
-                            <span id="flow-sb-weight" class="text-base sm:text-lg font-bold text-slate-200 font-mono truncate block">0.00 MT</span>
-                            <div class="pt-1 border-t border-slate-900">
-                                <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider block">Net Antimony Payout</span>
-                                <span id="flow-sb-payout" class="text-sm sm:text-base font-bold text-sky-400 font-mono truncate block">$0.00</span>
-                            </div>
-                        </div>
+          <div class="form-group">
+            <label for="moisture-initial-pct">Delivered / Actual Moisture (%)</label>
+            <input type="number" id="moisture-initial-pct" step="0.1" min="0" max="100" placeholder="e.g. 7.0" oninput="runMoistureCalc()" required>
+          </div>
 
-                        <div class="bg-slate-950 border-l-4 border-l-amber-500 border-y border-r border-slate-800 rounded-r-xl p-3 sm:p-4 space-y-1.5 shadow-md print-panel">
-                            <div class="flex items-center justify-between border-b border-slate-800/80 pb-1">
-                                <span class="text-[11px] sm:text-xs font-bold text-amber-400 uppercase tracking-wider">RESERVE GOLD (Au)</span>
-                                <span class="text-[9px] font-mono text-slate-400">Precious</span>
-                            </div>
-                            <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider block">Physical Pure Grams</span>
-                            <span id="flow-au-weight" class="text-base sm:text-lg font-bold text-slate-200 font-mono truncate block">0.00 g</span>
-                            <div class="pt-1 border-t border-slate-900">
-                                <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider block">Net Gold Payout</span>
-                                <span id="flow-au-payout" class="text-sm sm:text-base font-bold text-amber-400 font-mono truncate block">$0.00</span>
-                            </div>
-                        </div>
-                    </div>
+          <div class="form-group">
+            <label for="moisture-target-pct">Contract Limit / Target Moisture (%)</label>
+            <input type="number" id="moisture-target-pct" step="0.1" min="0" max="100" placeholder="e.g. 5.0" oninput="runMoistureCalc()" required>
+          </div>
 
-                    <div class="pt-3 space-y-1.5">
-                        <div class="flex justify-between text-[11px] sm:text-xs font-semibold">
-                            <span class="text-sky-400">Sb Share: <span id="sb-pct-share" class="font-mono">50.0%</span></span>
-                            <span class="text-amber-400">Au Share: <span id="au-pct-share" class="font-mono">50.0%</span></span>
-                        </div>
-                        <div class="w-full h-3.5 sm:h-4 bg-slate-950 rounded-full overflow-hidden flex border border-slate-800 p-0.5 no-print">
-                            <div id="sb-bar" class="h-full bg-sky-500" style="width:50%"></div>
-                            <div id="au-bar" class="h-full bg-amber-400" style="width:50%"></div>
-                        </div>
-                    </div>
-                </div>
+          <div class="form-group full-width">
+            <button type="submit" class="btn-primary">Calculate Moisture Breakdown</button>
+          </div>
 
-                <div class="space-y-2 text-xs text-slate-300 bg-slate-950/40 p-3.5 sm:p-4 rounded-xl border border-slate-800/50 print-panel">
-                    <div class="font-semibold text-slate-400 border-b border-slate-800/60 pb-1.5">Financial Breakdown Summary</div>
-                    <div class="flex justify-between"><span class="text-slate-400">Gross Sb Material Value</span><span id="ledger-sb-gross" class="font-mono">$0.00</span></div>
-                    <div class="flex justify-between"><span class="text-slate-400">Gross Au Material Value</span><span id="ledger-au-gross" class="font-mono">$0.00</span></div>
-                    <div class="flex justify-between pt-2 border-t border-slate-800 font-bold text-xs sm:text-sm">
-                        <span class="text-slate-200">Total Net Settlement</span>
-                        <span id="ledger-total" class="font-mono text-amber-400">$0.00</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+        </form>
+      </div>
 
-    <!-- Universal Tool Rating & Feedback Widget -->
-    <div class="no-print bg-slate-900/80 border border-slate-800 rounded-xl p-4 sm:p-5 mt-6">
-        <h3 class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider mb-1">Rate this Tool</h3>
-        <p class="text-xs text-slate-400 mb-3">How helpful was the Ore Valuation Engine for your trade workflow?</p>
-        
-        <div class="flex gap-2 mb-3">
-            <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(1)">★</button>
-            <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(2)">★</button>
-            <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(3)">★</button>
-            <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(4)">★</button>
-            <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(5)">★</button>
+      <div id="moisture-results-card" class="card results-card hidden">
+        <div class="results-header">
+          <h2>Moisture Adjustment Results</h2>
         </div>
-        
-        <div id="ore-rating-msg" class="hidden text-xs text-emerald-400 font-semibold mb-3"></div>
 
-        <div class="flex gap-2 flex-wrap">
-            <input type="text" id="ore-feedback-text" placeholder="Leave feedback or suggest an improvement..." class="flex-1 min-w-[200px] bg-slate-950 border border-slate-700 rounded px-3 py-2 text-xs text-slate-100">
-            <button type="button" onclick="submitOreFeedback()" class="px-4 py-2 text-xs font-bold rounded-lg border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-100">Submit Feedback</button>
+        <div class="result-hero">
+          <span id="output-moisture-label" class="result-label">Net Payable Weight</span>
+          <span id="output-moisture-weight" class="result-value">0.00</span>
         </div>
-    </div>
 
-    <footer class="text-center text-[11px] sm:text-xs text-slate-600 border-t border-slate-900 pt-3 sm:pt-4 print-footer">
-        Saraaf Ore Valuation Engine • Non-binding Trading Estimator
-    </footer>
-</section>
+        <div class="breakdown-container">
+          <h3 id="output-moisture-breakdown-title">Commercial Formula & Deductions</h3>
+          <ol id="moisture-breakdown-list" class="breakdown-list"></ol>
+        </div>
+      </div>
+    </section>
 
-</div>
+    <!-- View 4: Container CBM & Load Estimator -->
+    <section id="tool-container" class="tool-view hidden">
+      <div class="card">
+        <h1 class="card-title">Container CBM & Load Estimator</h1>
+        <p class="card-subtitle">Calculate total cubic volume (CBM), box counts, and container space utilization.</p>
 
-<script>
-    // Navigation Router
-    function showTool(toolId) {
-        document.querySelectorAll('section[id^="tool-"]').forEach(el => el.classList.add('hidden'));
-        const target = document.getElementById(toolId);
-        if (target) {
-            target.classList.remove('hidden');
-        } else {
-            document.getElementById('tool-grid').classList.remove('hidden');
-        }
-    }
+        <form id="container-form" class="form-grid" onsubmit="event.preventDefault(); runCbmCalc();">
+          
+          <div class="form-group">
+            <label for="cbm-box-length">Box / Package Length</label>
+            <input type="number" id="cbm-box-length" step="any" min="0" placeholder="e.g. 60" oninput="runCbmCalc()" required>
+          </div>
 
-    window.addEventListener('hashchange', () => {
-        const hash = window.location.hash.replace('#', '');
-        if (hash) showTool(hash);
-        else showTool('tool-grid');
-    });
+          <div class="form-group">
+            <label for="cbm-box-width">Box / Package Width</label>
+            <input type="number" id="cbm-box-width" step="any" min="0" placeholder="e.g. 40" oninput="runCbmCalc()" required>
+          </div>
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const hash = window.location.hash.replace('#', '');
-        if (hash) showTool(hash);
-        else showTool('tool-grid');
-    });
-</script>
-<script src="assets/js/ore.js"></script>
+          <div class="form-group">
+            <label for="cbm-box-height">Box / Package Height</label>
+            <input type="number" id="cbm-box-height" step="any" min="0" placeholder="e.g. 40" oninput="runCbmCalc()" required>
+          </div>
+
+          <div class="form-group">
+            <label for="cbm-dim-unit">Dimension Unit</label>
+            <select id="cbm-dim-unit" class="select-input" onchange="runCbmCalc()">
+              <option value="cm" selected>Centimeters (cm)</option>
+              <option value="m">Meters (m)</option>
+              <option value="in">Inches (in)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="cbm-total-boxes">Total Number of Packages / Cartons</label>
+            <input type="number" id="cbm-total-boxes" step="1" min="1" placeholder="e.g. 500" oninput="runCbmCalc()" required>
+          </div>
+
+          <div class="form-group">
+            <label for="cbm-box-weight">Gross Weight per Carton (kg)</label>
+            <input type="number" id="cbm-box-weight" step="any" min="0" placeholder="e.g. 15" oninput="runCbmCalc()">
+          </div>
+
+          <div class="form-group full-width">
+            <button type="submit" class="btn-primary">Calculate Container Fit</button>
+          </div>
+
+        </form>
+      </div>
+
+      <div id="cbm-results-card" class="card results-card hidden">
+        <div class="results-header">
+          <h2>Volumetric & Load Results</h2>
+        </div>
+
+        <div class="result-hero">
+          <span class="result-label">Total Volume (CBM)</span>
+          <span id="output-cbm-total" class="result-value">0.00 CBM</span>
+        </div>
+
+        <div class="breakdown-container">
+          <h3>Container Capacity Utilization</h3>
+          <ol id="cbm-breakdown-list" class="breakdown-list"></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- View 5: Incoterms 2020 Risk & Cost Matrix -->
+    <section id="tool-incoterms" class="tool-view hidden">
+      <div class="card">
+        <h1 class="card-title">Incoterms® 2020 Operational Matrix</h1>
+        <p class="card-subtitle">Analyze cost allocations, transport modes, and risk transfer points for international commercial trade.</p>
+
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="select-incoterm">Select Incoterm Rule</label>
+            <select id="select-incoterm" class="select-input" onchange="updateIncotermView()">
+              <option value="EXW">EXW – Ex Works</option>
+              <option value="FCA">FCA – Free Carrier</option>
+              <option value="FAS">FAS – Free Alongside Ship (Sea Only)</option>
+              <option value="FOB" selected>FOB – Free On Board (Sea Only)</option>
+              <option value="CFR">CFR – Cost and Freight (Sea Only)</option>
+              <option value="CIF">CIF – Cost, Insurance & Freight (Sea Only)</option>
+              <option value="CPT">CPT – Carriage Paid To</option>
+              <option value="CIP">CIP – Carriage and Insurance Paid To</option>
+              <option value="DAP">DAP – Delivered at Place</option>
+              <option value="DPU">DPU – Delivered at Place Unloaded</option>
+              <option value="DDP">DDP – Delivered Duty Paid</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="incoterm-details-card" class="card results-card" style="margin-top: 1.5rem;">
+        <div class="results-header" style="flex-wrap: wrap; gap: 0.5rem;">
+          <h2 id="incoterm-title" style="margin: 0;">FOB – Free On Board</h2>
+          <span id="incoterm-mode-badge" class="badge badge-active">Sea & Inland Waterway Only</span>
+        </div>
+
+        <div class="result-hero" style="text-align: left; padding: 1.25rem 1rem;">
+          <span class="result-label" style="text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem;">Critical Risk Transfer Point</span>
+          <p id="incoterm-risk-point" style="margin: 0.5rem 0 0 0; font-size: 1.05rem; color: var(--color-text-primary); font-weight: 600;">
+            Risk transfers once goods are loaded safely on board the vessel at the named port of shipment.
+          </p>
+        </div>
+
+        <div class="breakdown-container" style="margin-top: 1.5rem;">
+          <h3>Operational Cost Allocation (Seller vs Buyer)</h3>
+          <div class="incoterm-matrix-grid">
+            <div class="responsibility-row">
+              <span class="responsibility-stage">1. Export Packaging & Marking</span>
+              <span id="stage-packaging" class="party-badge badge-seller">Seller</span>
+            </div>
+            <div class="responsibility-row">
+              <span class="responsibility-stage">2. Export Customs Clearance & Local Taxes</span>
+              <span id="stage-export-customs" class="party-badge badge-seller">Seller</span>
+            </div>
+            <div class="responsibility-row">
+              <span class="responsibility-stage">3. Inland Transport to Departure Port/Terminal</span>
+              <span id="stage-inland-origin" class="party-badge badge-seller">Seller</span>
+            </div>
+            <div class="responsibility-row">
+              <span class="responsibility-stage">4. Terminal Handling & Origin Loading</span>
+              <span id="stage-loading-origin" class="party-badge badge-seller">Seller</span>
+            </div>
+            <div class="responsibility-row">
+              <span class="responsibility-stage">5. Main Freight (Ocean / Air Carriage)</span>
+              <span id="stage-freight" class="party-badge badge-buyer">Buyer</span>
+            </div>
+            <div class="responsibility-row">
+              <span class="responsibility-stage">6. Cargo Insurance</span>
+              <span id="stage-insurance" class="party-badge badge-buyer">Buyer (Optional)</span>
+            </div>
+            <div class="responsibility-row">
+              <span class="responsibility-stage">7. Import Customs Clearance, Duties & Taxes</span>
+              <span id="stage-import-customs" class="party-badge badge-buyer">Buyer</span>
+            </div>
+            <div class="responsibility-row">
+              <span class="responsibility-stage">8. Final Mile Delivery to Destination Warehouse</span>
+              <span id="stage-final-delivery" class="party-badge badge-buyer">Buyer</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Placeholder View -->
+    <section id="tool-hscode" class="tool-view hidden">
+      <div class="card">
+        <h1 class="card-title">HS Code & Tariff Calculator</h1>
+        <p class="card-subtitle">Global commodity classification and tariff estimation tool.</p>
+        <div class="result-hero"><span class="result-value">Coming Soon</span></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modular Scripts Loading -->
+  <script src="./assets/js/app.js"></script>
+  <script src="./assets/js/converter.js"></script>
+  <script src="./assets/js/moisture.js"></script>
+  <script src="./assets/js/container.js"></script>
+  <script src="./assets/js/incoterms.js"></script>
 </body>
 </html>
