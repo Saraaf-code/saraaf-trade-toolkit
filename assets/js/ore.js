@@ -139,7 +139,6 @@ function printOrePDF() {
   window.print();
 }
 
-// Universal Tool Rating & Feedback System
 function rateOreTool(stars) {
   const starBtns = document.querySelectorAll('.ore-star-btn');
   starBtns.forEach((btn, idx) => {
@@ -148,7 +147,7 @@ function rateOreTool(stars) {
   const feedbackMsg = $('ore-rating-msg');
   if (feedbackMsg) {
     feedbackMsg.textContent = `Thank you for rating this tool ${stars} out of 5 stars!`;
-    feedbackMsg.style.display = 'block';
+    feedbackMsg.classList.remove('hidden');
   }
 }
 
@@ -159,7 +158,6 @@ function submitOreFeedback() {
   if ($('ore-feedback-text')) $('ore-feedback-text').value = '';
 }
 
-// Initialize sliders & events
 document.addEventListener('DOMContentLoaded', () => {
   setupOreSlider('mass-slider', 'mass-input', defaults.mass);
   setupOreSlider('moisture-slider', 'moisture-input', defaults.moisture);
