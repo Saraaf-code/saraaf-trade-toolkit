@@ -35,7 +35,7 @@
 </head>
 <body class="min-h-full flex flex-col justify-between bg-slate-950 text-slate-100 p-3 sm:p-6 lg:p-8">
 
-<!-- Global Toolkit Header & Navigation -->
+<!-- Global Toolkit Header -->
 <header class="no-print max-w-7xl mx-auto w-full flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
     <div class="flex items-center gap-3">
         <a href="index.html" class="flex items-center gap-3">
@@ -46,15 +46,33 @@
             <p class="text-xs text-slate-400">Executive Trade & Commodity Calculators</p>
         </div>
     </div>
-    <a href="index.html" class="px-3 py-2 text-xs sm:text-sm font-bold rounded-lg border border-amber-500/50 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-colors">
-        ‹ Toolkit Homepage
-    </a>
 </header>
 
 <div class="print-shell max-w-7xl mx-auto w-full space-y-4 sm:space-y-6">
 
-<!-- TOOL VIEW: Ore Valuation Engine -->
-<section id="tool-ore" class="space-y-4 sm:space-y-6">
+<!-- VIEW 1: Toolkit Homepage Grid -->
+<section id="tool-grid" class="space-y-6">
+    <div class="border-b border-slate-800 pb-4">
+        <h2 class="text-2xl font-bold text-slate-100">Executive Calculator Suite</h2>
+        <p class="text-sm text-slate-400">Select a tool below to launch its valuation engine.</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Ore Calculator Card -->
+        <a href="#tool-ore" onclick="showTool('tool-ore')" class="block p-5 bg-slate-900 border border-slate-800 hover:border-amber-500/50 rounded-xl transition-all group">
+            <div class="flex justify-between items-start mb-2">
+                <span class="text-xs font-semibold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Metals & Ores</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-100 group-hover:text-amber-400 transition-colors">Ore Valuation Engine</h3>
+            <p class="text-xs text-slate-400 mt-1">Executive Gold-Antimony (Au-Sb) Ore Settlement System</p>
+        </a>
+
+        <!-- Additional Tool Cards will mount here -->
+    </div>
+</section>
+
+<!-- VIEW 2: Ore Valuation Engine (UNCHANGED) -->
+<section id="tool-ore" class="space-y-4 sm:space-y-6 hidden">
     <header class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3 sm:pb-4 gap-2 sm:gap-4">
         <div>
             <h1 class="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 print-title">ORE VALUATION ENGINE</h1>
@@ -276,6 +294,30 @@
 
 </div>
 
+<script>
+    // Navigation Router
+    function showTool(toolId) {
+        document.querySelectorAll('section[id^="tool-"]').forEach(el => el.classList.add('hidden'));
+        const target = document.getElementById(toolId);
+        if (target) {
+            target.classList.remove('hidden');
+        } else {
+            document.getElementById('tool-grid').classList.remove('hidden');
+        }
+    }
+
+    window.addEventListener('hashchange', () => {
+        const hash = window.location.hash.replace('#', '');
+        if (hash) showTool(hash);
+        else showTool('tool-grid');
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const hash = window.location.hash.replace('#', '');
+        if (hash) showTool(hash);
+        else showTool('tool-grid');
+    });
+</script>
 <script src="assets/js/ore.js"></script>
 </body>
 </html>
