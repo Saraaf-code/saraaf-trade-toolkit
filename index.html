@@ -1,236 +1,281 @@
-<!-- View: Ore Valuation Engine -->
-<section id="tool-ore" class="tool-view hidden">
-  <div class="print-shell max-w-7xl mx-auto w-full space-y-4 sm:space-y-6">
-    
-    <!-- Tool Header Bar -->
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100 font-sans antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saraaf Trade Toolkit</title>
+    <meta name="description" content="Executive Commodity & Trade Tool Suite">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        input[type=range]{-webkit-appearance:none;appearance:none;background:transparent}
+        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;height:18px;width:18px;border-radius:50%;background:#f59e0b;cursor:pointer;margin-top:-6px;box-shadow:0 0 10px rgba(245,158,11,.5);transition:all .15s ease}
+        input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);background:#fbbf24;box-shadow:0 0 15px rgba(251,191,36,.8)}
+        input[type=range]::-webkit-slider-runnable-track{width:100%;height:6px;cursor:pointer;background:#334155;border-radius:3px}
+        input[type=range]::-moz-range-thumb{height:18px;width:18px;border:0;border-radius:50%;background:#f59e0b;cursor:pointer}
+        input[type=range]::-moz-range-track{height:6px;background:#334155;border-radius:3px}
+        input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+        input[type=number]{-moz-appearance:textfield}
+        @media print{
+            @page{size:A4 portrait;margin:10mm}
+            html,body{background:#fff!important;color:#111!important;padding:0!important;margin:0!important;font-size:10pt!important}
+            body{display:block!important}
+            .no-print{display:none!important}
+            .print-shell{max-width:none!important;width:100%!important;margin:0!important;padding:0!important}
+            .print-panel{background:#fff!important;color:#111!important;border:1px solid #bbb!important;box-shadow:none!important}
+            .print-panel *{color:#111!important}
+            .print-title{color:#111!important}
+            section{break-inside:avoid;page-break-inside:avoid}
+            .print-hero{border:2px solid #777!important;background:#fff!important;box-shadow:none!important}
+            .print-hero .value{color:#111!important;-webkit-text-fill-color:#111!important}
+            .print-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+            .print-compact{padding:10px!important;margin-bottom:8px!important}
+            .print-footer{margin-top:8px!important}
+        }
+    </style>
+</head>
+<body class="min-h-full flex flex-col justify-between bg-slate-950 text-slate-100 p-3 sm:p-6 lg:p-8">
+
+<!-- Global Toolkit Header & Navigation -->
+<header class="no-print max-w-7xl mx-auto w-full flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+    <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-3">
+            <img src="Saraaf TM logo.jpg" alt="Saraaf" class="h-10 rounded">
+        </a>
+        <div>
+            <h1 class="text-xl sm:text-2xl font-black tracking-tight text-amber-400">SARAAF TRADE TOOLKIT</h1>
+            <p class="text-xs text-slate-400">Executive Trade & Commodity Calculators</p>
+        </div>
+    </div>
+    <a href="index.html" class="px-3 py-2 text-xs sm:text-sm font-bold rounded-lg border border-amber-500/50 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-colors">
+        ‹ Toolkit Homepage
+    </a>
+</header>
+
+<div class="print-shell max-w-7xl mx-auto w-full space-y-4 sm:space-y-6">
+
+<!-- TOOL VIEW: Ore Valuation Engine -->
+<section id="tool-ore" class="space-y-4 sm:space-y-6">
     <header class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3 sm:pb-4 gap-2 sm:gap-4">
-      <div>
-        <h1 class="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 print-title">ORE VALUATION ENGINE</h1>
-        <p class="text-xs sm:text-sm text-slate-400">Executive Gold-Antimony (Au-Sb) Ore Settlement System</p>
-      </div>
-      <div class="actions no-print flex items-center gap-2 flex-wrap">
-        <button id="printBtn" type="button" class="px-3 py-2 text-xs sm:text-sm font-bold rounded-lg border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-100">Print / Save PDF</button>
-        <button id="shareBtn" type="button" class="px-3 py-2 text-xs sm:text-sm font-bold rounded-lg bg-amber-500 text-slate-950 hover:bg-amber-400">Share Quote</button>
-      </div>
+        <div>
+            <h1 class="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 print-title">ORE VALUATION ENGINE</h1>
+            <p class="text-xs sm:text-sm text-slate-400">Executive Gold-Antimony (Au-Sb) Ore Settlement System</p>
+        </div>
+        <div class="actions no-print flex items-center gap-2 flex-wrap">
+            <button id="printBtn" type="button" class="px-3 py-2 text-xs sm:text-sm font-bold rounded-lg border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-100">Print / Save PDF</button>
+            <button id="shareBtn" type="button" class="px-3 py-2 text-xs sm:text-sm font-bold rounded-lg bg-amber-500 text-slate-950 hover:bg-amber-400">Share Quote</button>
+        </div>
     </header>
 
-    <!-- Executive Hero Banner -->
     <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-amber-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xl relative overflow-hidden print-panel print-hero">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-center">
-        <div class="lg:col-span-2">
-          <span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-amber-500/80">Total Estimated Lot Value</span>
-          <div id="total-value" class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-300 to-amber-500 my-1 truncate">$0.00</div>
-          <p class="text-[11px] sm:text-xs text-slate-400">Net payout yield combined from Antimony and Gold constituents, net of moisture factors.</p>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-center">
+            <div class="lg:col-span-2">
+                <span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-amber-500/80">Total Estimated Lot Value</span>
+                <div id="total-value" class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-300 to-amber-500 my-1 truncate">$0.00</div>
+                <p class="text-[11px] sm:text-xs text-slate-400">Net payout yield combined from Antimony and Gold constituents, net of moisture factors.</p>
+            </div>
+            <div class="bg-slate-950/60 rounded-xl p-3.5 sm:p-4 border border-slate-800/80 flex flex-col justify-center space-y-1 print-panel">
+                <span class="text-[11px] sm:text-xs text-slate-400">Effective Dry Metric Tons (DMT)</span>
+                <span id="dmt-display" class="text-xl sm:text-2xl font-bold text-slate-200">0.00 MT</span>
+                <div class="text-[10px] sm:text-[11px] text-slate-500 flex justify-between pt-1 border-t border-slate-800/40 mt-1">
+                    <span>Gross Mass: <span id="gross-mass-sub">0</span> MT</span>
+                    <span>Moisture: -<span id="moisture-sub">0</span>%</span>
+                </div>
+            </div>
         </div>
-        <div class="bg-slate-950/60 rounded-xl p-3.5 sm:p-4 border border-slate-800/80 flex flex-col justify-center space-y-1 print-panel">
-          <span class="text-[11px] sm:text-xs text-slate-400">Effective Dry Metric Tons (DMT)</span>
-          <span id="dmt-display" class="text-xl sm:text-2xl font-bold text-slate-200">0.00 MT</span>
-          <div class="text-[10px] sm:text-[11px] text-slate-500 flex justify-between pt-1 border-t border-slate-800/40 mt-1">
-            <span>Gross Mass: <span id="gross-mass-sub">0</span> MT</span>
-            <span>Moisture: -<span id="moisture-sub">0</span>%</span>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- Optional Deal Reference Fields -->
     <section class="no-print bg-slate-900/80 border border-slate-800 rounded-xl p-4 sm:p-5">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label class="text-xs text-slate-400 block mb-1" for="quote-ref">Quote / Deal Reference</label>
-          <input id="quote-ref" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-sm text-slate-100" placeholder="Optional reference">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+                <label class="text-xs text-slate-400 block mb-1" for="quote-ref">Quote / Deal Reference</label>
+                <input id="quote-ref" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-sm text-slate-100" placeholder="Optional reference">
+            </div>
+            <div>
+                <label class="text-xs text-slate-400 block mb-1" for="counterparty">Counterparty</label>
+                <input id="counterparty" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-sm text-slate-100" placeholder="Optional company / party">
+            </div>
         </div>
-        <div>
-          <label class="text-xs text-slate-400 block mb-1" for="counterparty">Counterparty</label>
-          <input id="counterparty" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-sm text-slate-100" placeholder="Optional company / party">
-        </div>
-      </div>
     </section>
 
-    <!-- Main Dual Column Layout -->
     <main class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-      
-      <!-- Input Parameters Column -->
-      <section class="space-y-4 sm:space-y-6">
-        
-        <!-- Lot Specifications -->
-        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3.5 sm:space-y-4 print-panel print-compact">
-          <h2 class="text-xs sm:text-sm font-bold tracking-wider text-slate-300 uppercase border-b border-slate-800 pb-2 flex items-center justify-between">
-            <span>Lot Specifications</span>
-            <span class="text-[10px] sm:text-xs font-normal text-slate-500">Physical Payload</span>
-          </h2>
-          <div class="space-y-1">
-            <div class="flex justify-between items-center text-xs">
-              <label for="mass-input" class="text-slate-300 font-medium truncate pr-2">Cargo Total Mass (MT)</label>
-              <input type="number" id="mass-input" min="1" max="500" step="0.1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
-            </div>
-            <input type="range" id="mass-slider" min="1" max="500" step="0.1" class="w-full no-print">
-          </div>
-          <div class="space-y-1">
-            <div class="flex justify-between items-center text-xs">
-              <label for="moisture-input" class="text-slate-300 font-medium truncate pr-2">Moisture Content Reduction (%)</label>
-              <input type="number" id="moisture-input" min="0" max="10" step="0.01" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
-            </div>
-            <input type="range" id="moisture-slider" min="0" max="10" step="0.01" class="w-full no-print">
-          </div>
-        </div>
-
-        <!-- Antimony (Sb) Parameters -->
-        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3.5 sm:space-y-4 relative overflow-hidden print-panel print-compact">
-          <div class="absolute top-0 right-0 w-2 h-full bg-sky-500/30 no-print"></div>
-          <h2 class="text-xs sm:text-sm font-bold tracking-wider text-slate-300 uppercase border-b border-slate-800 pb-2 flex items-center justify-between">
-            <span class="text-sky-400">Antimony (Sb) Parameters</span>
-            <span class="text-[10px] sm:text-xs font-normal text-slate-500">Base Metal</span>
-          </h2>
-          <div class="space-y-1">
-            <div class="flex justify-between items-center text-xs">
-              <label for="sb-grade-input" class="text-slate-300 font-medium truncate pr-2">Purity Grade (%)</label>
-              <input type="number" id="sb-grade-input" min="5" max="90" step="0.01" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-sky-400 font-mono text-xs sm:text-sm">
-            </div>
-            <input type="range" id="sb-grade-slider" min="5" max="90" step="0.01" class="w-full no-print">
-          </div>
-          <div class="space-y-1">
-            <div class="flex justify-between items-center text-xs">
-              <div>
-                <label for="sb-price-input" class="text-slate-300 font-medium truncate pr-2">Benchmark Price ($ / MT)</label>
-                <div class="text-[9px] text-slate-500">Market benchmark used for this estimate</div>
-              </div>
-              <input type="number" id="sb-price-input" min="10000" max="60000" step="100" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-sky-400 font-mono text-xs sm:text-sm">
-            </div>
-            <input type="range" id="sb-price-slider" min="10000" max="60000" step="100" class="w-full no-print">
-          </div>
-          <div class="space-y-1">
-            <div class="flex justify-between items-center text-xs">
-              <label for="sb-pay-input" class="text-slate-300 font-medium truncate pr-2">Buyer Payability (%)</label>
-              <input type="number" id="sb-pay-input" min="20" max="100" step="0.1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-sky-400 font-mono text-xs sm:text-sm">
-            </div>
-            <input type="range" id="sb-pay-slider" min="20" max="100" step="0.1" class="w-full no-print">
-          </div>
-        </div>
-
-        <!-- Gold (Au) Parameters -->
-        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3.5 sm:space-y-4 relative overflow-hidden print-panel print-compact">
-          <div class="absolute top-0 right-0 w-2 h-full bg-amber-500/40 no-print"></div>
-          <h2 class="text-xs sm:text-sm font-bold tracking-wider text-amber-400 uppercase border-b border-slate-800 pb-2 flex items-center justify-between">
-            <span>Gold (Au) Parameters</span>
-            <span class="text-[10px] sm:text-xs font-normal text-slate-500">Precious Metal</span>
-          </h2>
-          <div class="space-y-1">
-            <div class="flex justify-between items-center text-xs">
-              <label for="au-conc-input" class="text-slate-300 font-medium truncate pr-2">Concentration (ppm or g/t)</label>
-              <input type="number" id="au-conc-input" min="0" max="50" step="0.01" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
-            </div>
-            <input type="range" id="au-conc-slider" min="0" max="50" step="0.01" class="w-full no-print">
-          </div>
-          <div class="space-y-1">
-            <div class="flex justify-between items-center text-xs">
-              <label for="au-price-input" class="text-slate-300 font-medium truncate pr-2">Benchmark Spot Price ($ / gram)</label>
-              <input type="number" id="au-price-input" min="50" max="250" step="0.01" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
-            </div>
-            <input type="range" id="au-price-slider" min="50" max="250" step="0.01" class="w-full no-print">
-          </div>
-          <div class="space-y-1">
-            <div class="flex justify-between items-center text-xs">
-              <label for="au-pay-input" class="text-slate-300 font-medium truncate pr-2">Buyer Payability (%)</label>
-              <input type="number" id="au-pay-input" min="20" max="100" step="0.1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
-            </div>
-            <input type="range" id="au-pay-slider" min="20" max="100" step="0.1" class="w-full no-print">
-          </div>
-        </div>
-
-      </section>
-
-      <!-- Results & Visual Refining Flow Column -->
-      <section class="space-y-4 sm:space-y-6">
-        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 sm:p-6 space-y-4 sm:space-y-6 lg:sticky lg:top-6 shadow-xl print-panel print-compact">
-          <h2 class="text-xs sm:text-sm font-bold tracking-wider text-slate-300 uppercase border-b border-slate-800 pb-2.5 sm:pb-3 flex justify-between items-center">
-            <span>Material Refining Flow</span>
-            <span class="text-[10px] sm:text-xs font-normal text-slate-500">Visual Allocation</span>
-          </h2>
-          <div class="space-y-3 sm:space-y-4">
-            <div class="bg-slate-950 border border-slate-700/80 rounded-xl p-3.5 sm:p-4 text-center shadow-lg print-panel">
-              <span class="text-[10px] sm:text-xs font-bold tracking-widest text-slate-400 uppercase block">RAW CARGO INTAKE</span>
-              <div id="flow-raw-dmt" class="text-lg sm:text-2xl font-black text-slate-100 font-mono my-0.5 truncate">0.00 MT (DMT)</div>
-              <span class="text-[10px] sm:text-[11px] text-slate-500 block truncate">Dry mass ready for physical extraction</span>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-1">
-              <div class="bg-slate-950 border-l-4 border-l-sky-500 border-y border-r border-slate-800 rounded-r-xl p-3 sm:p-4 space-y-1.5 shadow-md print-panel">
-                <div class="flex items-center justify-between border-b border-slate-800/80 pb-1">
-                  <span class="text-[11px] sm:text-xs font-bold text-sky-400 uppercase tracking-wider">REFINED ANTIMONY (Sb)</span>
-                  <span class="text-[9px] font-mono text-slate-400">Base</span>
+        <section class="space-y-4 sm:space-y-6">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3.5 sm:space-y-4 print-panel print-compact">
+                <h2 class="text-xs sm:text-sm font-bold tracking-wider text-slate-300 uppercase border-b border-slate-800 pb-2 flex items-center justify-between">
+                    <span>Lot Specifications</span>
+                    <span class="text-[10px] sm:text-xs font-normal text-slate-500">Physical Payload</span>
+                </h2>
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center text-xs">
+                        <label for="mass-input" class="text-slate-300 font-medium truncate pr-2">Cargo Total Mass (MT)</label>
+                        <input type="number" id="mass-input" min="1" max="500" step="0.1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
+                    </div>
+                    <input type="range" id="mass-slider" min="1" max="500" step="0.1" class="w-full no-print">
                 </div>
-                <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider block">Physical Pure Mass</span>
-                <span id="flow-sb-weight" class="text-base sm:text-lg font-bold text-slate-200 font-mono truncate block">0.00 MT</span>
-                <div class="pt-1 border-t border-slate-900">
-                  <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider block">Net Antimony Payout</span>
-                  <span id="flow-sb-payout" class="text-sm sm:text-base font-bold text-sky-400 font-mono truncate block">$0.00</span>
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center text-xs">
+                        <label for="moisture-input" class="text-slate-300 font-medium truncate pr-2">Moisture Content Reduction (%)</label>
+                        <input type="number" id="moisture-input" min="0" max="10" step="0.01" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
+                    </div>
+                    <input type="range" id="moisture-slider" min="0" max="10" step="0.01" class="w-full no-print">
                 </div>
-              </div>
-
-              <div class="bg-slate-950 border-l-4 border-l-amber-500 border-y border-r border-slate-800 rounded-r-xl p-3 sm:p-4 space-y-1.5 shadow-md print-panel">
-                <div class="flex items-center justify-between border-b border-slate-800/80 pb-1">
-                  <span class="text-[11px] sm:text-xs font-bold text-amber-400 uppercase tracking-wider">RESERVE GOLD (Au)</span>
-                  <span class="text-[9px] font-mono text-slate-400">Precious</span>
-                </div>
-                <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider block">Physical Pure Grams</span>
-                <span id="flow-au-weight" class="text-base sm:text-lg font-bold text-slate-200 font-mono truncate block">0.00 g</span>
-                <div class="pt-1 border-t border-slate-900">
-                  <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider block">Net Gold Payout</span>
-                  <span id="flow-au-payout" class="text-sm sm:text-base font-bold text-amber-400 font-mono truncate block">$0.00</span>
-                </div>
-              </div>
             </div>
 
-            <div class="pt-3 space-y-1.5">
-              <div class="flex justify-between text-[11px] sm:text-xs font-semibold">
-                <span class="text-sky-400">Sb Share: <span id="sb-pct-share" class="font-mono">50.0%</span></span>
-                <span class="text-amber-400">Au Share: <span id="au-pct-share" class="font-mono">50.0%</span></span>
-              </div>
-              <div class="w-full h-3.5 sm:h-4 bg-slate-950 rounded-full overflow-hidden flex border border-slate-800 p-0.5 no-print">
-                <div id="sb-bar" class="h-full bg-sky-500" style="width:50%"></div>
-                <div id="au-bar" class="h-full bg-amber-400" style="width:50%"></div>
-              </div>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3.5 sm:space-y-4 relative overflow-hidden print-panel print-compact">
+                <div class="absolute top-0 right-0 w-2 h-full bg-sky-500/30 no-print"></div>
+                <h2 class="text-xs sm:text-sm font-bold tracking-wider text-slate-300 uppercase border-b border-slate-800 pb-2 flex items-center justify-between">
+                    <span class="text-sky-400">Antimony (Sb) Parameters</span>
+                    <span class="text-[10px] sm:text-xs font-normal text-slate-500">Base Metal</span>
+                </h2>
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center text-xs">
+                        <label for="sb-grade-input" class="text-slate-300 font-medium truncate pr-2">Purity Grade (%)</label>
+                        <input type="number" id="sb-grade-input" min="5" max="90" step="0.01" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-sky-400 font-mono text-xs sm:text-sm">
+                    </div>
+                    <input type="range" id="sb-grade-slider" min="5" max="90" step="0.01" class="w-full no-print">
+                </div>
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center text-xs">
+                        <div>
+                            <label for="sb-price-input" class="text-slate-300 font-medium truncate pr-2">Benchmark Price ($ / MT)</label>
+                            <div class="text-[9px] text-slate-500">Market benchmark used for this estimate</div>
+                        </div>
+                        <input type="number" id="sb-price-input" min="10000" max="60000" step="100" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-sky-400 font-mono text-xs sm:text-sm">
+                    </div>
+                    <input type="range" id="sb-price-slider" min="10000" max="60000" step="100" class="w-full no-print">
+                </div>
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center text-xs">
+                        <label for="sb-pay-input" class="text-slate-300 font-medium truncate pr-2">Buyer Payability (%)</label>
+                        <input type="number" id="sb-pay-input" min="20" max="100" step="0.1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-sky-400 font-mono text-xs sm:text-sm">
+                    </div>
+                    <input type="range" id="sb-pay-slider" min="20" max="100" step="0.1" class="w-full no-print">
+                </div>
             </div>
-          </div>
 
-          <div class="space-y-2 text-xs text-slate-300 bg-slate-950/40 p-3.5 sm:p-4 rounded-xl border border-slate-800/50 print-panel">
-            <div class="font-semibold text-slate-400 border-b border-slate-800/60 pb-1.5">Financial Breakdown Summary</div>
-            <div class="flex justify-between"><span class="text-slate-400">Gross Sb Material Value</span><span id="ledger-sb-gross" class="font-mono">$0.00</span></div>
-            <div class="flex justify-between"><span class="text-slate-400">Gross Au Material Value</span><span id="ledger-au-gross" class="font-mono">$0.00</span></div>
-            <div class="flex justify-between pt-2 border-t border-slate-800 font-bold text-xs sm:text-sm">
-              <span class="text-slate-200">Total Net Settlement</span>
-              <span id="ledger-total" class="font-mono text-amber-400">$0.00</span>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3.5 sm:space-y-4 relative overflow-hidden print-panel print-compact">
+                <div class="absolute top-0 right-0 w-2 h-full bg-amber-500/40 no-print"></div>
+                <h2 class="text-xs sm:text-sm font-bold tracking-wider text-amber-400 uppercase border-b border-slate-800 pb-2 flex items-center justify-between">
+                    <span>Gold (Au) Parameters</span>
+                    <span class="text-[10px] sm:text-xs font-normal text-slate-500">Precious Metal</span>
+                </h2>
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center text-xs">
+                        <label for="au-conc-input" class="text-slate-300 font-medium truncate pr-2">Concentration (ppm or g/t)</label>
+                        <input type="number" id="au-conc-input" min="0" max="50" step="0.01" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
+                    </div>
+                    <input type="range" id="au-conc-slider" min="0" max="50" step="0.01" class="w-full no-print">
+                </div>
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center text-xs">
+                        <label for="au-price-input" class="text-slate-300 font-medium truncate pr-2">Benchmark Spot Price ($ / gram)</label>
+                        <input type="number" id="au-price-input" min="50" max="250" step="0.01" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
+                    </div>
+                    <input type="range" id="au-price-slider" min="50" max="250" step="0.01" class="w-full no-print">
+                </div>
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center text-xs">
+                        <label for="au-pay-input" class="text-slate-300 font-medium truncate pr-2">Buyer Payability (%)</label>
+                        <input type="number" id="au-pay-input" min="20" max="100" step="0.1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-right text-amber-400 font-mono text-xs sm:text-sm">
+                    </div>
+                    <input type="range" id="au-pay-slider" min="20" max="100" step="0.1" class="w-full no-print">
+                </div>
             </div>
-          </div>
-        </div>
-      </section>
+        </section>
 
+        <section class="space-y-4 sm:space-y-6">
+            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 sm:p-6 space-y-4 sm:space-y-6 lg:sticky lg:top-6 shadow-xl print-panel print-compact">
+                <h2 class="text-xs sm:text-sm font-bold tracking-wider text-slate-300 uppercase border-b border-slate-800 pb-2.5 sm:pb-3 flex justify-between items-center">
+                    <span>Material Refining Flow</span>
+                    <span class="text-[10px] sm:text-xs font-normal text-slate-500">Visual Allocation</span>
+                </h2>
+                <div class="space-y-3 sm:space-y-4">
+                    <div class="bg-slate-950 border border-slate-700/80 rounded-xl p-3.5 sm:p-4 text-center shadow-lg print-panel">
+                        <span class="text-[10px] sm:text-xs font-bold tracking-widest text-slate-400 uppercase block">RAW CARGO INTAKE</span>
+                        <div id="flow-raw-dmt" class="text-lg sm:text-2xl font-black text-slate-100 font-mono my-0.5 truncate">0.00 MT (DMT)</div>
+                        <span class="text-[10px] sm:text-[11px] text-slate-500 block truncate">Dry mass ready for physical extraction</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-1">
+                        <div class="bg-slate-950 border-l-4 border-l-sky-500 border-y border-r border-slate-800 rounded-r-xl p-3 sm:p-4 space-y-1.5 shadow-md print-panel">
+                            <div class="flex items-center justify-between border-b border-slate-800/80 pb-1">
+                                <span class="text-[11px] sm:text-xs font-bold text-sky-400 uppercase tracking-wider">REFINED ANTIMONY (Sb)</span>
+                                <span class="text-[9px] font-mono text-slate-400">Base</span>
+                            </div>
+                            <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider block">Physical Pure Mass</span>
+                            <span id="flow-sb-weight" class="text-base sm:text-lg font-bold text-slate-200 font-mono truncate block">0.00 MT</span>
+                            <div class="pt-1 border-t border-slate-900">
+                                <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider block">Net Antimony Payout</span>
+                                <span id="flow-sb-payout" class="text-sm sm:text-base font-bold text-sky-400 font-mono truncate block">$0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-950 border-l-4 border-l-amber-500 border-y border-r border-slate-800 rounded-r-xl p-3 sm:p-4 space-y-1.5 shadow-md print-panel">
+                            <div class="flex items-center justify-between border-b border-slate-800/80 pb-1">
+                                <span class="text-[11px] sm:text-xs font-bold text-amber-400 uppercase tracking-wider">RESERVE GOLD (Au)</span>
+                                <span class="text-[9px] font-mono text-slate-400">Precious</span>
+                            </div>
+                            <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider block">Physical Pure Grams</span>
+                            <span id="flow-au-weight" class="text-base sm:text-lg font-bold text-slate-200 font-mono truncate block">0.00 g</span>
+                            <div class="pt-1 border-t border-slate-900">
+                                <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase tracking-wider block">Net Gold Payout</span>
+                                <span id="flow-au-payout" class="text-sm sm:text-base font-bold text-amber-400 font-mono truncate block">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 space-y-1.5">
+                        <div class="flex justify-between text-[11px] sm:text-xs font-semibold">
+                            <span class="text-sky-400">Sb Share: <span id="sb-pct-share" class="font-mono">50.0%</span></span>
+                            <span class="text-amber-400">Au Share: <span id="au-pct-share" class="font-mono">50.0%</span></span>
+                        </div>
+                        <div class="w-full h-3.5 sm:h-4 bg-slate-950 rounded-full overflow-hidden flex border border-slate-800 p-0.5 no-print">
+                            <div id="sb-bar" class="h-full bg-sky-500" style="width:50%"></div>
+                            <div id="au-bar" class="h-full bg-amber-400" style="width:50%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2 text-xs text-slate-300 bg-slate-950/40 p-3.5 sm:p-4 rounded-xl border border-slate-800/50 print-panel">
+                    <div class="font-semibold text-slate-400 border-b border-slate-800/60 pb-1.5">Financial Breakdown Summary</div>
+                    <div class="flex justify-between"><span class="text-slate-400">Gross Sb Material Value</span><span id="ledger-sb-gross" class="font-mono">$0.00</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">Gross Au Material Value</span><span id="ledger-au-gross" class="font-mono">$0.00</span></div>
+                    <div class="flex justify-between pt-2 border-t border-slate-800 font-bold text-xs sm:text-sm">
+                        <span class="text-slate-200">Total Net Settlement</span>
+                        <span id="ledger-total" class="font-mono text-amber-400">$0.00</span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- Universal Rating & Feedback Section -->
+    <!-- Universal Tool Rating & Feedback Widget -->
     <div class="no-print bg-slate-900/80 border border-slate-800 rounded-xl p-4 sm:p-5 mt-6">
-      <h3 class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider mb-1">Rate this Tool</h3>
-      <p class="text-xs text-slate-400 mb-3">How helpful was the Ore Valuation Engine for your trade workflow?</p>
-      
-      <div class="flex gap-2 mb-3">
-        <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(1)">★</button>
-        <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(2)">★</button>
-        <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(3)">★</button>
-        <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(4)">★</button>
-        <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(5)">★</button>
-      </div>
-      
-      <div id="ore-rating-msg" class="hidden text-xs text-emerald-400 font-semibold mb-3"></div>
+        <h3 class="text-xs sm:text-sm font-bold text-slate-300 uppercase tracking-wider mb-1">Rate this Tool</h3>
+        <p class="text-xs text-slate-400 mb-3">How helpful was the Ore Valuation Engine for your trade workflow?</p>
+        
+        <div class="flex gap-2 mb-3">
+            <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(1)">★</button>
+            <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(2)">★</button>
+            <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(3)">★</button>
+            <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(4)">★</button>
+            <button type="button" class="ore-star-btn text-slate-500 hover:text-amber-400 text-2xl transition-colors" onclick="rateOreTool(5)">★</button>
+        </div>
+        
+        <div id="ore-rating-msg" class="hidden text-xs text-emerald-400 font-semibold mb-3"></div>
 
-      <div class="flex gap-2 flex-wrap">
-        <input type="text" id="ore-feedback-text" placeholder="Leave feedback or suggest an improvement..." class="flex-1 min-w-[200px] bg-slate-950 border border-slate-700 rounded px-3 py-2 text-xs text-slate-100">
-        <button type="button" onclick="submitOreFeedback()" class="px-4 py-2 text-xs font-bold rounded-lg border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-100">Submit Feedback</button>
-      </div>
+        <div class="flex gap-2 flex-wrap">
+            <input type="text" id="ore-feedback-text" placeholder="Leave feedback or suggest an improvement..." class="flex-1 min-w-[200px] bg-slate-950 border border-slate-700 rounded px-3 py-2 text-xs text-slate-100">
+            <button type="button" onclick="submitOreFeedback()" class="px-4 py-2 text-xs font-bold rounded-lg border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-100">Submit Feedback</button>
+        </div>
     </div>
 
     <footer class="text-center text-[11px] sm:text-xs text-slate-600 border-t border-slate-900 pt-3 sm:pt-4 print-footer">
-      Saraaf Ore Valuation Engine • Non-binding Trading Estimator
+        Saraaf Ore Valuation Engine • Non-binding Trading Estimator
     </footer>
-  </div>
 </section>
+
+</div>
+
+<script src="assets/js/ore.js"></script>
+</body>
+</html>
