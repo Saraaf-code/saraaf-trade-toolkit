@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saraaf Trade Toolkit | Ore Valuation Engine</title>
+<meta name="description" content="Saraaf Ore Valuation Engine for Au-Sb ore settlement estimation.">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+body{padding:0}.ore-shell{max-width:1100px;margin:auto;padding:24px 18px 40px}
+.ore-header{display:flex;justify-content:space-between;gap:20px;align-items:center;border-bottom:1px solid var(--color-border);padding-bottom:16px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}.brand img{height:42px;border-radius:6px}.brand strong{display:block;color:#fff}.brand span{display:block;color:var(--color-text-secondary);font-size:.75rem;text-transform:uppercase;letter-spacing:1px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--color-border);background:var(--color-bg-elevated);color:#fff;padding:9px 14px;border-radius:999px;font-weight:700;cursor:pointer}.btn.primary{background:var(--color-accent-primary);border-color:var(--color-accent-primary)}
+.panel{background:var(--color-bg-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:22px;margin-bottom:18px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.field label{display:block;margin-bottom:6px}.field input{width:100%}
+.hero{background:var(--color-bg-primary);border:1px solid var(--color-accent-primary);border-radius:var(--radius-md);padding:24px;text-align:center}.hero .value{font-size:clamp(2.2rem,6vw,4.5rem);font-weight:800;color:var(--color-accent-primary);word-break:break-word}.muted{color:var(--color-text-secondary)}.flow{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.node{background:var(--color-bg-primary);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:16px}.node.sb{border-left:4px solid var(--color-accent-primary)}.node.au{border-left:4px solid #f59e0b}.node .big{font-size:1.25rem;font-weight:800}.breakdown{display:grid;gap:8px}.breakdown div{background:var(--color-bg-primary);border:1px solid var(--color-border);padding:10px 12px;border-radius:8px;font-family:monospace}
+.feedback{display:grid;gap:10px}.stars button{background:none;border:0;font-size:1.7rem;color:#64748b;cursor:pointer;padding:2px}.stars button.selected{color:var(--color-accent-primary)}textarea{width:100%;background:var(--color-bg-primary);border:1px solid var(--color-border);color:#fff;border-radius:var(--radius-md);padding:10px}
+@media(max-width:700px){.grid,.flow{grid-template-columns:1fr}.ore-header{align-items:flex-start;flex-direction:column}}
+@media print{.no-print{display:none!important}body{background:#fff!important;color:#111!important}.ore-shell{max-width:none}.panel,.hero{break-inside:avoid;background:#fff!important;color:#111!important;border-color:#bbb}.muted{color:#555}}
+</style>
+</head>
+<body>
+<div class="ore-shell">
+<header class="ore-header">
+<a class="brand" href="../index.html"><img src="../Saraaf TM logo.jpg" alt="Saraaf"><div><strong>Saraaf Commodity Trade Toolkit</strong><span>Ore Valuation Engine</span></div></a>
+<div class="actions no-print"><button class="btn" id="printBtn">Print / Save PDF</button><button class="btn primary" id="shareBtn">Share Quote</button></div>
+</header>
+
+<section class="panel no-print">
+<h1 class="card-title">Ore Valuation Engine</h1>
+<p class="card-subtitle">Gold-Antimony (Au-Sb) ore settlement estimator. Designed as a neutral negotiation tool for buyers and sellers.</p>
+<div class="grid">
+<div class="field"><label for="quoteRef">Quote / Deal Reference</label><input id="quoteRef" placeholder="Optional reference"></div>
+<div class="field"><label for="counterparty">Counterparty</label><input id="counterparty" placeholder="Optional company / party"></div>
+</div>
+</section>
+
+<section class="hero panel">
+<div class="muted">TOTAL ESTIMATED LOT VALUE</div>
+<div id="total" class="value">$0.00</div>
+<div class="muted">Net settlement value after moisture and payability adjustments</div>
+<div style="margin-top:14px"><strong id="dmt">0.00 MT</strong> DMT &nbsp; | &nbsp; Gross: <span id="gross">0.00</span> MT &nbsp; | &nbsp; Moisture: <span id="moistureOut">0.00</span>%</div>
+</section>
+
+<section class="panel">
+<h2 class="card-title">Lot Specifications</h2>
+<div class="grid">
+<div class="field"><label for="mass">Cargo Total Mass (MT)</label><input id="mass" type="number" min="1" step=".1" value="75"></div>
+<div class="field"><label for="moisture">Moisture Content Reduction (%)</label><input id="moisture" type="number" min="0" max="100" step=".01" value=".57"></div>
+</div>
+</section>
+
+<section class="panel">
+<h2 class="card-title">Antimony (Sb) Parameters</h2>
+<div class="grid">
+<div class="field"><label for="sbGrade">Purity Grade (%)</label><input id="sbGrade" type="number" min="0" max="100" step=".01" value="42.11"></div>
+<div class="field"><label for="sbPrice">Benchmark Price ($ / MT)</label><input id="sbPrice" type="number" min="0" step="100" value="35500"></div>
+<div class="field"><label for="sbPay">Buyer Payability (%)</label><input id="sbPay" type="number" min="0" max="100" step=".1" value="60"></div>
+</div>
+</section>
+
+<section class="panel">
+<h2 class="card-title">Gold (Au) Parameters</h2>
+<div class="grid">
+<div class="field"><label for="auConc">Concentration (ppm or g/t)</label><input id="auConc" type="number" min="0" step=".01" value="9.20"></div>
+<div class="field"><label for="auPrice">Benchmark Spot Price ($ / gram)</label><input id="auPrice" type="number" min="0" step=".01" value="139.73"></div>
+<div class="field"><label for="auPay">Gold Payability (%)</label><input id="auPay" type="number" min="0" max="100" step=".1" value="75"></div>
+</div>
+</section>
+
+<section class="panel">
+<h2 class="card-title">Material Valuation Flow</h2>
+<div class="flow">
+<div class="node sb"><div class="muted">REFINED ANTIMONY (Sb)</div><div id="sbWeight" class="big">0.00 MT</div><div>Net payout: <strong id="sbPayout">$0.00</strong></div></div>
+<div class="node au"><div class="muted">RESERVE GOLD (Au)</div><div id="auWeight" class="big">0.00 g</div><div>Net payout: <strong id="auPayout">$0.00</strong></div></div>
+</div>
+</section>
+
+<section class="panel">
+<h2 class="card-title">Financial Breakdown</h2>
+<div class="breakdown">
+<div>Gross Sb Material Value: <strong id="sbGross">$0.00</strong></div>
+<div>Gross Au Material Value: <strong id="auGross">$0.00</strong></div>
+<div>Total Net Settlement: <strong id="ledgerTotal">$0.00</strong></div>
+</div>
+</section>
+
+<section class="panel no-print">
+<h2 class="card-title">Was this tool helpful?</h2>
+<p class="muted">Tell us if your market, contract or industry uses a different method.</p>
+<div class="stars" id="stars" aria-label="Rate this tool">
+<button data-r="1" aria-label="1 star">★</button><button data-r="2" aria-label="2 stars">★</button><button data-r="3" aria-label="3 stars">★</button><button data-r="4" aria-label="4 stars">★</button><button data-r="5" aria-label="5 stars">★</button>
+</div>
+<textarea id="comment" rows="3" placeholder="Optional comment"></textarea>
+<button class="btn primary" id="saveFeedback">Save Feedback</button><div id="feedbackStatus" class="muted"></div>
+</section>
+
+<footer class="muted" style="text-align:center">Saraaf Ore Valuation Engine • Non-binding Trading Estimator</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const money=v=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(v);
+function calc(){
+ const mass=+$('mass').value||0, m=+$('moisture').value||0, sbg=+$('sbGrade').value||0, sbp=+$('sbPrice').value||0, sbpay=+$('sbPay').value||0, auc=+$('auConc').value||0, aup=+$('auPrice').value||0, aupay=+$('auPay').value||0;
+ const dmt=mass*(1-m/100), sbmt=dmt*sbg/100, sbgross=sbmt*sbp, sbnet=sbgross*sbpay/100, aug=dmt*auc, augross=aug*aup, aunet=augross*aupay/100, total=sbnet+aunet;
+ $('total').textContent=money(total);$('dmt').textContent=dmt.toFixed(2)+' MT';$('gross').textContent=mass.toFixed(2);$('moistureOut').textContent=m.toFixed(2);
+ $('sbWeight').textContent=sbmt.toFixed(2)+' MT';$('sbPayout').textContent=money(sbnet);$('auWeight').textContent=aug.toFixed(2)+' g';$('auPayout').textContent=money(aunet);
+ $('sbGross').textContent=money(sbgross);$('auGross').textContent=money(augross);$('ledgerTotal').textContent=money(total);
+}
+document.querySelectorAll('input[type=number]').forEach(e=>e.addEventListener('input',calc));calc();
+function quoteText(){
+ const rows=[['Quote / Deal Reference',$('quoteRef').value||'Not specified'],['Counterparty',$('counterparty').value||'Not specified'],['Cargo Total Mass',$('mass').value+' MT'],['Moisture',$('moisture').value+'%'],['Sb Grade',$('sbGrade').value+'%'],['Sb Benchmark Price','$'+$('sbPrice').value+' / MT'],['Sb Payability',$('sbPay').value+'%'],['Au Concentration',$('auConc').value+' g/t'],['Au Benchmark Price','$'+$('auPrice').value+' / g'],['Au Payability',$('auPay').value+'%'],['DMT',$('dmt').textContent],['Net Settlement',$('ledgerTotal').textContent]];
+ return 'Saraaf Commodity Trade Toolkit — Ore Valuation Engine\n\n'+rows.map(x=>x[0]+': '+x[1]).join('\n')+'\n\nGenerated: '+new Date().toLocaleString();
+}
+$('printBtn').onclick=()=>window.print();
+$('shareBtn').onclick=async()=>{const text=quoteText();if(navigator.share){try{await navigator.share({title:'Saraaf Ore Valuation Quote',text})}catch(e){}}else{await navigator.clipboard.writeText(text);$('shareBtn').textContent='Quote Copied';setTimeout(()=>$('shareBtn').textContent='Share Quote',1800)}};
+let rating=0;document.querySelectorAll('#stars button').forEach(b=>b.onclick=()=>{rating=+b.dataset.r;document.querySelectorAll('#stars button').forEach(x=>x.classList.toggle('selected',+x.dataset.r<=rating))});
+$('saveFeedback').onclick=()=>{const c=$('comment').value.trim();if(!rating&&!c){$('feedbackStatus').textContent='Please select a rating or enter a comment.';return}const item={tool:'ore-valuation-engine',rating,comment:c,createdAt:new Date().toISOString()};const all=JSON.parse(localStorage.getItem('saraaf_tool_feedback')||'[]');all.push(item);localStorage.setItem('saraaf_tool_feedback',JSON.stringify(all));$('feedbackStatus').textContent='Thank you. Feedback saved on this device.'};
+</script>
+</body></html>
