@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="./assets/css/variables.css">
   <link rel="stylesheet" href="./assets/css/main.css">
   <style>
-    /* Incoterms specific lightweight styling overrides */
     .incoterm-matrix-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -74,14 +73,14 @@
       <button class="nav-tab" onclick="switchView('moisture')">Moisture Calculator</button>
       <button class="nav-tab" onclick="switchView('container')">Container Estimator</button>
       <button class="nav-tab" onclick="switchView('incoterms')">Incoterms Guide</button>
-      <button class="nav-tab" onclick="switchView('hscode')">HS Code Lookup</button>
+      <button class="nav-tab" onclick="switchView('ore')">Ore Valuation</button>
     </nav>
   </header>
 
   <!-- Main View Container -->
   <main class="app-main">
 
-    <!-- View 1 (Default): All Tools Hub Grid -->
+    <!-- View 1: Hub -->
     <section id="tool-hub" class="tool-view">
       <div class="card">
         <h1 class="card-title">Trade Utilities Suite</h1>
@@ -108,7 +107,11 @@
             <h3>4. Incoterms 2020 Risk & Cost Matrix</h3>
             <p>Interactive operational cost allocation and risk transfer points for international trade.</p>
           </div>
-          <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>5. HS Code & Tariff Calculator</h3><p>Lookup global HS codes and calculate import tariffs across jurisdictions.</p></div>
+          <div class="tool-card active-card" onclick="switchView('ore')">
+            <span class="badge badge-active">Active</span>
+            <h3>5. Ore & Concentrate Valuation Engine</h3>
+            <p>Calculate dry weight metal content, treatment charges (TC/RC), and net payable lot values.</p>
+          </div>
           <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>6. Letter of Credit (L/C) Checklist</h3><p>Validate documentation criteria and bank negotiation fees.</p></div>
           <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>7. Freight & Shipping Estimator</h3><p>Estimate ocean and air freight rates alongside local port charges.</p></div>
           <div class="tool-card disabled-card"><span class="badge">Coming Soon</span><h3>8. Currency Volatility & Hedging</h3><p>Calculate exposure risks and forward exchange cover margins.</p></div>
@@ -120,19 +123,17 @@
       </div>
     </section>
     
-    <!-- View 2: Commodity Price Converter Tool -->
+    <!-- View 2: Converter -->
     <section id="tool-converter" class="tool-view hidden">
       <div class="card">
         <h1 class="card-title">The Commodity Price Converter</h1>
         <p class="card-subtitle">Convert weight units, currency exchange rates, and calculate total commodity values seamlessly.</p>
 
         <form id="converter-form" class="form-grid" onsubmit="event.preventDefault(); runCalculation();">
-          
           <div class="form-group">
             <label for="input-amount">Offer Quantity / Volume</label>
             <input type="number" id="input-amount" step="any" min="0" placeholder="e.g. 50000" oninput="runCalculation()" required>
           </div>
-
           <div class="form-group">
             <label for="select-source-unit">Offer Unit</label>
             <select id="select-source-unit" class="select-input" onchange="runCalculation()">
@@ -146,12 +147,10 @@
               <option value="seer">Seer</option>
             </select>
           </div>
-
           <div class="form-group">
             <label for="input-price">Price Per Unit (Base Currency)</label>
             <input type="number" id="input-price" step="any" min="0" placeholder="e.g. 52.3" oninput="runCalculation()" required>
           </div>
-
           <div class="form-group">
             <label for="select-target-unit">Convert To Target Unit</label>
             <select id="select-target-unit" class="select-input" onchange="runCalculation()">
@@ -165,7 +164,6 @@
               <option value="seer">Seer</option>
             </select>
           </div>
-
           <div class="form-group full-width">
             <label>Exchange Rate Mode</label>
             <div class="pill-toggle-group">
@@ -174,24 +172,19 @@
               <button type="button" class="pill-btn" id="btn-mode-live" onclick="setMode('live')">Live Market (Coming Soon)</button>
             </div>
           </div>
-
           <div id="rate-mode-inputs" class="form-group full-width">
             <div id="manual-rate-box">
               <label for="input-exchange-rate">Exchange Rate (1 Base Currency = X Target Currency)</label>
-              <input type="number" id="input-exchange-rate" step="any" min="0" value="1.0" placeholder="e.g. 7.23 for USD to CNY" oninput="runCalculation()">
+              <input type="number" id="input-exchange-rate" step="any" min="0" value="1.0" placeholder="e.g. 7.23" oninput="runCalculation()">
             </div>
-
             <div id="statebank-rate-box" class="hidden">
               <label for="input-statebank-date">Select Historical Rate Date</label>
               <input type="date" id="input-statebank-date">
-              <small style="color: var(--color-text-secondary); display: block; margin-top: 0.25rem;">Official bank rates repository integration active in next update.</small>
             </div>
           </div>
-
           <div class="form-group full-width">
             <button type="submit" class="btn-primary">Calculate Settlement Valuation</button>
           </div>
-
         </form>
       </div>
 
@@ -200,17 +193,14 @@
           <h2>Conversion Results</h2>
           <button id="btn-copy-results" class="pill-btn pill-btn-secondary" type="button" onclick="copyResults()">Copy Results</button>
         </div>
-
         <div class="result-hero" style="text-align: center; padding: 2rem 1rem;">
           <span class="result-label" style="text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.875rem;">Total Settlement Value</span>
           <span id="output-total-value" class="result-value" style="display: block; font-size: 2.5rem; font-weight: 700; margin: 0.5rem 0; word-break: break-word;">0.00</span>
-          
           <div style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 0.95rem;">
             <span>Target Unit Price: </span>
             <strong id="output-target-price" style="color: var(--color-text-primary); font-size: 1.05rem;">0.00</strong>
           </div>
         </div>
-
         <div class="breakdown-container" style="margin-top: 1.5rem;">
           <h3>Mathematical Breakdown & Steps</h3>
           <ol id="breakdown-list" class="breakdown-list"></ol>
@@ -218,14 +208,13 @@
       </div>
     </section>
 
-    <!-- View 3: Commodity Moisture Calculator -->
+    <!-- View 3: Moisture -->
     <section id="tool-moisture" class="tool-view hidden">
       <div class="card">
         <h1 class="card-title">Commodity Moisture & Dry Mass Calculator</h1>
         <p class="card-subtitle">Calculate net dry weight, contract moisture penalties, or dry matter shrink allowances.</p>
 
         <form id="moisture-form" class="form-grid" onsubmit="event.preventDefault(); runMoistureCalc();">
-          
           <div class="form-group full-width">
             <label for="select-moisture-mode">Calculation Mode / Industry Model</label>
             <select id="select-moisture-mode" class="select-input" onchange="runMoistureCalc()">
@@ -233,12 +222,10 @@
               <option value="rehydrate">Commercial Dry Matter & Shrink (Grains / Processing)</option>
             </select>
           </div>
-
           <div class="form-group">
             <label for="moisture-initial-weight">Delivered Gross Weight</label>
             <input type="number" id="moisture-initial-weight" step="any" min="0" placeholder="e.g. 15465" oninput="runMoistureCalc()" required>
           </div>
-
           <div class="form-group">
             <label for="moisture-weight-unit">Weight Unit</label>
             <select id="moisture-weight-unit" class="select-input" onchange="runMoistureCalc()">
@@ -248,34 +235,26 @@
               <option value="md">Maund (md)</option>
             </select>
           </div>
-
           <div class="form-group">
             <label for="moisture-initial-pct">Delivered / Actual Moisture (%)</label>
             <input type="number" id="moisture-initial-pct" step="0.1" min="0" max="100" placeholder="e.g. 7.0" oninput="runMoistureCalc()" required>
           </div>
-
           <div class="form-group">
             <label for="moisture-target-pct">Contract Limit / Target Moisture (%)</label>
             <input type="number" id="moisture-target-pct" step="0.1" min="0" max="100" placeholder="e.g. 5.0" oninput="runMoistureCalc()" required>
           </div>
-
           <div class="form-group full-width">
             <button type="submit" class="btn-primary">Calculate Moisture Breakdown</button>
           </div>
-
         </form>
       </div>
 
       <div id="moisture-results-card" class="card results-card hidden">
-        <div class="results-header">
-          <h2>Moisture Adjustment Results</h2>
-        </div>
-
+        <div class="results-header"><h2>Moisture Adjustment Results</h2></div>
         <div class="result-hero">
           <span id="output-moisture-label" class="result-label">Net Payable Weight</span>
           <span id="output-moisture-weight" class="result-value">0.00</span>
         </div>
-
         <div class="breakdown-container">
           <h3 id="output-moisture-breakdown-title">Commercial Formula & Deductions</h3>
           <ol id="moisture-breakdown-list" class="breakdown-list"></ol>
@@ -283,29 +262,25 @@
       </div>
     </section>
 
-    <!-- View 4: Container CBM & Load Estimator -->
+    <!-- View 4: Container -->
     <section id="tool-container" class="tool-view hidden">
       <div class="card">
         <h1 class="card-title">Container CBM & Load Estimator</h1>
         <p class="card-subtitle">Calculate total cubic volume (CBM), box counts, and container space utilization.</p>
 
         <form id="container-form" class="form-grid" onsubmit="event.preventDefault(); runCbmCalc();">
-          
           <div class="form-group">
             <label for="cbm-box-length">Box / Package Length</label>
             <input type="number" id="cbm-box-length" step="any" min="0" placeholder="e.g. 60" oninput="runCbmCalc()" required>
           </div>
-
           <div class="form-group">
             <label for="cbm-box-width">Box / Package Width</label>
             <input type="number" id="cbm-box-width" step="any" min="0" placeholder="e.g. 40" oninput="runCbmCalc()" required>
           </div>
-
           <div class="form-group">
             <label for="cbm-box-height">Box / Package Height</label>
             <input type="number" id="cbm-box-height" step="any" min="0" placeholder="e.g. 40" oninput="runCbmCalc()" required>
           </div>
-
           <div class="form-group">
             <label for="cbm-dim-unit">Dimension Unit</label>
             <select id="cbm-dim-unit" class="select-input" onchange="runCbmCalc()">
@@ -314,34 +289,26 @@
               <option value="in">Inches (in)</option>
             </select>
           </div>
-
           <div class="form-group">
             <label for="cbm-total-boxes">Total Number of Packages / Cartons</label>
             <input type="number" id="cbm-total-boxes" step="1" min="1" placeholder="e.g. 500" oninput="runCbmCalc()" required>
           </div>
-
           <div class="form-group">
             <label for="cbm-box-weight">Gross Weight per Carton (kg)</label>
             <input type="number" id="cbm-box-weight" step="any" min="0" placeholder="e.g. 15" oninput="runCbmCalc()">
           </div>
-
           <div class="form-group full-width">
             <button type="submit" class="btn-primary">Calculate Container Fit</button>
           </div>
-
         </form>
       </div>
 
       <div id="cbm-results-card" class="card results-card hidden">
-        <div class="results-header">
-          <h2>Volumetric & Load Results</h2>
-        </div>
-
+        <div class="results-header"><h2>Volumetric & Load Results</h2></div>
         <div class="result-hero">
           <span class="result-label">Total Volume (CBM)</span>
           <span id="output-cbm-total" class="result-value">0.00 CBM</span>
         </div>
-
         <div class="breakdown-container">
           <h3>Container Capacity Utilization</h3>
           <ol id="cbm-breakdown-list" class="breakdown-list"></ol>
@@ -349,7 +316,7 @@
       </div>
     </section>
 
-    <!-- View 5: Incoterms 2020 Risk & Cost Matrix -->
+    <!-- View 5: Incoterms -->
     <section id="tool-incoterms" class="tool-view hidden">
       <div class="card">
         <h1 class="card-title">Incoterms® 2020 Operational Matrix</h1>
@@ -380,60 +347,86 @@
           <h2 id="incoterm-title" style="margin: 0;">FOB – Free On Board</h2>
           <span id="incoterm-mode-badge" class="badge badge-active">Sea & Inland Waterway Only</span>
         </div>
-
         <div class="result-hero" style="text-align: left; padding: 1.25rem 1rem;">
           <span class="result-label" style="text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem;">Critical Risk Transfer Point</span>
           <p id="incoterm-risk-point" style="margin: 0.5rem 0 0 0; font-size: 1.05rem; color: var(--color-text-primary); font-weight: 600;">
             Risk transfers once goods are loaded safely on board the vessel at the named port of shipment.
           </p>
         </div>
-
         <div class="breakdown-container" style="margin-top: 1.5rem;">
           <h3>Operational Cost Allocation (Seller vs Buyer)</h3>
           <div class="incoterm-matrix-grid">
-            <div class="responsibility-row">
-              <span class="responsibility-stage">1. Export Packaging & Marking</span>
-              <span id="stage-packaging" class="party-badge badge-seller">Seller</span>
-            </div>
-            <div class="responsibility-row">
-              <span class="responsibility-stage">2. Export Customs Clearance & Local Taxes</span>
-              <span id="stage-export-customs" class="party-badge badge-seller">Seller</span>
-            </div>
-            <div class="responsibility-row">
-              <span class="responsibility-stage">3. Inland Transport to Departure Port/Terminal</span>
-              <span id="stage-inland-origin" class="party-badge badge-seller">Seller</span>
-            </div>
-            <div class="responsibility-row">
-              <span class="responsibility-stage">4. Terminal Handling & Origin Loading</span>
-              <span id="stage-loading-origin" class="party-badge badge-seller">Seller</span>
-            </div>
-            <div class="responsibility-row">
-              <span class="responsibility-stage">5. Main Freight (Ocean / Air Carriage)</span>
-              <span id="stage-freight" class="party-badge badge-buyer">Buyer</span>
-            </div>
-            <div class="responsibility-row">
-              <span class="responsibility-stage">6. Cargo Insurance</span>
-              <span id="stage-insurance" class="party-badge badge-buyer">Buyer (Optional)</span>
-            </div>
-            <div class="responsibility-row">
-              <span class="responsibility-stage">7. Import Customs Clearance, Duties & Taxes</span>
-              <span id="stage-import-customs" class="party-badge badge-buyer">Buyer</span>
-            </div>
-            <div class="responsibility-row">
-              <span class="responsibility-stage">8. Final Mile Delivery to Destination Warehouse</span>
-              <span id="stage-final-delivery" class="party-badge badge-buyer">Buyer</span>
-            </div>
+            <div class="responsibility-row"><span class="responsibility-stage">1. Export Packaging & Marking</span><span id="stage-packaging" class="party-badge badge-seller">Seller</span></div>
+            <div class="responsibility-row"><span class="responsibility-stage">2. Export Customs Clearance & Local Taxes</span><span id="stage-export-customs" class="party-badge badge-seller">Seller</span></div>
+            <div class="responsibility-row"><span class="responsibility-stage">3. Inland Transport to Departure Port/Terminal</span><span id="stage-inland-origin" class="party-badge badge-seller">Seller</span></div>
+            <div class="responsibility-row"><span class="responsibility-stage">4. Terminal Handling & Origin Loading</span><span id="stage-loading-origin" class="party-badge badge-seller">Seller</span></div>
+            <div class="responsibility-row"><span class="responsibility-stage">5. Main Freight (Ocean / Air Carriage)</span><span id="stage-freight" class="party-badge badge-buyer">Buyer</span></div>
+            <div class="responsibility-row"><span class="responsibility-stage">6. Cargo Insurance</span><span id="stage-insurance" class="party-badge badge-buyer">Buyer (Optional)</span></div>
+            <div class="responsibility-row"><span class="responsibility-stage">7. Import Customs Clearance, Duties & Taxes</span><span id="stage-import-customs" class="party-badge badge-buyer">Buyer</span></div>
+            <div class="responsibility-row"><span class="responsibility-stage">8. Final Mile Delivery to Destination Warehouse</span><span id="stage-final-delivery" class="party-badge badge-buyer">Buyer</span></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Placeholder View -->
-    <section id="tool-hscode" class="tool-view hidden">
+    <!-- View 6: Ore & Concentrate Valuation Engine -->
+    <section id="tool-ore" class="tool-view hidden">
       <div class="card">
-        <h1 class="card-title">HS Code & Tariff Calculator</h1>
-        <p class="card-subtitle">Global commodity classification and tariff estimation tool.</p>
-        <div class="result-hero"><span class="result-value">Coming Soon</span></div>
+        <h1 class="card-title">Ore & Concentrate Valuation Engine</h1>
+        <p class="card-subtitle">Calculate metal content value, payability percentages, and treatment charges (TC/RC).</p>
+
+        <form id="ore-form" class="form-grid" onsubmit="event.preventDefault(); runOreValuation();">
+          <div class="form-group">
+            <label for="ore-dry-weight">Dry Weight Volume (DMT)</label>
+            <input type="number" id="ore-dry-weight" step="any" min="0" placeholder="e.g. 1000" oninput="runOreValuation()" required>
+          </div>
+          <div class="form-group">
+            <label for="ore-grade-pct">Metal Grade / Purity (%)</label>
+            <input type="number" id="ore-grade-pct" step="0.01" min="0" max="100" placeholder="e.g. 22.5" oninput="runOreValuation()" required>
+          </div>
+          <div class="form-group">
+            <label for="ore-benchmark-price">Metal Benchmark Price ($ / MT)</label>
+            <input type="number" id="ore-benchmark-price" step="any" min="0" placeholder="e.g. 8500" oninput="runOreValuation()" required>
+          </div>
+          <div class="form-group">
+            <label for="ore-payability-pct">Contract Payability Rate (%)</label>
+            <input type="number" id="ore-payability-pct" step="0.1" min="0" max="100" value="95.0" oninput="runOreValuation()">
+          </div>
+          <div class="form-group">
+            <label for="ore-tc-deduction">Treatment Charge (TC) ($ / DMT)</label>
+            <input type="number" id="ore-tc-deduction" step="any" min="0" placeholder="e.g. 70" oninput="runOreValuation()">
+          </div>
+          <div class="form-group">
+            <label for="ore-rc-deduction">Refining Charge (RC) ($ / Contained MT)</label>
+            <input type="number" id="ore-rc-deduction" step="any" min="0" placeholder="e.g. 150" oninput="runOreValuation()">
+          </div>
+          <div class="form-group full-width">
+            <label for="ore-freight-cost">Ocean / Inland Freight Cost ($ / DMT)</label>
+            <input type="number" id="ore-freight-cost" step="any" min="0" placeholder="e.g. 35" oninput="runOreValuation()">
+          </div>
+          <div class="form-group full-width">
+            <button type="submit" class="btn-primary">Calculate Ore Settlement</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="ore-results-card" class="card results-card hidden">
+        <div class="results-header">
+          <h2>Ore Valuation Results</h2>
+          <button class="pill-btn pill-btn-secondary" type="button" onclick="shareOreResults()">Share Results</button>
+        </div>
+        <div class="result-hero" style="text-align: center; padding: 2rem 1rem;">
+          <span class="result-label" style="text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.875rem;">Net Commercial Lot Value</span>
+          <span id="output-ore-net-value" class="result-value" style="display: block; font-size: 2.5rem; font-weight: 700; margin: 0.5rem 0; word-break: break-word;">$0.00</span>
+          <div style="margin-top: 0.75rem; color: var(--color-text-secondary); font-size: 0.95rem;">
+            <span>Effective Rate: </span>
+            <strong id="output-ore-per-mt" style="color: var(--color-text-primary); font-size: 1.05rem;">$0.00 / DMT</strong>
+          </div>
+        </div>
+        <div class="breakdown-container" style="margin-top: 1.5rem;">
+          <h3>Commercial Smelter & Payability Breakdown</h3>
+          <ol id="ore-breakdown-list" class="breakdown-list"></ol>
+        </div>
       </div>
     </section>
 
@@ -445,5 +438,6 @@
   <script src="./assets/js/moisture.js"></script>
   <script src="./assets/js/container.js"></script>
   <script src="./assets/js/incoterms.js"></script>
+  <script src="./assets/js/ore.js"></script>
 </body>
 </html>
