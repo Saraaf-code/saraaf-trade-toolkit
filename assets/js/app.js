@@ -11,7 +11,7 @@ function renderToolWall(filter = '') {
   wall.innerHTML = matches.map(tool => {
     const [id,title,description,status,path] = tool;
     const isActive = status === 'active';
-    const number = SARAAF_TOOLS.indexOf(tool) + 1;
+    const number = ordered.indexOf(tool) + 1;
     const href = path || 'coming-soon.html';
     return `<a class="tool-card ${isActive ? 'active-card' : 'disabled-card'}" href="${href}"><span class="badge ${isActive ? 'badge-active' : ''}">${isActive ? 'Active' : 'Coming Soon'}</span><h3>${number}. ${title}</h3><p>${description}</p></a>`;
   }).join('');
