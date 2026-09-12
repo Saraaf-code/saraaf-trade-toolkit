@@ -1,17 +1,13 @@
 {
-  "short_name": "Saraaf",
-  "name": "Saraaf Trade Toolkit",
- "icons": [
-  {
-    "src": "./Saraaf TM logo.jpg",
-    "sizes": "192x192 512x512",
-    "type": "image/jpeg"
-  }
-],
-  "start_url": "./index.html",
-  "background_color": "#1a2a33",
-  "theme_color": "#1a2a33",
-  "display": "standalone",
-  "orientation": "any",
-  "description": "Commercial-grade trade utilities and commodity calculation toolkit."
+  "id":"./",
+  "short_name":"Saraaf",
+  "name":"Saraaf Trade Toolkit",
+  "icons":[{"src":"./Saraaf TM logo.jpg","sizes":"192x192 512x512","type":"image/jpeg"}],
+  "start_url":"./",
+  "scope":"./",
+  "background_color":"#1a2a33",
+  "theme_color":"#1a2a33",
+  "display":"standalone",
+  "orientation":"any",
+  "description":"Commercial-grade trade utilities and commodity calculation toolkit."
 }
