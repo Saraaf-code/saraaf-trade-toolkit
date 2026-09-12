@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Saraaf Trade Toolkit | Moisture & Dry Mass</title>
+<link rel="stylesheet" href="../assets/css/variables.css"><link rel="stylesheet" href="../assets/css/main.css"><link rel="stylesheet" href="../assets/css/toolkit.css">
+</head>
+<body class="tool-page">
+<header class="app-header"><a href="https://saraafglobal.com" class="header-brand" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img src="../Saraaf TM logo.jpg" alt="Saraaf Logo" class="brand-logo"><div><span class="brand-title">Saraaf</span><span class="brand-subtitle">Trade Toolkit</span></div></a><a class="nav-tab active" href="../">All Tools</a></header>
+<main class="tool-main">
+<div class="tool-header"><div><h1 data-tool-title>Commodity Moisture & Dry Mass Calculator</h1><p>Useful across cotton, grains, minerals and other commodities where moisture changes commercial weight.</p></div><div class="tool-actions"><button id="printBtn" class="tool-action">Print / Save PDF</button><button id="shareBtn" class="tool-action primary">Share Quote</button></div></div>
+<section class="card"><form class="form-grid" onsubmit="event.preventDefault();runMoistureCalc()">
+<div class="form-group full-width"><label for="select-moisture-mode">Calculation Mode / Industry Model</label><select id="select-moisture-mode" onchange="runMoistureCalc()"><option value="drymass" selected>Dry Mass & Penalty Deduction (Cotton & General Commodities)</option><option value="rehydrate">Commercial Dry Matter & Shrink (Grains / Processing)</option></select></div>
+<div class="form-group"><label for="moisture-initial-weight">Delivered Gross Weight</label><input type="number" id="moisture-initial-weight" step="any" min="0" oninput="runMoistureCalc()" required></div>
+<div class="form-group"><label for="moisture-weight-unit">Weight Unit</label><select id="moisture-weight-unit" onchange="runMoistureCalc()"><option value="MT" selected>Metric Tons (MT)</option><option value="kg">Kilograms (kg)</option><option value="lbs">Pounds (lbs)</option><option value="md">Maund (md)</option></select></div>
+<div class="form-group"><label for="moisture-initial-pct">Delivered / Actual Moisture (%)</label><input type="number" id="moisture-initial-pct" step="0.1" min="0" max="100" oninput="runMoistureCalc()" required></div>
+<div class="form-group"><label for="moisture-target-pct">Contract Limit / Target Moisture (%)</label><input type="number" id="moisture-target-pct" step="0.1" min="0" max="100" oninput="runMoistureCalc()" required></div>
+<div class="form-group full-width"><button type="submit" class="btn-primary">Calculate Moisture Breakdown</button></div>
+</form></section>
+<section id="moisture-results-card" class="card results-card hidden"><div class="results-header"><h2>Moisture Adjustment Results</h2></div><div class="result-hero"><span id="output-moisture-label" class="result-label">Net Payable Weight</span><span id="output-moisture-weight" class="result-value">0.00</span></div><div class="breakdown-container"><h3>Calculation Breakdown</h3><ol id="moisture-breakdown-list" class="breakdown-list"></ol></div></section>
+</main>
+<script src="../assets/js/moisture.js"></script><script src="../assets/js/toolkit-common.js"></script>
+</body></html>
