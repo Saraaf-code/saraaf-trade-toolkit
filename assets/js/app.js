@@ -1,29 +1,34 @@
-/**
- * Saraaf Trade Toolkit - Core App Controller
- */
+/* Saraaf Trade Toolkit - homepage controller */
+const SARAAF_HIDDEN_TOOLS = new Set();
 
-// Global tab switching controller
-function switchView(toolId) {
-  document.querySelectorAll('.nav-tab').forEach(btn => {
-    const isMatch = btn.getAttribute('onclick')?.includes("'" + toolId + "'");
-    btn.classList.toggle('active', isMatch);
-  });
-
-  document.querySelectorAll('.tool-view').forEach(view => {
-    view.classList.toggle('hidden', view.id !== 'tool-' + toolId);
-  });
-
-  // Trigger tool initializers when navigating
-  if (toolId === 'incoterms' && typeof updateIncotermView === 'function') {
-    updateIncotermView();
-  }
+function toolUrl(path) {
+  return path || 'coming-soon.html';
 }
 
-// Service Worker Registration for PWA Support
+function renderToolWall() {
+  const wall = document.getElementById('tool-wall');
+  if (!wall || typeof SARAAF_TOOLS === 'undefined') return;
+
+  const visible = SARAAF_TOOLS.filter(t => !SARAAF_HIDDEN_TOOLS.has(t[0]));
+  const active = visible.filter(t => t[3] === 'active');
+  const inactive = visible.filter(t => t[3] !== 'active');
+  const ordered = active.concat(inactive);
+
+  wall.innerHTML = ordered.map((tool, index) => {
+    const [id,title,description,status,path] = tool;
+    const isActive = status === 'active';
+    const number = index + 1;
+    const href = toolUrl(path);
+    return `<a class="tool-card ${isActive ? 'active-card' : 'disabled-card'}" href="${href}">
+      <span class="badge ${isActive ? 'badge-active' : ''}">${isActive ? 'Active' : 'Coming Soon'}</span>
+      <h3>${number}. ${title}</h3>
+      <p>${description}</p>
+    </a>`;
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', renderToolWall);
+
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(reg => console.log('PWA Service Worker active:', reg.scope))
-      .catch(err => console.error('Service Worker registration failed:', err));
-  });
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
 }
