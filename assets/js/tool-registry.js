@@ -16,5 +16,5 @@ const SARAAF_TOOLS = [
   ['payable-metal','Concentrate Payable Metal Calculator','Calculate payable Lead/Zinc metal after deductions.','planned',''],
   ['dimension-stone','Dimension Stone / Onyx Block Calculator','Calculate block volume, tonnage and stone quantities.','planned',''],
   ['trade-deal','Trade Deal Economics — Should I Actually Do This Deal?','Put major deal assumptions on the negotiation table.','planned',''],
-  ...Array.from({length:35},(_,i)=>['phase1-'+(i+17),'Phase 1 Candidate Tool '+(i+17),'Reserved slot for a validated commodity trade workflow calculator.','candidate',''])
+  ...Array.from({length:34},(_,i)=>['phase1-'+(i+17),'Phase 1 Candidate Tool '+(i+17),'Reserved slot for a validated commodity trade workflow calculator.','candidate',''])
 ];
