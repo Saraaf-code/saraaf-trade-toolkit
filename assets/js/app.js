@@ -1,14 +1,10 @@
 /* Saraaf Trade Toolkit - homepage controller */
-const HIDDEN_KEY = 'saraaf_hidden_tools';
-const getHiddenTools = () => new Set(JSON.parse(localStorage.getItem(HIDDEN_KEY) || '[]'));
-const saveHiddenTools = set => localStorage.setItem(HIDDEN_KEY, JSON.stringify([...set]));
-
 function renderToolWall(filter = '') {
   const wall = document.getElementById('tool-wall');
   if (!wall || typeof SARAAF_TOOLS === 'undefined') return;
-  const hidden = getHiddenTools();
-  const active = SARAAF_TOOLS.filter(t => t[3] === 'active' && !hidden.has(t[0]));
-  const inactive = SARAAF_TOOLS.filter(t => t[3] !== 'active' && !hidden.has(t[0]));
+  const visible = SARAAF_TOOLS.filter(t => t[5] !== false);
+  const active = visible.filter(t => t[3] === 'active');
+  const inactive = visible.filter(t => t[3] !== 'active');
   const ordered = active.concat(inactive);
   const q = filter.trim().toLowerCase();
   const matches = q ? ordered.filter(t => (t[1] + ' ' + t[2]).toLowerCase().includes(q)) : ordered;
@@ -21,23 +17,8 @@ function renderToolWall(filter = '') {
   }).join('');
 }
 
-function addHiddenToolsControl() {
-  const nav = document.querySelector('.header-nav');
-  if (!nav) return;
-  const button = document.createElement('button');
-  button.className = 'nav-tab';
-  button.type = 'button';
-  button.textContent = 'Show Hidden';
-  button.addEventListener('click', () => {
-    localStorage.removeItem(HIDDEN_KEY);
-    renderToolWall(document.getElementById('tool-search')?.value || '');
-  });
-  nav.appendChild(button);
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   renderToolWall();
-  addHiddenToolsControl();
   document.getElementById('tool-search')?.addEventListener('input', e => renderToolWall(e.target.value));
 });
 
