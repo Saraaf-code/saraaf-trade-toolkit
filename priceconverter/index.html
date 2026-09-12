@@ -5,13 +5,13 @@
 <title>Saraaf Trade Toolkit | Commodity Price Converter</title>
 <link rel="manifest" href="../manifest.json"><link rel="stylesheet" href="../assets/css/variables.css"><link rel="stylesheet" href="../assets/css/main.css"><link rel="stylesheet" href="../assets/css/toolkit.css">
 </head>
-<body class="tool-page">
+<body class="tool-page" data-tool-id="converter">
 <header class="app-header">
 <a href="https://saraafglobal.com" class="header-brand" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img src="../Saraaf TM logo.jpg" alt="Saraaf Logo" class="brand-logo"><div><span class="brand-title">Saraaf</span><span class="brand-subtitle">Trade Toolkit</span></div></a>
 <a class="nav-tab active" href="../">All Tools</a>
 </header>
 <main class="tool-main">
-<div class="tool-header"><div><h1 data-tool-title>The Commodity Price Converter</h1><p>Convert weight units, currency exchange rates, and commodity values.</p></div><div class="tool-actions"><button id="printBtn" class="tool-action">Print / Save PDF</button><button id="shareBtn" class="tool-action primary">Share Quote</button></div></div>
+<div class="tool-header"><div><h1 data-tool-title>Commodity Price Converter</h1><p>Convert weight units, currency exchange rates, and commodity values.</p></div><div class="tool-actions"><button id="printBtn" class="tool-action">Print / Save PDF</button><button id="shareBtn" class="tool-action primary">Share Quote</button></div></div>
 <section class="card"><form id="converter-form" class="form-grid" onsubmit="event.preventDefault();runCalculation()">
 <div class="form-group"><label for="input-amount">Offer Quantity / Volume</label><input type="number" id="input-amount" step="any" min="0" oninput="runCalculation()" required></div>
 <div class="form-group"><label for="select-source-unit">Offer Unit</label><select id="select-source-unit" onchange="runCalculation()"><option value="kg">Kilograms (kg)</option><option value="g">Grams (g)</option><option value="mt" selected>Metric Tons (MT)</option><option value="lb">Pounds (lbs)</option><option value="oz">Ounces (oz)</option><option value="maund">Maund (37.32 kg)</option><option value="maund40">Maund 40 (40 kg)</option><option value="seer">Seer</option></select></div>
