@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Saraaf Trade Toolkit | Trade Finance Calculator</title>
+<link rel="manifest" href="../manifest.json"><link rel="stylesheet" href="../assets/css/variables.css"><link rel="stylesheet" href="../assets/css/main.css"><link rel="stylesheet" href="../assets/css/toolkit.css">
+</head>
+<body class="tool-page" data-tool-id="trade-finance">
+<header class="app-header"><a href="https://saraafglobal.com" class="header-brand" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img src="../Saraaf TM logo.jpg" alt="Saraaf Logo" class="brand-logo"><div><span class="brand-title">Saraaf</span><span class="brand-subtitle">Trade Toolkit</span></div></a><nav class="header-nav"><a class="nav-tab active" href="../">All Tools</a></nav></header>
+<main class="tool-main">
+<div class="tool-header"><div><h1 data-tool-title>Trade Finance Calculator</h1><p>Model the financing cost of funding part of a commodity transaction so buyers, sellers and financiers can negotiate from the same numbers.</p></div><div class="tool-actions"><button id="printBtn" class="tool-action">Print / Save PDF</button><button id="shareBtn" class="tool-action primary">Share Quote</button></div></div>
+<section class="card"><form class="form-grid" onsubmit="event.preventDefault();calculateTradeFinance()">
+<div class="form-group"><label for="deal-value">Deal / Invoice Value</label><input id="deal-value" type="number" min="0" step="any" value="740000" oninput="calculateTradeFinance()" required></div>
+<div class="form-group"><label for="currency">Currency</label><select id="currency" onchange="calculateTradeFinance()"><option>USD</option><option>EUR</option><option>GBP</option><option>PKR</option><option>CNY</option><option>AED</option><option>THB</option></select></div>
+<div class="form-group full-width"><label for="finance-percent">Percentage Financed</label><div class="range-pair"><input id="finance-percent-range" type="range" min="0" max="100" step="1" value="70" oninput="syncFinancePercent(this.value)"><input id="finance-percent" type="number" min="0" max="100" step="1" value="70" oninput="syncFinancePercent(this.value)"></div></div>
+<div class="form-group full-width"><label for="tenor-days">Financing Tenor (Days)</label><div class="range-pair"><input id="tenor-days-range" type="range" min="1" max="365" step="1" value="90" oninput="syncTenor(this.value)"><input id="tenor-days" type="number" min="1" max="365" step="1" value="90" oninput="syncTenor(this.value)"></div></div>
+<div class="form-group"><label for="interest-rate">Annual Financing Rate (%)</label><input id="interest-rate" type="number" min="0" step="0.01" value="8" oninput="calculateTradeFinance()"></div>
+<div class="form-group"><label for="finance-fee">Upfront Finance Fee (%)</label><input id="finance-fee" type="number" min="0" step="0.01" value="1" oninput="calculateTradeFinance()"></div>
+<div class="form-group full-width"><button type="submit" class="btn-primary">Calculate Financing Cost</button></div>
+</form></section>
+<section class="card results-card"><div class="results-header"><h2>Financing Results</h2></div><div class="result-hero"><span class="result-label">Total Financing Cost</span><span id="output-finance-cost" class="result-value">0.00</span><div id="output-currency">USD</div></div><div class="breakdown-container"><h3>Mathematical Breakdown &amp; Steps</h3><ol id="breakdown-list" class="breakdown-list"></ol></div></section>
+<section class="card"><div class="breakdown-container"><h3>Negotiation View</h3><ul id="deal-view" class="breakdown-list"></ul></div></section>
+</main>
+<style>.range-pair{display:grid;grid-template-columns:1fr 120px;gap:.8rem;align-items:center}.range-pair input[type=range]{padding:0;border:0;background:transparent}.range-pair input[type=number]{text-align:center}@media(max-width:640px){.range-pair{grid-template-columns:1fr 95px}}</style>
+<script src="../assets/js/trade-finance.js"></script><script src="../assets/js/toolkit-common.js"></script>
+</body></html>
