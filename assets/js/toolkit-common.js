@@ -8,8 +8,7 @@
       if (el.closest('.tool-feedback') || !el.id || el.type === 'button' || el.type === 'submit') return;
       const label = document.querySelector('label[for="' + el.id + '"]');
       const name = label ? label.textContent.trim() : el.id;
-      const value = el.value;
-      if (value !== '') rows.push(name + ': ' + value);
+      if (el.value !== '') rows.push(name + ': ' + el.value);
     });
     return rows.join('\n');
   }
@@ -48,16 +47,15 @@
     box.className = 'card tool-feedback';
     box.innerHTML = '<h2>Feedback</h2>' +
       '<p class="feedback-note">Rate this tool and tell us what would make it more useful for your trade workflow.</p>' +
-      '<div class="feedback-row">' +
-      '<div class="tool-stars" aria-label="Rate this tool">' +
+      '<div class="feedback-row"><div class="tool-stars" aria-label="Rate this tool">' +
       [1,2,3,4,5].map(n => '<button class="tool-star" type="button" data-star="' + n + '" aria-label="' + n + ' stars">★</button>').join('') +
-      '</div>' +
-      '<span id="feedback-rating" class="feedback-note"></span>' +
-      '</div>' +
+      '</div><span id="feedback-rating" class="feedback-note"></span></div>' +
       '<textarea id="tool-feedback-text" placeholder="Optional comment"></textarea>' +
       '<button id="feedback-submit" class="btn-primary feedback-submit" type="button">Submit Feedback</button>' +
       '<p id="feedback-status" class="feedback-note"></p>';
-    document.querySelector('.tool-main')?.appendChild(box);
+    const host = document.querySelector('.tool-main') || document.querySelector('.max-w-7xl');
+    if (!host) return;
+    host.appendChild(box);
     box.querySelectorAll('.tool-star').forEach(btn => btn.addEventListener('click', () => {
       const stars = Number(btn.dataset.star);
       box.querySelectorAll('.tool-star').forEach((s, i) => s.style.color = i < stars ? '#0480e4' : '#627885');
