@@ -14,7 +14,7 @@ const SARAAF_TOOLS = [
   ['freight-rate','Freight Rate Calculator','Estimate freight cost from a known freight rate, especially for land transport.','active','freight-rate/',true],
   ['landed-cost','Landed Cost Calculator','Calculate estimated landed cost by combining product, freight, insurance, duty and other charges.','active','landed-cost/',true],
   ['trade-finance','Trade Finance Calculator','Model financing cost, buyer funding and supplier settlement for a commodity trade.','active','trade-finance/',true],
-  ['hs-code','HS Code Lookup','Browse the global HS hierarchy and country extensions.','planned','',true],
+  ['hs-code','HS Code Lookup','Browse the HS 2022 global hierarchy at the 2-digit chapter and 4-digit heading levels.','active','hs-code/',true],
   ['lc-checklist','Letter of Credit Document Checklist','Review documentary requirements before bank presentation.','planned','',true],
   ['break-even','Break-even Selling Price Calculator','Find the minimum selling price needed to cover deal costs.','planned','',true],
   ['cotton-quality','Cotton Quality / Grade Calculator','Compare cotton quality inputs and commercial implications.','planned','',true],
