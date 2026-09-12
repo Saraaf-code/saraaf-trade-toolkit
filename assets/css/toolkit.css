@@ -2,7 +2,8 @@
 .tool-page { min-height:100vh; background:var(--color-bg-primary,#1a2a33); }
 .tool-page .app-header { position:static; }
 .tool-main { width:min(1100px,100%); margin:0 auto; padding:2rem 1.25rem 3rem; }
-.tool-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.25rem; }
+.tool-main > .card + .card { margin-top:1rem; }
+.tool-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
 .tool-header-left { display:flex; align-items:center; gap:.9rem; min-width:0; }
 .tool-header-left img { width:42px; height:42px; object-fit:contain; border-radius:6px; }
 .tool-header h1 { font-size:clamp(1.35rem,3vw,2.1rem); line-height:1.1; }
@@ -51,6 +52,7 @@
 
 @media print {
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+  .app-header { display:none !important; }
   html,body { background:#1a2a33 !important; color:#fff !important; }
   .no-print,.tool-actions,.tool-feedback,.app-header .header-nav { display:none !important; }
   .tool-page,.tool-main { background:#1a2a33 !important; color:#fff !important; }
@@ -58,4 +60,19 @@
   .tool-main { width:100%; max-width:none; padding:0; }
   .tool-header { margin-bottom:12px; }
   .tool-page a { color:inherit; }
+  .tool-main > .card + .card { margin-top:12px; }
+}
+
+/* User-selected B&W PDF: white paper, black text, black controls/sliders. */
+@media print {
+  body.print-bw, body.print-bw .tool-page, body.print-bw .tool-main,
+  body.print-bw .card, body.print-bw .results-card { background:#fff !important; color:#000 !important; }
+  body.print-bw .card, body.print-bw .results-card { border-color:#000 !important; }
+  body.print-bw h1, body.print-bw h2, body.print-bw h3, body.print-bw p,
+  body.print-bw label, body.print-bw span, body.print-bw li, body.print-bw strong,
+  body.print-bw .result-value, body.print-bw .result-label { color:#000 !important; }
+  body.print-bw input, body.print-bw select, body.print-bw textarea { background:#fff !important; color:#000 !important; border-color:#000 !important; }
+  body.print-bw input[type=range] { accent-color:#000 !important; }
+  body.print-bw .breakdown-container, body.print-bw .result-hero { background:#fff !important; color:#000 !important; }
+  body.print-bw .tool-feedback { background:#fff !important; }
 }
