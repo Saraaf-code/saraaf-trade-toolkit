@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Saraaf Trade Toolkit | Commodity Price Converter</title>
+<link rel="manifest" href="../manifest.json"><link rel="stylesheet" href="../assets/css/variables.css"><link rel="stylesheet" href="../assets/css/main.css"><link rel="stylesheet" href="../assets/css/toolkit.css">
+</head>
+<body class="tool-page">
+<header class="app-header">
+<a href="https://saraafglobal.com" class="header-brand" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img src="../Saraaf TM logo.jpg" alt="Saraaf Logo" class="brand-logo"><div><span class="brand-title">Saraaf</span><span class="brand-subtitle">Trade Toolkit</span></div></a>
+<a class="nav-tab active" href="../">All Tools</a>
+</header>
+<main class="tool-main">
+<div class="tool-header"><div><h1 data-tool-title>The Commodity Price Converter</h1><p>Convert weight units, currency exchange rates, and commodity values.</p></div><div class="tool-actions"><button id="printBtn" class="tool-action">Print / Save PDF</button><button id="shareBtn" class="tool-action primary">Share Quote</button></div></div>
+<section class="card"><form id="converter-form" class="form-grid" onsubmit="event.preventDefault();runCalculation()">
+<div class="form-group"><label for="input-amount">Offer Quantity / Volume</label><input type="number" id="input-amount" step="any" min="0" oninput="runCalculation()" required></div>
+<div class="form-group"><label for="select-source-unit">Offer Unit</label><select id="select-source-unit" onchange="runCalculation()"><option value="kg">Kilograms (kg)</option><option value="g">Grams (g)</option><option value="mt" selected>Metric Tons (MT)</option><option value="lb">Pounds (lbs)</option><option value="oz">Ounces (oz)</option><option value="maund">Maund (37.32 kg)</option><option value="maund40">Maund 40 (40 kg)</option><option value="seer">Seer</option></select></div>
+<div class="form-group"><label for="input-price">Price Per Unit (Base Currency)</label><input type="number" id="input-price" step="any" min="0" oninput="runCalculation()" required></div>
+<div class="form-group"><label for="select-target-unit">Convert To Target Unit</label><select id="select-target-unit" onchange="runCalculation()"><option value="kg" selected>Kilograms (kg)</option><option value="g">Grams (g)</option><option value="mt">Metric Tons (MT)</option><option value="lb">Pounds (lbs)</option><option value="oz">Ounces (oz)</option><option value="maund">Maund (37.32 kg)</option><option value="maund40">Maund 40 (40 kg)</option><option value="seer">Seer</option></select></div>
+<div class="form-group full-width"><label>Exchange Rate Mode</label><div class="pill-toggle-group"><button type="button" class="pill-btn active" id="btn-mode-manual" onclick="setMode('manual')">Manual Rate</button><button type="button" class="pill-btn" id="btn-mode-statebank" onclick="setMode('statebank')">State Bank (Historical)</button><button type="button" class="pill-btn" id="btn-mode-live" onclick="setMode('live')">Live Market (Coming Soon)</button></div></div>
+<div class="form-group full-width"><div id="manual-rate-box"><label for="input-exchange-rate">Exchange Rate</label><input type="number" id="input-exchange-rate" step="any" min="0" value="1" oninput="runCalculation()"></div><div id="statebank-rate-box" class="hidden"><label for="input-statebank-date">Select Historical Rate Date</label><input type="date" id="input-statebank-date"></div></div>
+<div class="form-group full-width"><button type="submit" class="btn-primary">Calculate Settlement Valuation</button></div>
+</form></section>
+<section id="results-card" class="card results-card hidden"><div class="results-header"><h2>Conversion Results</h2><button id="btn-copy-results" class="pill-btn pill-btn-secondary" type="button" onclick="copyResults()">Copy Results</button></div><div class="result-hero"><span class="result-label">Total Settlement Value</span><span id="output-total-value" class="result-value">0.00</span><div>Target Unit Price: <strong id="output-target-price">0.00</strong></div></div><div class="breakdown-container"><h3>Mathematical Breakdown & Steps</h3><ol id="breakdown-list" class="breakdown-list"></ol></div></section>
+</main>
+<script src="../assets/js/converter.js"></script><script src="../assets/js/toolkit-common.js"></script>
+</body></html>
