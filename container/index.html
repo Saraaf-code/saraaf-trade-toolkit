@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Saraaf Trade Toolkit | Container CBM & Load Estimator</title>
+<link rel="stylesheet" href="../assets/css/variables.css"><link rel="stylesheet" href="../assets/css/main.css"><link rel="stylesheet" href="../assets/css/toolkit.css">
+</head>
+<body class="tool-page">
+<header class="app-header"><a href="https://saraafglobal.com" class="header-brand" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img src="../Saraaf TM logo.jpg" alt="Saraaf Logo" class="brand-logo"><div><span class="brand-title">Saraaf</span><span class="brand-subtitle">Trade Toolkit</span></div></a><a class="nav-tab active" href="../">All Tools</a></header>
+<main class="tool-main">
+<div class="tool-header"><div><h1 data-tool-title>Container CBM & Load Estimator</h1><p>Estimate cargo volume, carton capacity and container payload utilization.</p></div><div class="tool-actions"><button id="printBtn" class="tool-action">Print / Save PDF</button><button id="shareBtn" class="tool-action primary">Share Quote</button></div></div>
+<section class="card"><form class="form-grid" onsubmit="event.preventDefault();runCbmCalc()">
+<div class="form-group"><label for="cbm-box-length">Carton Length</label><input type="number" id="cbm-box-length" step="any" min="0" oninput="runCbmCalc()" required></div>
+<div class="form-group"><label for="cbm-box-width">Carton Width</label><input type="number" id="cbm-box-width" step="any" min="0" oninput="runCbmCalc()" required></div>
+<div class="form-group"><label for="cbm-box-height">Carton Height</label><input type="number" id="cbm-box-height" step="any" min="0" oninput="runCbmCalc()" required></div>
+<div class="form-group"><label for="cbm-dim-unit">Dimension Unit</label><select id="cbm-dim-unit" onchange="runCbmCalc()"><option value="cm" selected>Centimeters</option><option value="m">Meters</option><option value="in">Inches</option></select></div>
+<div class="form-group"><label for="cbm-total-boxes">Total Cartons</label><input type="number" id="cbm-total-boxes" step="1" min="1" oninput="runCbmCalc()" required></div>
+<div class="form-group"><label for="cbm-box-weight">Weight per Carton (kg)</label><input type="number" id="cbm-box-weight" step="any" min="0" oninput="runCbmCalc()"></div>
+<div class="form-group full-width"><button type="submit" class="btn-primary">Calculate Container Load</button></div>
+</form></section>
+<section id="cbm-results-card" class="card results-card hidden"><div class="results-header"><h2>Load Results</h2></div><div class="result-hero"><span class="result-label">Total Cargo Volume</span><span id="output-cbm-total" class="result-value">0.000 CBM</span></div><div class="breakdown-container"><h3>Container Capacity Breakdown</h3><ol id="cbm-breakdown-list" class="breakdown-list"></ol></div></section>
+</main>
+<script src="../assets/js/container.js"></script><script src="../assets/js/toolkit-common.js"></script>
+</body></html>
