@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Saraaf Trade Toolkit | Incoterms 2020</title>
+<link rel="stylesheet" href="../assets/css/variables.css"><link rel="stylesheet" href="../assets/css/main.css"><link rel="stylesheet" href="../assets/css/toolkit.css">
+<style>
+.incoterm-matrix-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:1rem}.responsibility-row{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.8rem 1rem;border-radius:6px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)}.responsibility-stage{font-weight:600}.party-badge{padding:.25rem .6rem;border-radius:4px;font-size:.75rem;font-weight:700;text-transform:uppercase}.badge-seller{background:rgba(59,130,246,.2);color:#60a5fa;border:1px solid rgba(59,130,246,.4)}.badge-buyer{background:rgba(245,158,11,.2);color:#fbbf24;border:1px solid rgba(245,158,11,.4)}.badge-shared{background:rgba(16,185,129,.2);color:#34d399;border:1px solid rgba(16,185,129,.4)}
+@media(max-width:640px){.incoterm-matrix-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="tool-page">
+<header class="app-header"><a href="https://saraafglobal.com" class="header-brand" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img src="../Saraaf TM logo.jpg" alt="Saraaf Logo" class="brand-logo"><div><span class="brand-title">Saraaf</span><span class="brand-subtitle">Trade Toolkit</span></div></a><a class="nav-tab active" href="../">All Tools</a></header>
+<main class="tool-main">
+<div class="tool-header"><div><h1 data-tool-title>Incoterms 2020 Risk & Cost Matrix</h1><p>Interactive responsibility and risk-transfer reference for international commodity trade.</p></div><div class="tool-actions"><button id="printBtn" class="tool-action">Print / Save PDF</button><button id="shareBtn" class="tool-action primary">Share Quote</button></div></div>
+<section class="card">
+<div class="form-group"><label for="select-incoterm">Select Incoterm</label><select id="select-incoterm" onchange="updateIncotermView()"><option>EXW</option><option>FCA</option><option>FAS</option><option>FOB</option><option>CFR</option><option>CIF</option><option>CPT</option><option>CIP</option><option>DAP</option><option>DPU</option><option>DDP</option></select></div>
+<div class="result-hero"><h2 id="incoterm-title">EXW – Ex Works</h2><p id="incoterm-mode-badge" class="feedback-note">Any Transport Mode</p><p id="incoterm-risk-point" style="margin-top:.8rem">Risk transfer description</p></div>
+<div class="incoterm-matrix-grid">
+<div class="responsibility-row"><span class="responsibility-stage">Packaging</span><span id="stage-packaging" class="party-badge">Seller</span></div>
+<div class="responsibility-row"><span class="responsibility-stage">Export Customs</span><span id="stage-export-customs" class="party-badge">Buyer</span></div>
+<div class="responsibility-row"><span class="responsibility-stage">Inland Origin</span><span id="stage-inland-origin" class="party-badge">Buyer</span></div>
+<div class="responsibility-row"><span class="responsibility-stage">Loading at Origin</span><span id="stage-loading-origin" class="party-badge">Buyer</span></div>
+<div class="responsibility-row"><span class="responsibility-stage">Main Freight</span><span id="stage-freight" class="party-badge">Buyer</span></div>
+<div class="responsibility-row"><span class="responsibility-stage">Insurance</span><span id="stage-insurance" class="party-badge">Buyer</span></div>
+<div class="responsibility-row"><span class="responsibility-stage">Import Customs</span><span id="stage-import-customs" class="party-badge">Buyer</span></div>
+<div class="responsibility-row"><span class="responsibility-stage">Final Delivery</span><span id="stage-final-delivery" class="party-badge">Buyer</span></div>
+</div></section>
+</main>
+<script src="../assets/js/incoterms.js"></script><script src="../assets/js/toolkit-common.js"></script><script>document.addEventListener('DOMContentLoaded',updateIncotermView);</script>
+</body></html>
