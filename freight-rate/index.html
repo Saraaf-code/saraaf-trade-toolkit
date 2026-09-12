@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Saraaf Trade Toolkit | Freight Rate Calculator</title>
+<link rel="manifest" href="../manifest.json"><link rel="stylesheet" href="../assets/css/variables.css"><link rel="stylesheet" href="../assets/css/main.css"><link rel="stylesheet" href="../assets/css/toolkit.css">
+</head>
+<body class="tool-page" data-tool-id="freight-rate">
+<header class="app-header"><a href="https://saraafglobal.com" class="header-brand" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img src="../Saraaf TM logo.jpg" alt="Saraaf Logo" class="brand-logo"><div><span class="brand-title">Saraaf</span><span class="brand-subtitle">Trade Toolkit</span></div></a><nav class="header-nav"><a class="nav-tab active" href="../">All Tools</a></nav></header>
+<main class="tool-main">
+<div class="tool-header"><div><h1 data-tool-title>Freight Rate Calculator</h1><p>Estimate freight cost from a known freight rate. Built primarily for overland commodity transport.</p></div><div class="tool-actions"><button id="printBtn" class="tool-action">Print / Save PDF</button><button id="shareBtn" class="tool-action primary">Share Quote</button></div></div>
+<section class="card"><form id="freight-form" class="form-grid" onsubmit="event.preventDefault();calculateFreight()">
+<div class="form-group"><label for="shipment-weight">Total Shipment Weight</label><input id="shipment-weight" type="number" min="0" step="any" value="75000" oninput="calculateFreight()" required></div>
+<div class="form-group"><label for="weight-unit">Weight Unit</label><select id="weight-unit" onchange="calculateFreight()"><option value="kg" selected>Kilograms (kg)</option><option value="mt">Metric Tons (MT)</option><option value="g">Grams (g)</option><option value="lb">Pounds (lb)</option></select></div>
+<div class="form-group"><label for="freight-rate">Freight Rate</label><input id="freight-rate" type="number" min="0" step="any" value="700" oninput="calculateFreight()" required></div>
+<div class="form-group"><label for="rate-unit">Rate Unit</label><select id="rate-unit" onchange="calculateFreight()"><option value="kg" selected>Per Kg</option><option value="mt">Per MT</option><option value="g">Per Gram</option><option value="lb">Per Pound</option><option value="20ft">Per 20ft Container</option><option value="40ft">Per 40ft Container</option></select></div>
+<div class="form-group full-width"><button type="submit" class="btn-primary">Calculate Freight Cost</button></div>
+</form></section>
+<section id="results-card" class="card results-card"><div class="results-header"><h2>Freight Results</h2></div><div class="result-hero"><span class="result-label">Estimated Total Freight Cost</span><span id="output-total" class="result-value">0.00</span><div id="output-note">Enter the shipment details to calculate.</div></div><div class="breakdown-container"><h3>Mathematical Breakdown &amp; Steps</h3><ol id="breakdown-list" class="breakdown-list"></ol></div></section>
+</main>
+<script src="../assets/js/freight-rate.js"></script><script src="../assets/js/toolkit-common.js"></script>
+</body></html>
