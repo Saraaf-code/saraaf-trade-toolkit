@@ -5,68 +5,13 @@ const SHEET_NAME='Toolkit Usage';
 const PDF_FOLDER_NAME='Saraaf Trade Toolkit PDFs';
 const LEAD_FORM_TITLE='Saraaf Trade Enquiry — Buy / Sell Commodity';
 const HEADERS=['Timestamp','Suite','Event','Tool ID','Tool','Fields','Results','Rating','Comment','PDF File ID'];
-
-function doPost(e){
-  try{
-    const data=JSON.parse(e.postData.contents||'{}');
-    const sheet=getUsageSheet_();
-    if(sheet.getLastRow()===0)sheet.appendRow(HEADERS);
-    let pdfId='';
-    if(data.pdfBase64)pdfId=savePdf_(data.pdfBase64,data.suite||'global',data.toolId||'tool',data.at);
-    sheet.appendRow([new Date(data.at||Date.now()),data.suite||'global',data.eventType||'',data.toolId||'',data.toolTitle||'',data.fields||'',data.results||'',data.rating||'',data.comment||'',pdfId]);
-    return json_({ok:true,pdfFileId:pdfId});
-  }catch(err){return json_({ok:false,error:String(err)});}
-}
-
-function doGet(e){
-  const action=e&&e.parameter?e.parameter.action:'';
-  if(action==='lead-form')return leadFormRedirect_(e.parameter.mode||'',e.parameter.hs||'',e.parameter.commodity||'');
-  return json_({ok:true,message:'Saraaf Trade Toolkit data endpoint is running.'});
-}
-
-function getUsageSpreadsheet_(){
-  const props=PropertiesService.getScriptProperties();
-  let id=props.getProperty('SHEET_ID');
-  if(id)return SpreadsheetApp.openById(id);
-  const ss=SpreadsheetApp.create('Saraaf Trade Toolkit Usage');
-  const sheet=ss.getSheets()[0];sheet.setName(SHEET_NAME);sheet.appendRow(HEADERS);
-  props.setProperty('SHEET_ID',ss.getId());
-  return ss;
-}
+function doPost(e){try{const data=JSON.parse(e.postData.contents||'{}');const sheet=getUsageSheet_();if(sheet.getLastRow()===0)sheet.appendRow(HEADERS);let pdfId='';if(data.pdfBase64)pdfId=savePdf_(data.pdfBase64,data.suite||'global',data.toolId||'tool',data.at);sheet.appendRow([new Date(data.at||Date.now()),data.suite||'global',data.eventType||'',data.toolId||'',data.toolTitle||'',data.fields||'',data.results||'',data.rating||'',data.comment||'',pdfId]);return json_({ok:true,pdfFileId:pdfId});}catch(err){return json_({ok:false,error:String(err)});}}
+function doGet(e){const action=e&&e.parameter?e.parameter.action:'';if(action==='lead-form')return leadFormRedirect_(e.parameter.mode||'',e.parameter.hs||'',e.parameter.commodity||'');return json_({ok:true,message:'Saraaf Trade Toolkit data endpoint is running.'});}
+function getUsageSpreadsheet_(){const props=PropertiesService.getScriptProperties();let id=props.getProperty('SHEET_ID');if(id)return SpreadsheetApp.openById(id);const ss=SpreadsheetApp.create('Saraaf Trade Toolkit Usage');const sheet=ss.getSheets()[0];sheet.setName(SHEET_NAME);sheet.appendRow(HEADERS);props.setProperty('SHEET_ID',ss.getId());return ss;}
 function getUsageSheet_(){return getUsageSpreadsheet_().getSheetByName(SHEET_NAME);}
-
-function getLeadForm_(){
-  const props=PropertiesService.getScriptProperties();
-  const existing=props.getProperty('LEAD_FORM_ID');
-  if(existing){try{return FormApp.openById(existing);}catch(err){}}
-  const form=FormApp.create(LEAD_FORM_TITLE);
-  form.setDescription('Tell Saraaf what commodity you trade and what you need. We will use this information to help connect a buyer or seller and arrange a commercial enquiry.');
-  form.addMultipleChoiceItem().setTitle('I am').setChoiceValues(['Buying','Selling']).setRequired(true);
-  form.addTextItem().setTitle('Commodity / product').setRequired(true);
-  form.addTextItem().setTitle('HS Code (if known)');
-  form.addTextItem().setTitle('Quantity and unit').setRequired(true);
-  form.addTextItem().setTitle('Expected price / rate').setRequired(true);
-  form.addTextItem().setTitle('Incoterm');
-  form.addTextItem().setTitle('Country of origin').setRequired(true);
-  form.addTextItem().setTitle('Destination country / port');
-  form.addTextItem().setTitle('Full name').setRequired(true);
-  form.addTextItem().setTitle('Company name').setRequired(true);
-  form.addTextItem().setTitle('Email address').setRequired(true);
-  form.addTextItem().setTitle('Phone / WhatsApp');
-  form.addParagraphTextItem().setTitle('Additional specifications, quality requirements or comments');
-  form.setPublished(true);
-  form.setDestination(FormApp.DestinationType.SPREADSHEET,getUsageSpreadsheet_().getId());
-  props.setProperty('LEAD_FORM_ID',form.getId());
-  return form;
-}
-
-function leadFormRedirect_(mode,hs,commodity){
-  const form=getLeadForm_();
-  const url=form.getPublishedUrl();
-  const context=(mode==='buy'?'You selected buying. Please complete the enquiry form to request a quote.':mode==='sell'?'You selected selling. Please complete the enquiry form so we can look for a buyer.':'Please complete the enquiry form.');
-  const html=`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Saraaf Trade Enquiry</title><style>body{font-family:Arial,sans-serif;background:#1a2a33;color:#fff;display:grid;place-items:center;min-height:100vh;margin:0}main{max-width:560px;padding:32px;text-align:center}a{display:inline-block;margin-top:20px;padding:12px 18px;border-radius:999px;background:#0480e4;color:#fff;text-decoration:none;font-weight:700}</style></head><body><main><h1>Saraaf Trade Enquiry</h1><p>${escapeHtml_(context)}</p>${hs?'<p>Selected HS heading: <strong>'+escapeHtml_(hs)+'</strong></p>':''}${commodity?'<p>Commodity: <strong>'+escapeHtml_(commodity)+'</strong></p>':''}<a href="${escapeHtml_(url)}" target="_top">Open Google Form</a><script>setTimeout(function(){location.href=${JSON.stringify(url)};},250);</script></main></body></html>`;
-  return HtmlService.createHtmlOutput(html).setTitle('Saraaf Trade Enquiry');
-}
+function getLeadForm_(){const props=PropertiesService.getScriptProperties(),existing=props.getProperty('LEAD_FORM_ID');if(existing){try{return FormApp.openById(existing);}catch(err){}}const form=FormApp.create(LEAD_FORM_TITLE);form.setDescription('Tell Saraaf what commodity you trade and what you need. We will use this information to help connect a buyer or seller and arrange a commercial enquiry.');form.addMultipleChoiceItem().setTitle('I am').setChoiceValues(['Buying','Selling']).setRequired(true);form.addTextItem().setTitle('Commodity / product').setRequired(true);form.addTextItem().setTitle('HS Code (if known)');form.addTextItem().setTitle('Quantity and unit').setRequired(true);form.addTextItem().setTitle('Expected price / rate').setRequired(true);form.addTextItem().setTitle('Incoterm');form.addTextItem().setTitle('Country of origin');form.addTextItem().setTitle('Destination country / port');form.addTextItem().setTitle('Full name').setRequired(true);form.addTextItem().setTitle('Company name').setRequired(true);form.addTextItem().setTitle('Email address').setRequired(true);form.addTextItem().setTitle('Phone / WhatsApp');form.addParagraphTextItem().setTitle('Additional specifications, quality requirements or comments');form.setPublished(true);form.setDestination(FormApp.DestinationType.SPREADSHEET,getUsageSpreadsheet_().getId());props.setProperty('LEAD_FORM_ID',form.getId());return form;}
+function leadFormRedirect_(mode,hs,commodity){const form=getLeadForm_();const url=form.getPublishedUrl();const context=mode==='buy'?'You selected buying. Please complete the enquiry form to request a quote.':mode==='sell'?'You selected selling. Please complete the enquiry form so we can look for a buyer.':'Please complete the enquiry form.';const prefilled=makePrefilledUrl_(form,mode,hs,commodity);const html=`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Saraaf Trade Enquiry</title><style>body{font-family:Arial,sans-serif;background:#1a2a33;color:#fff;display:grid;place-items:center;min-height:100vh;margin:0}main{max-width:560px;padding:32px;text-align:center}a{display:inline-block;margin-top:20px;padding:12px 18px;border-radius:999px;background:#0480e4;color:#fff;text-decoration:none;font-weight:700}</style></head><body><main><h1>Saraaf Trade Enquiry</h1><p>${escapeHtml_(context)}</p>${hs?'<p>Selected HS heading: <strong>'+escapeHtml_(hs)+'</strong></p>':''}${commodity?'<p>Commodity: <strong>'+escapeHtml_(commodity)+'</strong></p>':''}<a href="${escapeHtml_(prefilled||url)}" target="_top">Open Google Form</a><script>setTimeout(function(){location.href=${JSON.stringify(prefilled||url)};},250);</script></main></body></html>`;return HtmlService.createHtmlOutput(html).setTitle('Saraaf Trade Enquiry');}
+function makePrefilledUrl_(form,mode,hs,commodity){try{const response=form.createResponse();const items=form.getItems();items.forEach(item=>{const title=item.getTitle();if(title==='I am'&&mode)response.withItemResponse(item.asMultipleChoiceItem().createResponse(mode==='buy'?'Buying':'Selling'));if(title==='HS Code (if known)'&&hs)response.withItemResponse(item.asTextItem().createResponse(String(hs)));if(title==='Commodity / product'&&commodity)response.withItemResponse(item.asTextItem().createResponse(String(commodity)));});return response.toPrefilledUrl();}catch(err){return '';}}
 function escapeHtml_(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function savePdf_(base64,suite,toolId,stamp){const clean=String(base64).replace(/^data:application\/pdf;base64,/,'');const bytes=Utilities.base64Decode(clean);const blob=Utilities.newBlob(bytes,'application/pdf',`${suite}-${toolId}-${stamp||Date.now()}.pdf`);return getPdfFolder_().createFile(blob).getId();}
 function getPdfFolder_(){const props=PropertiesService.getScriptProperties();const id=props.getProperty('PDF_FOLDER_ID');if(id)return DriveApp.getFolderById(id);const folder=DriveApp.createFolder(PDF_FOLDER_NAME);props.setProperty('PDF_FOLDER_ID',folder.getId());return folder;}
