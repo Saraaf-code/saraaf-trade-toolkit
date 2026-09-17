@@ -1,16 +1,4 @@
 /* Landed Cost Calculator */
-function money(n) { return Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
-function calculateLandedCost() {
-  const currency=document.getElementById('currency').value;
-  const product=Number(document.getElementById('product-value').value)||0;
-  const freight=Number(document.getElementById('freight-cost').value)||0;
-  const insurance=Number(document.getElementById('insurance-cost').value)||0;
-  const duty=Number(document.getElementById('import-duty').value)||0;
-  const other=Number(document.getElementById('other-charges').value)||0;
-  const total=product+freight+insurance+duty+other;
-  document.getElementById('output-total').textContent=`${currency} ${money(total)}`;
-  document.getElementById('output-currency').textContent=`All inputs treated as ${currency}. No FX conversion is applied.`;
-  const steps=[`${currency} ${money(product)} product value`,`+ ${currency} ${money(freight)} freight`,`+ ${currency} ${money(insurance)} insurance`,`+ ${currency} ${money(duty)} import duty`,`+ ${currency} ${money(other)} other charges`,`= ${currency} ${money(total)} estimated landed cost`];
-  document.getElementById('breakdown-list').innerHTML=steps.map(s=>`<li>${s}</li>`).join('');
-}
+function money(n){return Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
+function calculateLandedCost(){const currency=document.getElementById('currency').value,product=Number(document.getElementById('product-value').value)||0,freight=Number(document.getElementById('freight-cost').value)||0,insurance=Number(document.getElementById('insurance-cost').value)||0,duty=Number(document.getElementById('import-duty').value)||0,other=Number(document.getElementById('other-charges').value)||0,total=product+freight+insurance+duty+other;document.getElementById('output-total').textContent=`${currency} ${money(total)}`;document.getElementById('output-currency').textContent=`All inputs treated as ${currency}. No FX conversion is applied.`;const steps=[`${currency} ${money(product)} product value`,`+ ${currency} ${money(freight)} freight`,`+ ${currency} ${money(insurance)} insurance`,`+ ${currency} ${money(duty)} import duty`,`+ ${currency} ${money(other)} other charges`,`= ${currency} ${money(total)} estimated landed cost`];document.getElementById('breakdown-list').innerHTML=steps.map(s=>`<li>${s}</li>`).join('');const include=document.getElementById('pie-mode')?.value==='include',parts=include?[['Product Value',product],['Freight',freight],['Insurance',insurance],['Import Duty',duty],['Other Charges',other]]:[['Freight',freight],['Insurance',insurance],['Import Duty',duty],['Other Charges',other]],sum=parts.reduce((a,x)=>a+x[1],0)||1;let deg=0;document.getElementById('landed-pie').style.background=`conic-gradient(${parts.map(x=>{const end=deg+x[1]/sum*360,s=`#0480e4 ${deg}deg ${end}deg`;deg=end;return s}).join(',')})`;document.getElementById('landed-legend').innerHTML=parts.map(x=>`<div><span>${x[0]}</span><strong>${money(x[1])} (${(x[1]/sum*100).toFixed(1)}%)</strong></div>`).join('');}
 document.addEventListener('DOMContentLoaded',calculateLandedCost);
